@@ -1,0 +1,108 @@
+package com.evansamuel.pbptubes;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
+import android.os.Bundle;
+import android.util.Patterns;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+
+
+public class ActivityLogin extends AppCompatActivity {
+    private String CHANNEL_ID = "channel 1";
+    EditText emailLogin,passwordLogin;
+    Button Login,Register;
+    FirebaseAuth firebaseAuth;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_login);
+        emailLogin = findViewById(R.id.edtEmailLogin);
+        passwordLogin = findViewById(R.id.edtPasswordLogin);
+        firebaseAuth = FirebaseAuth.getInstance();
+        Register = findViewById(R.id.btnRegister1);
+        Register.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ActivityLogin.this,RegisterActivity.class);
+                startActivity(intent);
+            }
+        });
+        Login = findViewById(R.id.btnLogin);
+
+        Login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (emailLogin.getText().toString().isEmpty() && passwordLogin.getText().toString().isEmpty()) {
+                    Toast.makeText(ActivityLogin.this, "Authentication Failed", Toast.LENGTH_SHORT).show();
+                } else if (emailLogin.getText().toString().isEmpty()) {
+                    Toast.makeText(ActivityLogin.this, "Email Invalid", Toast.LENGTH_SHORT).show();
+                } else if (passwordLogin.getText().toString().isEmpty()) {
+                    Toast.makeText(ActivityLogin.this, "Password Invalid", Toast.LENGTH_SHORT).show();
+                } else if (!(emailLogin.getText().toString().isEmpty() && passwordLogin.getText().toString().isEmpty())) {
+                    firebaseAuth.signInWithEmailAndPassword(emailLogin.getText().toString(), passwordLogin.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                Toast.makeText(ActivityLogin.this, "Login successfully", Toast.LENGTH_LONG).show();
+                                Intent intent = new Intent(ActivityLogin.this, HomeActivity.class);
+                                startActivity(intent);
+                                createNotificationChannel();
+                                addNotification();
+                            } else {
+                                Toast.makeText(ActivityLogin.this,task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    });
+                }else{
+                    Toast.makeText(ActivityLogin.this, "Error", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+    }
+
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "Channel 1";
+            String description = "This Channel 1";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
+    private void addNotification(){
+        NotificationCompat.Builder builder = new NotificationCompat.Builder( this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_launcher_background)
+                .setContentTitle("Login Successful")
+                .setContentText("Selamat Datang")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+        Intent notificationIntent = new Intent( this, MainActivity.class);
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        builder.setContentIntent(contentIntent);
+
+        NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        manager.notify(0, builder.build());
+    }
+}
