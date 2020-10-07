@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 
 public class MainActivity extends AppCompatActivity {
+
     private AppBarConfiguration mAppBarConfiguration;
     private static int SPLASH_TIME_OUT = 4000;
     @Override
@@ -28,6 +29,5 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-
-
+    //asdhsajdhas
 }
