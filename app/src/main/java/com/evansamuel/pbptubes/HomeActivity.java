@@ -29,7 +29,6 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class HomeActivity extends AppCompatActivity {
     private String CHANNEL_ID = "channel 2";
-    TextView userEmail;
     FirebaseAuth firebaseAuth;
     FirebaseUser firebaseUser;
     Button Logout;
@@ -39,24 +38,10 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        userEmail = findViewById(R.id.tvEmail);
-        Logout = findViewById(R.id.btnLogout);
         firebaseAuth =firebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
-        userEmail.setText(firebaseUser.getEmail());
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        Logout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
-                Intent intent = new Intent(HomeActivity.this, ActivityLogin.class);
-                startActivity(intent);
-                createNotificationChannel();
-                addNotification();
-            }
-        });
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
@@ -65,6 +50,9 @@ public class HomeActivity extends AppCompatActivity {
                 R.id.nav_home, R.id.nav_profile, R.id.nav_logout)
                 .setDrawerLayout(drawer)
                 .build();
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
+        NavigationUI.setupWithNavController(navigationView, navController);
 
     }
 
