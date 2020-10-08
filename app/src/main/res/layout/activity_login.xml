@@ -17,7 +17,7 @@
 
 
         <LinearLayout
-            android:layout_marginTop="100dp"
+            android:layout_marginTop="50dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -49,6 +49,7 @@
             android:hint="Email"
             abdroid:startIconDrawable="@drawable/ic_baseline_email_24"
             app:boxStrokeColor="#3498DB"
+            android:textColorHint="#3498DB"
             app:hintTextColor="#3498DB"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
 
@@ -56,7 +57,9 @@
                 android:id="@+id/edtEmailLogin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textEmailAddress" android:textSize="25sp"/>
+                android:textCursorDrawable="@drawable/cursor"
+                android:inputType="textEmailAddress"
+                android:textSize="25sp"/>
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -67,6 +70,8 @@
             android:layout_height="wrap_content"
             abdroid:startIconDrawable="@drawable/ic_baseline_lock_24"
             android:hint="Password"
+            app:placeholderTextColor="#3498DB"
+            android:textColorHint="#3498DB"
             app:boxStrokeColor="#3498DB"
             app:hintTextColor="#3498DB"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
@@ -75,6 +80,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
+                android:textCursorDrawable="@drawable/cursor"
                 android:textSize="25sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
