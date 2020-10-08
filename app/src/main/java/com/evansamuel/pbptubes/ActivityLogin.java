@@ -20,13 +20,14 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 
 public class ActivityLogin extends AppCompatActivity {
     private String CHANNEL_ID = "channel 1";
-    EditText emailLogin,passwordLogin;
+    TextInputEditText emailLogin,passwordLogin;
     Button Login,Register;
     FirebaseAuth firebaseAuth;
     @Override

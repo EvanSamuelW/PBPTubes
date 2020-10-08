@@ -5,57 +5,84 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:abdroid="http://schemas.android.com/apk/res-auto"
-    tools:context=".MainActivity"
+    tools:context=".ActivityLogin"
     android:orientation="vertical">
-
-    <TextView
-        android:id="@+id/text0"
-        style="@android:style/Widget.TextView.PopupMenu"
-        android:layout_width="match_parent"
-        android:layout_height="149dp"
-        android:text="Login"
-        android:textAlignment="center"
-        android:textColor="@color/colorAccent"
-        android:textSize="30sp" />
-
-    <TextView
-        android:id="@+id/text1"
-        style="@android:style/Widget.DeviceDefault.TextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Email"
-        android:textColor="@android:color/background_dark"
-        android:textSize="24sp" />
-
-    <EditText
-        android:id="@+id/edtEmailLogin"
-        android:layout_width="match_parent"
-        android:layout_height="79dp"
-        android:inputType="textEmailAddress"
-        android:textSize="25sp" />
-
-    <TextView
-        android:id="@+id/text2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Password"
-        android:textColor="@android:color/background_dark"
-        android:textSize="24sp" />
-
-    <EditText
-        android:id="@+id/edtPasswordLogin"
-        android:layout_width="match_parent"
-        android:layout_height="78dp"
-        android:inputType="textPassword"
-        android:textSize="25sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="142dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_margin="20dp">
+
+
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="30dp">
+
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginLeft="10dp"
+            android:foregroundGravity="center"
+            android:src="@drawable/ic_peacoks" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25dp"
+                android:text="Hotel Peacoks"
+                android:textAlignment="center"
+                android:textSize="30sp" />
+
+
+        </LinearLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/editEmailLoginLayout"
+            android:layout_marginTop="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Email"
+            abdroid:startIconDrawable="@drawable/ic_baseline_email_24"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtEmailLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textEmailAddress"
+                android:textSize="25sp"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/editPasswordLoginLayout"
+            android:layout_marginTop="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            abdroid:startIconDrawable="@drawable/ic_baseline_lock_24"
+            android:hint="Password"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtPasswordLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:textSize="25sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <Button
             android:id="@+id/btnLogin"
+            android:layout_marginTop="20dp"
             style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="208dp"
             android:layout_height="wrap_content"
@@ -64,22 +91,31 @@
             android:textAlignment="gravity"
             android:textSize="20sp" />
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center">
+
         <TextView
             android:id="@+id/textView3"
             android:layout_width="match_parent"
-            android:layout_height="32dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:text="Belum punya akun?"
             android:textAlignment="center" />
 
         <Button
+            style="@style/Widget.MaterialComponents.Button.TextButton"
             android:id="@+id/btnRegister1"
-            style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="wrap_content"
-            android:layout_height="35dp"
+            android:layout_height="30dp"
             android:layout_gravity="center"
             android:text="Register"
+            android:textColor="#0000ff"
             android:textSize="10sp" />
-
+        </LinearLayout>
+         </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>
