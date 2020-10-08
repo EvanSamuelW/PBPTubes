@@ -27,7 +27,6 @@
                 android:src="@drawable/ic_peacoks"
                 android:foregroundGravity="center"
                 android:layout_gravity="center"/>
-
             <TextView
                 android:id="@+id/tvTextRegister"
                 android:layout_width="wrap_content"
@@ -193,7 +192,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="@string/login"
+                android:text="sudah punya akun ?"
                 android:textAlignment="center" />
 
             <Button
