@@ -28,6 +28,7 @@
                 android:src="@drawable/ic_peacoks"
                 android:layout_gravity="center"/>
             <TextView
+                android:id="@+id/tvTextAwal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -113,7 +114,7 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edtTelepon"
+                android:id="@+id/edtTelpon"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textCursorDrawable="@drawable/cursor"
