@@ -10,6 +10,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Patterns;
@@ -38,6 +39,7 @@ public class ActivityLogin extends AppCompatActivity {
         passwordLogin = findViewById(R.id.edtPasswordLogin);
         firebaseAuth = FirebaseAuth.getInstance();
         Register = findViewById(R.id.btnRegister1);
+        Register.setPaintFlags(Register.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         Register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
