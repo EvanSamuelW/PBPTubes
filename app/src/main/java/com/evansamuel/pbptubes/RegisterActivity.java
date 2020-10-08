@@ -36,7 +36,6 @@ public class RegisterActivity extends AppCompatActivity {
     Button backLogin;
     FirebaseAuth firebaseAuth;
     FirebaseFirestore fStore;
-    TextView tvTextAwal;
     String userID;
 
 
@@ -49,11 +48,10 @@ public class RegisterActivity extends AppCompatActivity {
         fStore = FirebaseFirestore.getInstance();
         email = findViewById(R.id.edtEmailRegister);
         password = findViewById(R.id.edtPasswordRegister);
-        tvTextAwal = findViewById(R.id.tvTextAwal);
         register = findViewById(R.id.btnRegisterUser);
-        nama = findViewById(R.id.edtNama);
-        alamat = findViewById(R.id.edtAlamat);
-        telepon = findViewById(R.id.edtTelpon);
+        nama = findViewById(R.id.edtName);
+        alamat = findViewById(R.id.edtAddress);
+        telepon = findViewById(R.id.edtHand);
         username = findViewById(R.id.edtUsername);
         backLogin = findViewById(R.id.buttonBackLogin);
 
