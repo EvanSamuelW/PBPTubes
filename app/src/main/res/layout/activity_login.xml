@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     xmlns:abdroid="http://schemas.android.com/apk/res-auto"
     tools:context=".ActivityLogin"
+    android:background="#ffffff"
     android:orientation="vertical">
 
     <LinearLayout
