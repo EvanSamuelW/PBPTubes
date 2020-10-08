@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -13,12 +14,22 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 public class RegisterActivity extends AppCompatActivity {
+    public static final String TAG = "TAG";
+    public static final String TAG1 = "TAG";
     EditText email;
     EditText nama;
     EditText alamat;
@@ -28,13 +39,18 @@ public class RegisterActivity extends AppCompatActivity {
     Button register;
     Button backLogin;
     FirebaseAuth firebaseAuth;
+    FirebaseFirestore fStore;
     TextView tvTextAwal;
+    String userID;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+
         firebaseAuth = FirebaseAuth.getInstance();
-        FirebaseApp.initializeApp(this);
+        fStore = FirebaseFirestore.getInstance();
         email = findViewById(R.id.edtEmailRegister);
         password = findViewById(R.id.edtPasswordRegister);
         tvTextAwal = findViewById(R.id.tvTextAwal);
@@ -56,6 +72,14 @@ public class RegisterActivity extends AppCompatActivity {
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                final String Fusername = username.getText().toString();
+                final String Fnama = nama.getText().toString();
+                final String Ftelp = telepon.getText().toString();
+                final String Falamat = alamat.getText().toString();
+                final String Femail = email.getText().toString().trim();
+
+
                 if (nama.getText().toString().isEmpty()) {
                     Toast.makeText(RegisterActivity.this, "Nama tidak boleh kosong", Toast.LENGTH_SHORT).show();
                 }else if(alamat.getText().toString().isEmpty()) {
@@ -74,10 +98,28 @@ public class RegisterActivity extends AppCompatActivity {
                     firebaseAuth.createUserWithEmailAndPassword(email.getText().toString(), password.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful() && Patterns.EMAIL_ADDRESS.matcher((CharSequence) email).matches()) {
+                            if (task.isSuccessful()) {
                                 Toast.makeText(RegisterActivity.this, "Registered successfully", Toast.LENGTH_LONG).show();
-                                Intent intent = new Intent(RegisterActivity.this, ActivityLogin.class);
-                                startActivity(intent);
+                                userID = firebaseAuth.getCurrentUser().getUid();
+                                DocumentReference documentReference = fStore.collection("users").document(userID);
+                                Map<String,Object> user = new HashMap<>();
+                                user.put("fName", Fnama);
+                                user.put("alamat", Falamat);
+                                user.put("email", Femail);
+                                user.put("telp", Ftelp);
+                                user.put("username", Fusername);
+                                documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Log.d(TAG, "onSuccess : user Profile is created for"+ userID);
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.d(TAG, "onFailure : "+ e.toString());
+                                    }
+                                });
+                                startActivity(new Intent(getApplicationContext(),ActivityLogin.class));
                             } else {
                                 Toast.makeText(RegisterActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
                             }
@@ -86,13 +128,5 @@ public class RegisterActivity extends AppCompatActivity {
                 }
             }
         });
-    }
-    private boolean validasi(){
-        if(email.getText().toString().equals("")){
-            email.setError("Email Harus Diisi");
-        }else if(password.getText().toString().equals("")){
-            password.setError("Password Harus Diisi");
-        }
-        return true;
     }
 }
