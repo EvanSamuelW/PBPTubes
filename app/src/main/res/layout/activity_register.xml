@@ -24,10 +24,10 @@
             <ImageView
                 android:id="@+id/registerLogo"
                 android:layout_width="70dp"
-                android:layout_height="70dp"
-                android:src="@drawable/ic_peacoks"
+                android:layout_height="84dp"
+                android:layout_gravity="center"
                 android:foregroundGravity="center"
-                android:layout_gravity="center"/>
+                android:src="@drawable/ic_peacoks" />
             <TextView
                 android:id="@+id/tvTextRegister"
                 android:layout_width="wrap_content"
@@ -46,7 +46,7 @@
             android:id="@+id/edtNameLayout"
             android:layout_marginTop="10dp"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="55dp"
             android:hint="Nama"
             app:boxStrokeColor="#3498DB"
             android:textColorHint="#3498DB"
@@ -67,7 +67,7 @@
             android:id="@+id/edtAddressLayout"
             android:layout_marginTop="10dp"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="55dp"
             android:hint="Alamat"
             app:boxStrokeColor="#3498DB"
             android:textColorHint="#3498DB"
@@ -88,7 +88,7 @@
             android:id="@+id/edtEmailLayout"
             android:layout_marginTop="10dp"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="55dp"
             android:hint="Email"
             app:boxStrokeColor="#3498DB"
             android:textColorHint="#3498DB"
@@ -109,7 +109,7 @@
             android:id="@+id/edtTelponLayout"
             android:layout_marginTop="10dp"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="55dp"
             android:hint="+62"
             app:boxStrokeColor="#3498DB"
             android:textColorHint="#3498DB"
@@ -130,7 +130,7 @@
             android:id="@+id/edtUsernameLayout"
             android:layout_marginTop="10dp"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="55dp"
             android:hint="Username"
             app:boxStrokeColor="#3498DB"
             android:textColorHint="#3498DB"
@@ -151,7 +151,7 @@
             android:id="@+id/edtPasswordLayout"
             android:layout_marginTop="10dp"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="55dp"
             android:hint="Password"
             app:boxStrokeColor="#3498DB"
             android:textColorHint="#3498DB"
@@ -188,6 +188,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="-17dp"
             android:layout_gravity="center">
 
             <TextView
