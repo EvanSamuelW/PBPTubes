@@ -44,6 +44,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="170dp"
+                android:src="@drawable/ic_baseline_brightness_4_24"
                 android:background="@null"/>
 
             <include layout="@layout/content_main" />

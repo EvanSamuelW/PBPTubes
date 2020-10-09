@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffff"
+    android:background="@color/bg_color"
     tools:context=".MainActivity">
 
     <LinearLayout
@@ -26,7 +26,7 @@
         android:layout_gravity="center"
         android:layout_height="wrap_content"
         android:text="@string/hotel_peacocks"
-        android:textColor="#000000"
+        android:textColor="@color/PrimaryText"
         android:textSize="40sp"
         app:layout_constraintTop_toBottomOf="@+id/logo" />
 

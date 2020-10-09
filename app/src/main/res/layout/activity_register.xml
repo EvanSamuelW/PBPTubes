@@ -7,6 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".RegisterActivity"
+    android:background="@color/bg_color"
     android:orientation="vertical">
 
     <LinearLayout
@@ -33,6 +34,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginLeft="10dp"
+                android:textColor="@color/PrimaryText"
                 android:text="Registration Form"
                 android:textAlignment="center"
                 android:textSize="30sp" />
@@ -175,11 +177,11 @@
         android:layout_marginTop="30dp">
         <Button
             android:id="@+id/btnRegisterUser"
-            style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:shadowColor="#FFFFFF"
+            app:backgroundTint="#3498DB"
             android:text="Register"
             android:textSize="20sp" />
         <LinearLayout

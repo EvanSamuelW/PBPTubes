@@ -4,11 +4,11 @@
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
 
-    <color name="colorPrimaryNight">#212121</color>
-    <color name="colorPrimaryDarkNight">#000000</color>
-    <color name="colorAccentNight">#ffffff</color>
+<!--    extra color-->
+    <color name="PrimaryText">#000000</color>
+    <color name="SecondaryText">#1a1a1a</color>
+    <color name="bg_color">#FFFFFF</color>
 
-    <color name="primaryTitleColor">#212121</color>
-    <color name="primaryTitleColorNight">#ffffff</color>
 
+    <color name="cardBackground">#FFFFFF</color>
 </resources>

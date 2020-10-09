@@ -2,6 +2,7 @@ package com.evansamuel.pbptubes;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -37,11 +38,20 @@ public class RegisterActivity extends AppCompatActivity {
     FirebaseAuth firebaseAuth;
     FirebaseFirestore fStore;
     String userID;
+    AppPreferencesManager preferencesManager;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        preferencesManager = new AppPreferencesManager(this);
+        if (preferencesManager.getDarkModeState()) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+
+        }
         setContentView(R.layout.activity_register);
 
         firebaseAuth = FirebaseAuth.getInstance();

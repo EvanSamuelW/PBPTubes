@@ -2,6 +2,7 @@ package com.evansamuel.pbptubes;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
@@ -31,9 +32,18 @@ public class ActivityLogin extends AppCompatActivity {
     TextInputEditText emailLogin,passwordLogin;
     Button Login,Register;
     FirebaseAuth firebaseAuth;
+    AppPreferencesManager preferencesManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        preferencesManager = new AppPreferencesManager(this);
+        if (preferencesManager.getDarkModeState()) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+
+        }
         setContentView(R.layout.activity_login);
         emailLogin = findViewById(R.id.edtEmailLogin);
         passwordLogin = findViewById(R.id.edtPasswordLogin);
