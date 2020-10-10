@@ -1,6 +1,7 @@
 package com.evansamuel.pbptubes.ui.dashboard;
 
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.cardview.widget.CardView;
@@ -18,7 +19,8 @@ import com.evansamuel.pbptubes.ui.fitur.BookFragment;
 public class DashboardFragment extends Fragment {
 
     private CardView cardHome;
-    FragmentManager fragmentManager;
+    private final static String TAG_FRAGMENT = "TAG_FRAGMENT";
+
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -68,7 +70,6 @@ public class DashboardFragment extends Fragment {
                 Fragment fragment = new BookFragment();
                 androidx.fragment.app.FragmentManager fragmentManager = getFragmentManager();
                 fragmentManager.beginTransaction().replace(R.id.dashboard,fragment).commit();
-
             }
         });
         return view;
