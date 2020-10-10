@@ -21,5 +21,11 @@
         android:label="Dashboard"
         tools:layout="@layout/fragment_dashboard"/>
 
+    <fragment
+        android:id="@+id/nav_book"
+        android:name="com.evansamuel.pbptubes.ui.fitur.BookFragment"
+        android:label="Book"
+        tools:layout="@layout/fragment_book"/>
+
 
 </navigation>
