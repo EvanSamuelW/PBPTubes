@@ -48,7 +48,7 @@ public class ProfileActivity extends AppCompatActivity {
     FirebaseUser user;
     ImageView profileImage;
     StorageReference storageReference;
-    Button changeProfileImage;
+    Button changeProfileImage, backButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,14 +63,30 @@ public class ProfileActivity extends AppCompatActivity {
 
         profileImage = findViewById(R.id.profileImage);
         changeProfileImage = findViewById(R.id.changeProfile);
+        backButton = findViewById(R.id.backButton);
 
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
 
+        StorageReference profileRef = storageReference.child("users/"+fAuth.getCurrentUser().getUid()+"/profile.jpg");
+        profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Picasso.get().load(uri).into(profileImage);
+            }
+        });
 
         userID = fAuth.getCurrentUser().getUid();
         user = fAuth.getCurrentUser();
+
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ProfileActivity.this, HomeActivity.class);
+                startActivity(intent);
+            }
+        });
 
         DocumentReference documentReference = fStore.collection("users").document(userID);
         documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
