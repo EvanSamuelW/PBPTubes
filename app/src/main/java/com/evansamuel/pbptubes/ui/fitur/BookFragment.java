@@ -4,16 +4,20 @@ import android.app.FragmentManager;
 import android.os.Bundle;
 
 import androidx.cardview.widget.CardView;
+import androidx.databinding.BindingAdapter;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.renderscript.ScriptGroup;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.evansamuel.pbptubes.R;
+import com.evansamuel.pbptubes.databinding.FragmentBookBinding;
 
 import java.util.ArrayList;
 
@@ -23,12 +27,12 @@ import java.util.ArrayList;
  * create an instance of this fragment.
  */
 public class BookFragment extends Fragment {
+
     private ArrayList<Kamar> ListKamar;
     private RecyclerView recyclerView;
     private RecyclerViewAdapter adapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private CardView cardHome;
-
+    FragmentBookBinding binding;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -42,14 +46,6 @@ public class BookFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment BookFragment.
-     */
     // TODO: Rename and change types and number of parameters
     public static BookFragment newInstance(String param1, String param2) {
         BookFragment fragment = new BookFragment();
@@ -63,27 +59,27 @@ public class BookFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        binding  = DataBindingUtil.setContentView(getActivity(), R.layout.fragment_book);
+        bambang();
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        ListKamar = new DaftarKamar().KAMAR;
         View view = inflater.inflate(R.layout.fragment_book, container, false);
-        //recycler view
-        cardHome = view.findViewById(R.id.book);
-        recyclerView = view.findViewById(R.id.recycler_view_mahasiswa);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        recyclerView.setAdapter(adapter);
+
 
 
 
         return view;
+    }
+
+
+    public void bambang(){
+        ListKamar = new DaftarKamar().KAMAR;
+        adapter = new RecyclerViewAdapter(getActivity(),ListKamar);
+        binding.setMyAdapter(adapter);
     }
 }

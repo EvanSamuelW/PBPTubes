@@ -3,6 +3,7 @@ package com.evansamuel.pbptubes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
+import androidx.databinding.DataBindingUtil;
 import androidx.navigation.ui.AppBarConfiguration;
 
 import android.content.Intent;
@@ -15,9 +16,6 @@ public class MainActivity extends AppCompatActivity {
     private AppBarConfiguration mAppBarConfiguration;
     private static int SPLASH_TIME_OUT = 4000;
     AppPreferencesManager preferencesManager;
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
