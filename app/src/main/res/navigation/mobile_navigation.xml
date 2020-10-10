@@ -19,13 +19,27 @@
         android:id="@+id/nav_dashboard"
         android:name="com.evansamuel.pbptubes.ui.dashboard.DashboardFragment"
         android:label="Dashboard"
-        tools:layout="@layout/fragment_dashboard"/>
+        tools:layout="@layout/fragment_dashboard">
+        <action
+            android:id="@+id/action_nav_dashboard_to_nav_food"
+            app:destination="@id/nav_food" />
+        <action
+            android:id="@+id/action_nav_dashboard_to_nav_book"
+            app:destination="@id/nav_book" />
+
+    </fragment>
 
     <fragment
         android:id="@+id/nav_book"
         android:name="com.evansamuel.pbptubes.ui.fitur.BookFragment"
         android:label="Book"
         tools:layout="@layout/fragment_book"/>
+
+    <fragment
+        android:id="@+id/nav_food"
+        android:name="com.evansamuel.pbptubes.ui.fitur.FoodFragment"
+        android:label="Food"
+        tools:layout="@layout/fragment_food"/>
 
 
 </navigation>

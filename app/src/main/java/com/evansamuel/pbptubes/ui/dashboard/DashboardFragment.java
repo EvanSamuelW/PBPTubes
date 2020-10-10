@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +19,7 @@ import com.evansamuel.pbptubes.ui.fitur.BookFragment;
 
 public class DashboardFragment extends Fragment {
 
-    private CardView cardHome;
+    private CardView cardHome,cardFood;
     private final static String TAG_FRAGMENT = "TAG_FRAGMENT";
 
 
@@ -63,19 +64,21 @@ public class DashboardFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_dashboard, container, false);
 
         cardHome = view.findViewById(R.id.book);
+        cardFood = view.findViewById(R.id.food);
 
         cardHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Fragment fragment = new BookFragment();
-//                androidx.fragment.app.FragmentManager fragmentManager = getFragmentManager();
-//                fragmentManager.beginTransaction().replace(R.id.dashboard,fragment).commit();
-                Fragment fragment = new BookFragment();
-                FragmentTransaction ft = getFragmentManager().beginTransaction();
-                ft.replace(R.id.nav_host_fragment, fragment);
-                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                ft.addToBackStack(null);
-                ft.commit();
+
+                Navigation.findNavController(view).navigate(R.id.action_nav_dashboard_to_nav_book);
+            }
+        });
+
+        cardFood.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Navigation.findNavController(view).navigate(R.id.action_nav_dashboard_to_nav_food);
 
             }
         });
