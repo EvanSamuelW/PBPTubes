@@ -44,18 +44,17 @@ public class ProfileActivity extends AppCompatActivity {
     TextView fullName,username,alamat,email,phone;
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
-    String userID;
+    String userId;
     FirebaseUser user;
     ImageView profileImage;
     StorageReference storageReference;
-    Button changeProfileImage, backButton;
+    Button changeProfileImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        username = findViewById(R.id.edtUsername);
         fullName = findViewById(R.id.profileName);
         alamat = findViewById(R.id.profileAddress);
         phone = findViewById(R.id.profileTelp);
@@ -63,7 +62,6 @@ public class ProfileActivity extends AppCompatActivity {
 
         profileImage = findViewById(R.id.profileImage);
         changeProfileImage = findViewById(R.id.changeProfile);
-        backButton = findViewById(R.id.backButton);
 
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
@@ -77,18 +75,10 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
-        userID = fAuth.getCurrentUser().getUid();
+        userId = fAuth.getCurrentUser().getUid();
         user = fAuth.getCurrentUser();
 
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(ProfileActivity.this, HomeActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        DocumentReference documentReference = fStore.collection("users").document(userID);
+        final DocumentReference documentReference = fStore.collection("users").document(userId);
         documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {

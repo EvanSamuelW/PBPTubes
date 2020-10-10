@@ -4,10 +4,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -35,7 +37,7 @@ public class EditProfile extends AppCompatActivity {
     public static final String TAG = "TAG";
     EditText profileUsername,profileName,profileAddress,profileEmail,profilePhone;
     ImageView profileImageView;
-    Button saveBtn, backButton;
+    Button saveBtn;
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
     FirebaseUser user;
@@ -58,14 +60,13 @@ public class EditProfile extends AppCompatActivity {
         user = fAuth.getCurrentUser();
         storageReference = FirebaseStorage.getInstance().getReference();
 
-        profileUsername = findViewById(R.id.profileUsername);
+
         profileName = findViewById(R.id.profileName);
         profileAddress = findViewById(R.id.profileAddress);
         profileEmail = findViewById(R.id.profileEmail);
         profilePhone = findViewById(R.id.profileTelp);
         profileImageView = findViewById(R.id.profileImageView);
         saveBtn = findViewById(R.id.saveProfileInfo);
-        backButton = findViewById(R.id.backButton);
 
         StorageReference profileRef = storageReference.child("users/"+fAuth.getCurrentUser().getUid()+"/profile.jpg");
         profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -75,20 +76,11 @@ public class EditProfile extends AppCompatActivity {
             }
         });
 
-
         profileImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent openGalleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(openGalleryIntent,1000);
-            }
-        });
-
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v){
-                Intent backIntent = new Intent(EditProfile.this, ProfileActivity.class);
-                startActivity(backIntent);
             }
         });
 

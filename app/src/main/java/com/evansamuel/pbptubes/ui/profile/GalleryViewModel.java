@@ -1,4 +1,4 @@
-package com.evansamuel.pbptubes.ui.gallery;
+package com.evansamuel.pbptubes.ui.profile;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

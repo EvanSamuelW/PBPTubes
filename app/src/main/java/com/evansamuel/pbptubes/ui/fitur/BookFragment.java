@@ -1,8 +1,13 @@
 package com.evansamuel.pbptubes.ui.fitur;
 
+import android.app.FragmentManager;
 import android.os.Bundle;
 
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,12 +15,19 @@ import android.view.ViewGroup;
 
 import com.evansamuel.pbptubes.R;
 
+import java.util.ArrayList;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link BookFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class BookFragment extends Fragment {
+    private ArrayList<Kamar> ListKamar;
+    private RecyclerView recyclerView;
+    private RecyclerViewAdapter adapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private CardView cardHome;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -61,6 +73,17 @@ public class BookFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_book, container, false);
+        ListKamar = new DaftarKamar().KAMAR;
+        View view = inflater.inflate(R.layout.fragment_book, container, false);
+        //recycler view
+        cardHome = view.findViewById(R.id.book);
+        recyclerView = view.findViewById(R.id.recycler_view_mahasiswa);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        recyclerView.setAdapter(adapter);
+
+
+
+        return view;
     }
 }

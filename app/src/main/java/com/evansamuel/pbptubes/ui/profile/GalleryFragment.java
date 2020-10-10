@@ -1,4 +1,4 @@
-package com.evansamuel.pbptubes.ui.gallery;
+package com.evansamuel.pbptubes.ui.profile;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
