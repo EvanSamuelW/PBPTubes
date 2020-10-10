@@ -72,20 +72,17 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         firebaseUser = firebaseAuth.getCurrentUser();
         final DrawerLayout drawer = findViewById(R.id.drawer_layout);
         final ImageButton dark = findViewById(R.id.dark);
-        findViewById(R.id.imageMenu).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                drawer.openDrawer(GravityCompat.START);
-            }
-        });
-
-        NavigationView navigationView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
-        mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_profile, R.id.nav_logout)
-                .setDrawerLayout(drawer)
-                .build();
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+
+
 
         dark.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,12 +103,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                         .create().show();
             }
         });
-        }
+    }
 
 
 
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
+    // Passing each menu ID as a set of Ids because each
+    // menu should be considered as top level destinations.
 
 
 
@@ -188,21 +185,14 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-        int id = item.getItemId();
-
-        if (id == R.id.nav_profile) {
-            HomeFragment profile = new HomeFragment();
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
-                    android.R.anim.fade_out);
-            fragmentTransaction.replace(R.id.nav_host_fragment, profile);
-            fragmentTransaction.commit();
-        } else {
-
+        switch (item.getItemId()){
+            case R.id.nav_profile:{
+                Intent intent = new Intent(HomeActivity.this, ProfileActivity.class);
+                startActivity(intent);
+            }
         }
-        DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawerLayout.closeDrawer(GravityCompat.START);
         return true;
+
     }
 
 
