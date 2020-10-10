@@ -96,7 +96,6 @@ public class ProfileActivity extends AppCompatActivity {
                 i.putExtra("alamat", alamat.getText().toString());
                 i.putExtra("email", email.getText().toString());
                 i.putExtra("telp", phone.getText().toString());
-                i.putExtra("username", username.getText().toString());
                 startActivity(i);
             }
         });
