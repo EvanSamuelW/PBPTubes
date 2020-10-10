@@ -9,7 +9,11 @@
     android:fitsSystemWindows="true"
     android:background="@color/bg_color"
     tools:openDrawer="start">
-
+    <FrameLayout
+        android:id="@+id/fragment_layout"
+        android:layout_marginTop="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
     <include
         layout="@layout/app_bar_main"
@@ -26,11 +30,7 @@
         app:headerLayout="@layout/nav_header_main"
         app:menu="@menu/activity_main_drawer" />
 
-    <FrameLayout
-        android:id="@+id/fragment_layout"
-        android:layout_marginTop="16dp"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+
 
 
 </androidx.drawerlayout.widget.DrawerLayout>
