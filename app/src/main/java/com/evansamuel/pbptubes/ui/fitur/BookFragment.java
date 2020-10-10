@@ -1,6 +1,7 @@
 package com.evansamuel.pbptubes.ui.fitur;
 
 import android.app.FragmentManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.cardview.widget.CardView;
@@ -20,6 +21,7 @@ import com.evansamuel.pbptubes.R;
 import com.evansamuel.pbptubes.databinding.FragmentBookBinding;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -28,7 +30,7 @@ import java.util.ArrayList;
  */
 public class BookFragment extends Fragment {
 
-    private ArrayList<Kamar> ListKamar;
+    private ArrayList<Kamar> ListKamar ;
     private RecyclerView recyclerView;
     private RecyclerViewAdapter adapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -59,8 +61,8 @@ public class BookFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding  = DataBindingUtil.setContentView(getActivity(), R.layout.fragment_book);
-        bambang();
+
+
 
     }
 
@@ -68,18 +70,34 @@ public class BookFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_book, container, false);
+        binding  = DataBindingUtil.inflate(inflater, R.layout.fragment_book,container,false);
+        View view = binding.getRoot();
 
+        recyclerView = binding.recyclerViewKamar;
 
-
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setHasFixedSize(true);
+        ListKamar = new DaftarKamar().KAMAR;
+        adapter = new RecyclerViewAdapter(getActivity(),ListKamar);
+        recyclerView.setAdapter(adapter);
 
         return view;
     }
 
+//    private void getKamar(){
+//        class GetKamar extends AsyncTask<Void, Void, List<Kamar>>{
+//
+//
+//            @Override
+//            protected List<Kamar> doInBackground(Void... voids) {
+//                recyclerView
+//                return null;
+//            }
+//        }
+//    }
 
-    public void bambang(){
-        ListKamar = new DaftarKamar().KAMAR;
-        adapter = new RecyclerViewAdapter(getActivity(),ListKamar);
-        binding.setMyAdapter(adapter);
-    }
+//    public void bambang(){
+//        ListKamar = new DaftarKamar().KAMAR;
+//        adapter = new RecyclerViewAdapter(getActivity(),ListKamar);
+//    }
 }
