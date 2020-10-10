@@ -65,15 +65,10 @@ public class DashboardFragment extends Fragment {
         cardHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fragment fragment= new BookFragment();
+                Fragment fragment = new BookFragment();
+                androidx.fragment.app.FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.dashboard,fragment).commit();
 
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.dashboard, fragment)
-                        .commit();
-            }
-
-            private androidx.fragment.app.FragmentManager getSupportFragmentManager() {
-                return null;
             }
         });
         return view;
