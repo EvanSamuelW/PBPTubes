@@ -14,7 +14,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.evansamuel.pbptubes.R;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment  {
 
     public HomeFragment(){
 

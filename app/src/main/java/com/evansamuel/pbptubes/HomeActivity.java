@@ -38,6 +38,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.evansamuel.pbptubes.ui.dashboard.DashboardFragment;
 import com.evansamuel.pbptubes.ui.home.HomeFragment;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -70,6 +71,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         setSupportActionBar(toolbar);
         firebaseAuth = firebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
+        Fragment fragment = new DashboardFragment();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_layout, fragment)
+                .commit();
         final DrawerLayout drawer = findViewById(R.id.drawer_layout);
         final ImageButton dark = findViewById(R.id.dark);
         // Passing each menu ID as a set of Ids because each

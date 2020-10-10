@@ -6,6 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".ui.dashboard.DashboardFragment">
 
+
+
     <!-- TODO: Update blank fragment layout -->
     <GridLayout
         android:layout_width="match_parent"
@@ -151,5 +153,6 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
     </GridLayout>
+
 
 </RelativeLayout>
