@@ -44,7 +44,7 @@ public class ProfileActivity extends AppCompatActivity {
     TextView fullName,username,alamat,email,phone;
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
-    String userId;
+    String userID;
     FirebaseUser user;
     ImageView profileImage;
     StorageReference storageReference;
@@ -68,23 +68,15 @@ public class ProfileActivity extends AppCompatActivity {
         fStore = FirebaseFirestore.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
 
-        StorageReference profileRef = storageReference.child("users/"+fAuth.getCurrentUser().getUid()+"/profile.jpg");
-        profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                Picasso.get().load(uri).into(profileImage);
-            }
-        });
 
-        userId = fAuth.getCurrentUser().getUid();
+        userID = fAuth.getCurrentUser().getUid();
         user = fAuth.getCurrentUser();
 
-        final DocumentReference documentReference = fStore.collection("users").document(userId);
+        DocumentReference documentReference = fStore.collection("users").document(userID);
         documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                 if(documentSnapshot.exists()){
-                    username.setText(documentSnapshot.getString("username"));
                     fullName.setText(documentSnapshot.getString("fName"));
                     phone.setText(documentSnapshot.getString("telp"));
                     alamat.setText(documentSnapshot.getString("alamat"));

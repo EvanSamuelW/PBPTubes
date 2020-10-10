@@ -24,7 +24,6 @@
         android:layout_height="22dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="40dp"
-        android:text="Username"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -38,7 +37,6 @@
         android:layout_height="20dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="20dp"
-        android:text="Your Name"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -52,7 +50,6 @@
         android:layout_height="21dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
-        android:text="Telepon"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -66,7 +63,6 @@
         android:layout_width="356dp"
         android:layout_height="21dp"
         android:layout_marginTop="20dp"
-        android:text="Alamat"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -80,25 +76,12 @@
         android:layout_width="356dp"
         android:layout_height="21dp"
         android:layout_marginTop="20dp"
-        android:text="Email"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.618"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/profileAddress" />
-
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:layout_marginEnd="5dp"
-        app:layout_constraintEnd_toStartOf="@+id/profileUsername"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profileImage"
-        app:srcCompat="@drawable/ic_baseline_username" />
 
     <Button
         android:id="@+id/changeProfile"
