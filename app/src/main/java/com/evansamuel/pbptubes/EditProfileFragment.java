@@ -1,13 +1,17 @@
 package com.evansamuel.pbptubes;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -37,7 +41,7 @@ import java.util.Map;
 
 import javax.annotation.Nullable;
 
-public class EditProfileFragment extends Fragment {
+public class EditProfile extends Fragment {
 
     public static final String TAG = "TAG";
     EditText profileName, profileAddress, profilePhone;
@@ -52,7 +56,7 @@ public class EditProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        View root = inflater.inflate(R.layout.fragment_edit_profile, container, false);
+        View root = inflater.inflate(R.layout.activity_edit_profile, container, false);
 
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
