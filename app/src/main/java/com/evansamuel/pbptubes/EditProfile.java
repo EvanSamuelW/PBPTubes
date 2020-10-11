@@ -102,7 +102,7 @@ public class EditProfile extends AppCompatActivity {
                         edited.put("alamat", profileAddress.getText().toString());
                         edited.put("email", email);
                         edited.put("telp", profilePhone.getText().toString());
-                        edited.put("Username", profileUsername.getText().toString());
+                        edited.put("username", profileUsername.getText().toString());
                         docRef.update(edited).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {

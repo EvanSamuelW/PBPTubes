@@ -87,6 +87,7 @@ public class ProfileActivity extends AppCompatActivity {
                     phone.setText(documentSnapshot.getString("telp"));
                     alamat.setText(documentSnapshot.getString("alamat"));
                     email.setText(documentSnapshot.getString("email"));
+                    username.setText(documentSnapshot.getString("username"));
 
                 }else {
                     Log.d("tag", "onEvent: Document do not exists");
