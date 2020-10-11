@@ -35,7 +35,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_gravity="center"
-                android:text="Hotel Peacoks"
+                android:text="Hotel Peacocks"
                 android:textColor="@color/PrimaryText"
                 android:textAlignment="center"
                 android:textSize="30sp" />
