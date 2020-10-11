@@ -58,7 +58,6 @@ public class ProfileActivity extends AppCompatActivity {
         fullName = findViewById(R.id.profileName);
         alamat = findViewById(R.id.profileAddress);
         phone = findViewById(R.id.profileTelp);
-        email    = findViewById(R.id.profileEmail);
 
         profileImage = findViewById(R.id.profileImage);
         changeProfileImage = findViewById(R.id.changeProfile);
