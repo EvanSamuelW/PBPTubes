@@ -3,6 +3,7 @@ package com.evansamuel.pbptubes;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -43,7 +44,7 @@ import javax.annotation.Nullable;
 public class EditProfile extends Fragment {
 
     public static final String TAG = "TAG";
-    EditText profileName,profileAddress,profilePhone;
+    EditText profileName, profileAddress, profilePhone;
     ImageView profileImageView;
     Button saveBtn;
     FirebaseAuth fAuth;
@@ -57,14 +58,8 @@ public class EditProfile extends Fragment {
         super.onCreate(savedInstanceState);
         View root = inflater.inflate(R.layout.activity_edit_profile, container, false);
 
-        Intent data = getActivity().getIntent();
-        String fullName = data.getStringExtra("fName");
-        String address = data.getStringExtra("alamat");
-        String phone = data.getStringExtra("telp");
-
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
-        user = fAuth.getCurrentUser();
         storageReference = FirebaseStorage.getInstance().getReference();
 
         profileName = root.findViewById(R.id.profileName);
@@ -74,7 +69,7 @@ public class EditProfile extends Fragment {
         saveBtn = root.findViewById(R.id.saveProfileInfo);
 
 
-        StorageReference profileRef = storageReference.child("users/"+fAuth.getCurrentUser().getUid()+"/profile.jpg");
+        StorageReference profileRef = storageReference.child("users/" + fAuth.getCurrentUser().getUid() + "/profile.jpg");
         profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
@@ -86,7 +81,7 @@ public class EditProfile extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent openGalleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(openGalleryIntent,1000);
+                startActivityForResult(openGalleryIntent, 1000);
             }
         });
 
@@ -97,20 +92,17 @@ public class EditProfile extends Fragment {
         documentReference.addSnapshotListener(getActivity(), new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                if(documentSnapshot.exists()){
+                if (documentSnapshot.exists()) {
                     profileName.setText(documentSnapshot.getString("email"));
                     profileName.setText(documentSnapshot.getString("fName"));
                     profilePhone.setText(documentSnapshot.getString("telp"));
                     profileAddress.setText(documentSnapshot.getString("alamat"));
-                }else {
+                } else {
                     Log.d("tag", "onEvent: Document do not exists");
                 }
             }
         });
 
-//        profileName.setText(fullname);
-//        profilePhone.setText(phone);
-//        profileAddress.setText(address);
 
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,54 +113,31 @@ public class EditProfile extends Fragment {
                 }
 
 
-//                user.updateEmail(email).addOnSuccessListener(new OnSuccessListener<Void>() {
-//                    @Override
-//                    public void onSuccess(Void aVoid) {
-                        DocumentReference docRef = fStore.collection("users").document(user.getUid());
-                        Map<String, Object> edited = new HashMap<>();
-                        edited.put("fName", profileName.getText().toString());
-                        edited.put("alamat", profileAddress.getText().toString());
-                        edited.put("telp", profilePhone.getText().toString());
-                        docRef.update(edited).addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                Toast.makeText(getActivity(), "Profile Updated", Toast.LENGTH_SHORT).show();
+                DocumentReference docRef = fStore.collection("users").document(user.getUid());
+                Map<String, Object> edited = new HashMap<>();
+                edited.put("fName", profileName.getText().toString());
+                edited.put("alamat", profileAddress.getText().toString());
+                edited.put("telp", profilePhone.getText().toString());
+                docRef.update(edited).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(getActivity(), "Profile Updated", Toast.LENGTH_SHORT).show();
 
-                            }
-                        });
-//                    }
-//                }).addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
-//                    }
-//                });
+                    }
+                });
             }
 
         });
-
-        profileName.setText(fullName);
-        profilePhone.setText(phone);
-        profileAddress.setText(address);
-
-
-        Log.d(TAG, "onCreate: " + fullName + " " + phone + " " + address);
-
         return root;
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @androidx.annotation.Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 1000){
-            if(resultCode == Activity.RESULT_OK){
+        if (requestCode == 1000) {
+            if (resultCode == Activity.RESULT_OK) {
                 Uri imageUri = data.getData();
-
-                //profileImage.setImageURI(imageUri);
-
                 uploadImageToFirebase(imageUri);
-
-
             }
         }
 
@@ -176,7 +145,7 @@ public class EditProfile extends Fragment {
 
     private void uploadImageToFirebase(Uri imageUri) {
         // uplaod image to firebase storage
-        final StorageReference fileRef = storageReference.child("users/"+fAuth.getCurrentUser().getUid()+"/profile.jpg");
+        final StorageReference fileRef = storageReference.child("users/" + fAuth.getCurrentUser().getUid() + "/profile.jpg");
         fileRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
