@@ -59,10 +59,6 @@ public class EditProfile extends Fragment {
         View root = inflater.inflate(R.layout.activity_edit_profile, container, false);
 
 
-//        Bundle data = new Bundle();
-//        String fullName = data.getString("fName");
-//        String address = data.getString("alamat");
-//        String phone = data.getString("telp");
 
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
