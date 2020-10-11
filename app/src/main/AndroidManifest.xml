@@ -14,9 +14,7 @@
         android:theme="@style/AppTheme">
         <activity android:name=".EditProfile"></activity>
         <activity android:name=".ProfileActivity" />
-        <activity
-            android:name=".Sidebar"
-            android:label="@string/title_activity_sidebar" />
+
         <activity
             android:name=".ActivityLogin"
             android:label="@string/title_activity_login" />

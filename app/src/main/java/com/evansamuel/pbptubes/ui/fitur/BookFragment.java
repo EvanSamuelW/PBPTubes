@@ -1,9 +1,12 @@
 package com.evansamuel.pbptubes.ui.fitur;
 
 import android.app.FragmentManager;
+import android.icu.text.Transliterator;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.databinding.BindingAdapter;
 import androidx.databinding.DataBindingUtil;
@@ -16,6 +19,8 @@ import android.renderscript.ScriptGroup;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.evansamuel.pbptubes.R;
 import com.evansamuel.pbptubes.databinding.FragmentBookBinding;
@@ -31,10 +36,11 @@ import java.util.List;
 public class BookFragment extends Fragment {
 
     private ArrayList<Kamar> ListKamar ;
-    private RecyclerView recyclerView;
+    private RecyclerView recyclerView,recyclerView2;
     private RecyclerViewAdapter adapter;
     private RecyclerView.LayoutManager mLayoutManager;
     FragmentBookBinding binding;
+    Button order;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -64,6 +70,7 @@ public class BookFragment extends Fragment {
 
 
 
+
     }
 
     @Override
@@ -77,27 +84,32 @@ public class BookFragment extends Fragment {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setHasFixedSize(true);
+        recyclerView2 = (RecyclerView) view.findViewById(R.id.recycler_view_kamar);
         ListKamar = new DaftarKamar().KAMAR;
         adapter = new RecyclerViewAdapter(getActivity(),ListKamar);
         recyclerView.setAdapter(adapter);
 
+        order.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Toast.makeText(getActivity(),"halo",Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+
         return view;
     }
 
-//    private void getKamar(){
-//        class GetKamar extends AsyncTask<Void, Void, List<Kamar>>{
-//
-//
-//            @Override
-//            protected List<Kamar> doInBackground(Void... voids) {
-//                recyclerView
-//                return null;
-//            }
-//        }
-//    }
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
-//    public void bambang(){
-//        ListKamar = new DaftarKamar().KAMAR;
-//        adapter = new RecyclerViewAdapter(getActivity(),ListKamar);
-//    }
+
+
+    }
+
+
+
 }

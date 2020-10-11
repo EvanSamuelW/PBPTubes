@@ -38,8 +38,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.evansamuel.pbptubes.ui.dashboard.DashboardFragment;
-import com.evansamuel.pbptubes.ui.home.HomeFragment;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -78,7 +76,7 @@ public class HomeActivity extends AppCompatActivity {
         // menu should be considered as top level destinations.
 
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_dashboard)
+                R.id.nav_dashboard,R.id.nav_profile)
                 .setDrawerLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
@@ -181,23 +179,10 @@ public class HomeActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         return NavigationUI.onNavDestinationSelected(item, navController) || super.onOptionsItemSelected(item);
-//        return super.onOptionsItemSelected(item);
 
     }
 
-//    @SuppressWarnings("StatementWithEmptyBody")
-//    @Override
-//    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-//
-////        switch (item.getItemId()){
-////            case R.id.nav_profile:{
-////                Intent intent = new Intent(HomeActivity.this, ProfileActivity.class);
-////                startActivity(intent);
-////            }
-////        }
-////        return true;
-//
-//    }
+
 
 
 }

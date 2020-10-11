@@ -10,33 +10,23 @@ import com.bumptech.glide.Glide;
 public class Kamar {
 
     public String nama;
-    public String ketersediaan;
+    public String fasilitas;
     public Integer harga;
-    public String deskripsi;
     public String imgURL;
 
-    public Kamar(String nama, String ketersediaan, Integer harga, String deskripsi, String imgURL) {
+    public Kamar(String nama, String fasilitas, Integer harga, String imgURL) {
         this.nama = nama;
-        this.ketersediaan = ketersediaan;
+        this.fasilitas = fasilitas;
         this.harga = harga;
-        this.deskripsi = deskripsi;
         this.imgURL = imgURL;
     }
 
-    public String getKetersediaan() {
-        return ketersediaan;
+    public String getFasilitas() {
+        return fasilitas;
     }
 
-    public void setKetersediaan(String ketersediaan) {
-        this.ketersediaan = ketersediaan;
-    }
-
-    public String getDeskripsi() {
-        return deskripsi;
-    }
-
-    public void setDeskripsi(String deskripsi) {
-        this.deskripsi = deskripsi;
+    public void setFasilitas(String fasilitas) {
+        this.fasilitas = fasilitas;
     }
 
     public String getNama() {

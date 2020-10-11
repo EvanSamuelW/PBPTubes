@@ -38,6 +38,7 @@ import com.squareup.picasso.Target;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Executor;
 
 import javax.annotation.Nullable;
 
@@ -65,11 +66,9 @@ public class EditProfile extends Fragment {
 
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
-        user = fAuth.getCurrentUser();
         storageReference = FirebaseStorage.getInstance().getReference();
 
         String userId = fAuth.getCurrentUser().getUid();
-        user = fAuth.getCurrentUser();
 
         profileName = root.findViewById(R.id.profileName);
         profileAddress = root.findViewById(R.id.profileAddress);

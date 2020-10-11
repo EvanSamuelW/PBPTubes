@@ -14,18 +14,17 @@ public class DaftarKamar {
         KAMAR.add(SUITE);
     }
 
-    public static final Kamar STANDARD = new Kamar("Standard Room","Available",400000,"Jenis kamar yang menawarkan fasilitas kasur king size atau dua queen size namun dengan harga yang miring",
+    public static final Kamar STANDARD = new Kamar("Standard Room","1 kasur king size",400000,
             "https://ecs7.tokopedia.net/blog-tokopedia-com/uploads/2020/02/1.-standard-room-sumber-gambar-Pixabay.jpg");
 
-    public static final Kamar SUPERIOR = new Kamar("Superior Room","Available",700000,"Jenis kamar yang menawarkan fasilitas kasur king size atau dua queen size namun dengan harga yang miring",
+    public static final Kamar SUPERIOR = new Kamar("Superior Room","1 kasur king size",700000,
             "https://ecs7.tokopedia.net/blog-tokopedia-com/uploads/2020/02/2.-Superior-Room-sumber-gambar-Pixabay.jpg");
 
-    public static final Kamar DELUXE = new Kamar("Deluxe Room","Available",900000,"Jenis kamar yang menawarkan fasilitas kasur king size atau dua queen size namun dengan harga yang miring",
+    public static final Kamar DELUXE = new Kamar("Deluxe Room","Kasur double bed",900000,
             "https://ecs7.tokopedia.net/blog-tokopedia-com/uploads/2020/02/3.-Deluxe-Room-sumber-gambar-Pixabay.jpg");
-    public static final Kamar JUNIOR = new Kamar("Junior Suite","Available",1500000,"Jenis kamar yang menawarkan fasilitas kasur king size atau dua queen size namun dengan harga yang miring",
-            "https://ecs7.tokopedia.net/blog-tokopedia-com/uploads/2020/02/4.-Junior-Suite-Room-sumber-gambar-Pixabay.jpg");
+    public static final Kamar JUNIOR = new Kamar("Junior Suite","1 kasur king size, ruang tamu",1500000, "https://ecs7.tokopedia.net/blog-tokopedia-com/uploads/2020/02/4.-Junior-Suite-Room-sumber-gambar-Pixabay.jpg");
 
-    public static final Kamar SUITE = new Kamar("Suite Room","Available",2000000,"Jenis kamar yang menawarkan fasilitas kasur king size atau dua queen size namun dengan harga yang miring",
+    public static final Kamar SUITE = new Kamar("Suite Room","1 kasur king size, ruang tamu, dapur",2000000,
             "https://ecs7.tokopedia.net/blog-tokopedia-com/uploads/2020/02/5.-Suite-Room-sumber-gambar-Pixabay.jpg");
 
 
