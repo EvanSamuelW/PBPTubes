@@ -34,21 +34,20 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.Executor;
 
 import javax.annotation.Nullable;
 
 public class EditProfile extends Fragment {
 
     public static final String TAG = "TAG";
-    EditText profileUsername,profileName,profileAddress,profileEmail,profilePhone;
+    EditText profileName,profileAddress,profilePhone;
     ImageView profileImageView;
     Button saveBtn;
     FirebaseAuth fAuth;
+    String userId;
     FirebaseFirestore fStore;
     FirebaseUser user;
     StorageReference storageReference;
@@ -58,33 +57,28 @@ public class EditProfile extends Fragment {
         super.onCreate(savedInstanceState);
         View root = inflater.inflate(R.layout.activity_edit_profile, container, false);
 
-
-//        Bundle data = new Bundle();
-//        String fullName = data.getString("fName");
-//        String address = data.getString("alamat");
-//        String phone = data.getString("telp");
+        Intent data = getActivity().getIntent();
+        String fullName = data.getStringExtra("fName");
+        String address = data.getStringExtra("alamat");
+        String phone = data.getStringExtra("telp");
 
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
+        user = fAuth.getCurrentUser();
         storageReference = FirebaseStorage.getInstance().getReference();
-
-        String userId = fAuth.getCurrentUser().getUid();
 
         profileName = root.findViewById(R.id.profileName);
         profileAddress = root.findViewById(R.id.profileAddress);
         profilePhone = root.findViewById(R.id.profileTelp);
         profileImageView = root.findViewById(R.id.profileImageView);
-        Button saveBtn = root.findViewById(R.id.saveProfileInfo);
+        saveBtn = root.findViewById(R.id.saveProfileInfo);
 
-//        profileName.setText(userId);
-//        profilePhone.setText(phone);
-//        profileAddress.setText(address);
 
         StorageReference profileRef = storageReference.child("users/"+fAuth.getCurrentUser().getUid()+"/profile.jpg");
         profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
-                Picasso.get().load(uri).into((Target) profileImageView);
+                Picasso.get().load(uri).into(profileImageView);
             }
         });
 
@@ -96,11 +90,15 @@ public class EditProfile extends Fragment {
             }
         });
 
+        userId = fAuth.getCurrentUser().getUid();
+        user = fAuth.getCurrentUser();
+
         final DocumentReference documentReference = fStore.collection("users").document(userId);
         documentReference.addSnapshotListener(getActivity(), new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                 if(documentSnapshot.exists()){
+                    profileName.setText(documentSnapshot.getString("email"));
                     profileName.setText(documentSnapshot.getString("fName"));
                     profilePhone.setText(documentSnapshot.getString("telp"));
                     profileAddress.setText(documentSnapshot.getString("alamat"));
@@ -117,15 +115,15 @@ public class EditProfile extends Fragment {
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (profileUsername.getText().toString().isEmpty() || profileName.getText().toString().isEmpty() || profileAddress.getText().toString().isEmpty() || profileEmail.getText().toString().isEmpty() || profilePhone.getText().toString().isEmpty()) {
+                if (profileName.getText().toString().isEmpty() || profileAddress.getText().toString().isEmpty() || profilePhone.getText().toString().isEmpty()) {
                     Toast.makeText(getActivity(), "One or Many fields are empty.", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                final String email = profileEmail.getText().toString();
-                user.updateEmail(email).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
+
+//                user.updateEmail(email).addOnSuccessListener(new OnSuccessListener<Void>() {
+//                    @Override
+//                    public void onSuccess(Void aVoid) {
                         DocumentReference docRef = fStore.collection("users").document(user.getUid());
                         Map<String, Object> edited = new HashMap<>();
                         edited.put("fName", profileName.getText().toString());
@@ -135,26 +133,28 @@ public class EditProfile extends Fragment {
                             @Override
                             public void onSuccess(Void aVoid) {
                                 Toast.makeText(getActivity(), "Profile Updated", Toast.LENGTH_SHORT).show();
+                                startActivity(new Intent(getActivity(), MainActivity.class));
+                                getActivity().finish();
                             }
                         });
                         Toast.makeText(getActivity(), "Profile is changed.", Toast.LENGTH_SHORT).show();
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
+//                    }
+//                }).addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+//                    }
+//                });
             }
 
         });
 
-//        profileName.setText(fullName);
-//        profilePhone.setText(phone);
-//        profileAddress.setText(address);
+        profileName.setText(fullName);
+        profilePhone.setText(phone);
+        profileAddress.setText(address);
 
 
-        //Log.d(TAG, "onCreate: " + fullName + " " + phone + " " + address);
+        Log.d(TAG, "onCreate: " + fullName + " " + phone + " " + address);
 
         return root;
     }
