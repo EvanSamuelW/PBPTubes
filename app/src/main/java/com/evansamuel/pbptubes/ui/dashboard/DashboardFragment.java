@@ -19,7 +19,7 @@ import com.evansamuel.pbptubes.ui.fitur.BookFragment;
 
 public class DashboardFragment extends Fragment {
 
-    private CardView cardHome,cardFood;
+    private CardView cardHome,cardFood,cardLocation;
     private final static String TAG_FRAGMENT = "TAG_FRAGMENT";
 
 
@@ -65,7 +65,7 @@ public class DashboardFragment extends Fragment {
 
         cardHome = view.findViewById(R.id.book);
         cardFood = view.findViewById(R.id.food);
-
+        cardLocation = view.findViewById(R.id.cardLocation);
         cardHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -79,6 +79,14 @@ public class DashboardFragment extends Fragment {
             public void onClick(View view) {
 
                 Navigation.findNavController(view).navigate(R.id.action_nav_dashboard_to_nav_food);
+
+            }
+        });
+
+        cardLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Navigation.findNavController(view).navigate(R.id.action_nav_dashboard_to_nav_location);
 
             }
         });

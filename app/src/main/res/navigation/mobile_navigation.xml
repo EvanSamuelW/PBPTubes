@@ -26,6 +26,9 @@
         <action
             android:id="@+id/action_nav_dashboard_to_nav_book"
             app:destination="@id/nav_book" />
+        <action
+            android:id="@+id/action_nav_dashboard_to_nav_location"
+            app:destination="@id/nav_location" />
 
     </fragment>
 
@@ -42,6 +45,12 @@
         android:name="com.evansamuel.pbptubes.ui.fitur.FoodFragment"
         android:label="Food"
         tools:layout="@layout/fragment_food"/>
+
+    <fragment
+        android:id="@+id/nav_location"
+        android:name="com.evansamuel.pbptubes.ui.fitur.LocationFragment"
+        android:label="Location"
+        tools:layout="@layout/fragment_location"/>
 
 
 </navigation>

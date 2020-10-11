@@ -1,7 +1,10 @@
 package com.evansamuel.pbptubes.ui.fitur;
 
+import android.annotation.SuppressLint;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -9,13 +12,48 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.evansamuel.pbptubes.R;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.mapbox.android.core.permissions.PermissionsListener;
+import com.mapbox.android.core.permissions.PermissionsManager;
+import com.mapbox.geojson.Feature;
+import com.mapbox.geojson.FeatureCollection;
+import com.mapbox.geojson.Point;
+import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.mapboxsdk.location.LocationComponent;
+import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions;
+import com.mapbox.mapboxsdk.location.modes.CameraMode;
+import com.mapbox.mapboxsdk.location.modes.RenderMode;
+import com.mapbox.mapboxsdk.maps.MapView;
+import com.mapbox.mapboxsdk.maps.MapboxMap;
+import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
+import com.mapbox.mapboxsdk.maps.Style;
+import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
+import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAllowOverlap;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconIgnorePlacement;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconImage;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link LocationFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class LocationFragment extends Fragment {
+public class LocationFragment extends Fragment implements OnMapReadyCallback{
+
+    private static final String DESTINATION_SYMBOL_LAYER_ID = "destination-symbol-layer-id";
+    private static final String DESTINATION_ICON_ID = "destination-icon-id";
+    private static final String DESTINATION_SOURCE_ID = "destination-source-id";
+    private static final int REQUEST_CODE_AUTOCOMPLETE =1;
+    private FloatingActionButton searchfab;
+    private PermissionsManager permissionsManager;
+    private MapboxMap mapboxMap;
+    private MapView mapView;
+    private Point origin;
+    private Point destination;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -61,6 +99,84 @@ public class LocationFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_location, container, false);
+        View root = inflater.inflate(R.layout.fragment_location, container, false);
+
+        mapView = root.findViewById(R.id.map_view);
+        mapView.onCreate(savedInstanceState);
+        mapView.getMapAsync(this);
+
+        return root;
     }
+
+    @Override
+    public void onMapReady(@NonNull MapboxMap mapboxMap) {
+        this.mapboxMap = mapboxMap;
+
+        mapboxMap.setStyle(new Style.Builder().fromUri(Style.MAPBOX_STREETS),
+                new Style.OnStyleLoaded() {
+                    @Override
+                    public void onStyleLoaded(@NonNull Style style) {
+                        List<Feature> symbolLayerIconFeatureList = new ArrayList<>();
+                        enableLocationComponent(style);
+
+                        initLayers(style);
+
+                        mapboxMap.addOnMapClickListener(new MapboxMap.OnMapClickListener() {
+                            @Override
+                            public boolean onMapClick(@NonNull LatLng point) {
+
+                                Point destination = Point.fromLngLat(point.getLongitude(), point.getLatitude());
+
+                                GeoJsonSource source = mapboxMap.getStyle().getSourceAs(DESTINATION_SOURCE_ID);
+                                source.setGeoJson(FeatureCollection.fromFeatures(symbolLayerIconFeatureList));
+
+                                if(source != null)
+                                {
+                                    source.setGeoJson(Feature.fromGeometry(destination));
+                                }
+                                return true;
+                            }
+                        });
+                    }
+                });
+
+    }
+
+
+    private void initLayers(@NonNull Style loadedMapStyle) {
+        loadedMapStyle.addImage(DESTINATION_ICON_ID,
+                BitmapFactory.decodeResource(this.getResources(), R.drawable.mapbox_marker_icon_default));
+        GeoJsonSource geoJsonSource = new GeoJsonSource(DESTINATION_SOURCE_ID);
+        loadedMapStyle.addSource(geoJsonSource);
+        SymbolLayer destinationSymbolLayer = new SymbolLayer(DESTINATION_SYMBOL_LAYER_ID, DESTINATION_SOURCE_ID);
+        destinationSymbolLayer.withProperties(
+                iconImage(DESTINATION_ICON_ID),
+                iconAllowOverlap(true),
+                iconIgnorePlacement(true)
+        );
+        loadedMapStyle.addLayer(destinationSymbolLayer);
+    }
+
+    @SuppressLint("MissingPermission")
+    private void enableLocationComponent(@NonNull Style loadedMapStyle) {
+
+            LocationComponent locationComponent = mapboxMap.getLocationComponent();
+
+            locationComponent.activateLocationComponent(
+                    LocationComponentActivationOptions.builder(getActivity(), loadedMapStyle).build()
+            );
+
+            locationComponent.setLocationComponentEnabled(true);
+
+            locationComponent.setCameraMode(CameraMode.TRACKING);
+            locationComponent.setRenderMode(RenderMode.COMPASS);
+            this.origin = Point.fromLngLat( 110.414210,-7.780438);
+    }
+
+
+
+
+
+
+
 }
