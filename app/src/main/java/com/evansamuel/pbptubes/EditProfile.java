@@ -133,11 +133,9 @@ public class EditProfile extends Fragment {
                             @Override
                             public void onSuccess(Void aVoid) {
                                 Toast.makeText(getActivity(), "Profile Updated", Toast.LENGTH_SHORT).show();
-                                startActivity(new Intent(getActivity(), MainActivity.class));
-                                getActivity().finish();
+
                             }
                         });
-                        Toast.makeText(getActivity(), "Profile is changed.", Toast.LENGTH_SHORT).show();
 //                    }
 //                }).addOnFailureListener(new OnFailureListener() {
 //                    @Override
