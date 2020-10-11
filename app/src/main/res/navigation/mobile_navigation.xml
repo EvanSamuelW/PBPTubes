@@ -7,9 +7,9 @@
 
     <fragment
         android:id="@+id/nav_profile"
-        android:name="com.evansamuel.pbptubes.EditProfile"
+        android:name="com.evansamuel.pbptubes.EditProfileFragment"
         android:label="Profile"
-        tools:layout="@layout/activity_edit_profile" />
+        tools:layout="@layout/fragment_edit_profile" />
 
     <fragment
         android:id="@+id/nav_logout"
