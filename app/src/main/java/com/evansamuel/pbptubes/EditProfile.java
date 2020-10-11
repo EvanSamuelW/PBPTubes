@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -12,7 +13,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -23,16 +26,22 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class EditProfile extends AppCompatActivity {
+import javax.annotation.Nullable;
+
+public class EditProfile extends Fragment {
 
     public static final String TAG = "TAG";
     EditText profileUsername,profileName,profileAddress,profileEmail,profilePhone;
@@ -44,35 +53,39 @@ public class EditProfile extends AppCompatActivity {
     StorageReference storageReference;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_profile);
+        View root = inflater.inflate(R.layout.activity_edit_profile, container, false);
 
-        Intent data = getIntent();
-        String fullName = data.getStringExtra("fName");
-        String address = data.getStringExtra("alamat");
-        String email = data.getStringExtra("email");
-        String phone = data.getStringExtra("telp");
-        String username = data.getStringExtra("username");
+
+//        Bundle data = new Bundle();
+//        String fullName = data.getString("fName");
+//        String address = data.getString("alamat");
+//        String phone = data.getString("telp");
 
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
         user = fAuth.getCurrentUser();
         storageReference = FirebaseStorage.getInstance().getReference();
 
+        String userId = fAuth.getCurrentUser().getUid();
+        user = fAuth.getCurrentUser();
 
-        profileName = findViewById(R.id.profileName);
-        profileAddress = findViewById(R.id.profileAddress);
-        profileEmail = findViewById(R.id.profileEmail);
-        profilePhone = findViewById(R.id.profileTelp);
-        profileImageView = findViewById(R.id.profileImageView);
-        saveBtn = findViewById(R.id.saveProfileInfo);
+        profileName = root.findViewById(R.id.profileName);
+        profileAddress = root.findViewById(R.id.profileAddress);
+        profilePhone = root.findViewById(R.id.profileTelp);
+        profileImageView = root.findViewById(R.id.profileImageView);
+        Button saveBtn = root.findViewById(R.id.saveProfileInfo);
+
+//        profileName.setText(userId);
+//        profilePhone.setText(phone);
+//        profileAddress.setText(address);
 
         StorageReference profileRef = storageReference.child("users/"+fAuth.getCurrentUser().getUid()+"/profile.jpg");
         profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
-                Picasso.get().load(uri).into(profileImageView);
+                Picasso.get().load(uri).into((Target) profileImageView);
             }
         });
 
@@ -84,11 +97,29 @@ public class EditProfile extends AppCompatActivity {
             }
         });
 
+        final DocumentReference documentReference = fStore.collection("users").document(userId);
+        documentReference.addSnapshotListener(getActivity(), new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                if(documentSnapshot.exists()){
+                    profileName.setText(documentSnapshot.getString("fName"));
+                    profilePhone.setText(documentSnapshot.getString("telp"));
+                    profileAddress.setText(documentSnapshot.getString("alamat"));
+                }else {
+                    Log.d("tag", "onEvent: Document do not exists");
+                }
+            }
+        });
+
+//        profileName.setText(fullname);
+//        profilePhone.setText(phone);
+//        profileAddress.setText(address);
+
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (profileUsername.getText().toString().isEmpty() || profileName.getText().toString().isEmpty() || profileAddress.getText().toString().isEmpty() || profileEmail.getText().toString().isEmpty() || profilePhone.getText().toString().isEmpty()) {
-                    Toast.makeText(EditProfile.this, "One or Many fields are empty.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "One or Many fields are empty.", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -100,40 +131,37 @@ public class EditProfile extends AppCompatActivity {
                         Map<String, Object> edited = new HashMap<>();
                         edited.put("fName", profileName.getText().toString());
                         edited.put("alamat", profileAddress.getText().toString());
-                        edited.put("email", email);
                         edited.put("telp", profilePhone.getText().toString());
-                        edited.put("Username", profileUsername.getText().toString());
                         docRef.update(edited).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                Toast.makeText(EditProfile.this, "Profile Updated", Toast.LENGTH_SHORT).show();
-                                startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                                finish();
+                                Toast.makeText(getActivity(), "Profile Updated", Toast.LENGTH_SHORT).show();
                             }
                         });
-                        Toast.makeText(EditProfile.this, "Email is changed.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Profile is changed.", Toast.LENGTH_SHORT).show();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(EditProfile.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
             }
 
         });
 
-        profileEmail.setText(email);
-        profileUsername.setText(username);
-        profileName.setText(fullName);
-        profilePhone.setText(phone);
-        profileAddress.setText(address);
+//        profileName.setText(fullName);
+//        profilePhone.setText(phone);
+//        profileAddress.setText(address);
 
-        Log.d(TAG, "onCreate: " + username + " " + fullName + " " + phone + " " + address + " " + email);
+
+        //Log.d(TAG, "onCreate: " + fullName + " " + phone + " " + address);
+
+        return root;
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @androidx.annotation.Nullable Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, @androidx.annotation.Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == 1000){
             if(resultCode == Activity.RESULT_OK){
@@ -165,7 +193,7 @@ public class EditProfile extends AppCompatActivity {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getApplicationContext(), "Failed.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Failed.", Toast.LENGTH_SHORT).show();
             }
         });
 

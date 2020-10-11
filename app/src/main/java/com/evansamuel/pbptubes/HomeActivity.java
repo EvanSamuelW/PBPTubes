@@ -86,14 +86,6 @@ public class HomeActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navigationView, navController);
 
 
-//        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-//                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-//        drawer.setDrawerListener(toggle);
-//        toggle.syncState();
-
-//        navigationView.setNavigationItemSelectedListener(this);
-
-
 
 
         dark.setOnClickListener(new View.OnClickListener() {

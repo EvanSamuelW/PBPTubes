@@ -58,7 +58,6 @@ public class ProfileActivity extends AppCompatActivity {
         fullName = findViewById(R.id.profileName);
         alamat = findViewById(R.id.profileAddress);
         phone = findViewById(R.id.profileTelp);
-        email    = findViewById(R.id.profileEmail);
 
         profileImage = findViewById(R.id.profileImage);
         changeProfileImage = findViewById(R.id.changeProfile);
@@ -87,6 +86,7 @@ public class ProfileActivity extends AppCompatActivity {
                     phone.setText(documentSnapshot.getString("telp"));
                     alamat.setText(documentSnapshot.getString("alamat"));
                     email.setText(documentSnapshot.getString("email"));
+                    username.setText(documentSnapshot.getString("username"));
 
                 }else {
                     Log.d("tag", "onEvent: Document do not exists");
