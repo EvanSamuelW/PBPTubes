@@ -1,12 +1,16 @@
 package com.evansamuel.pbptubes.ui.fitur;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -18,14 +22,15 @@ import com.evansamuel.pbptubes.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mapbox.android.core.permissions.PermissionsListener;
 import com.mapbox.android.core.permissions.PermissionsManager;
-import com.mapbox.api.geocoding.v5.models.CarmenFeature;
+import com.mapbox.api.directions.v5.DirectionsCriteria;
+import com.mapbox.api.directions.v5.MapboxDirections;
+import com.mapbox.api.directions.v5.models.DirectionsResponse;
+import com.mapbox.api.directions.v5.models.DirectionsRoute;
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
+import com.mapbox.geojson.LineString;
 import com.mapbox.geojson.Point;
 import com.mapbox.mapboxsdk.Mapbox;
-import com.mapbox.mapboxsdk.camera.CameraPosition;
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
-import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.location.LocationComponent;
 import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions;
 import com.mapbox.mapboxsdk.location.modes.CameraMode;
@@ -34,32 +39,49 @@ import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
-import com.mapbox.mapboxsdk.plugins.places.autocomplete.PlaceAutocomplete;
+import com.mapbox.mapboxsdk.style.layers.LineLayer;
+import com.mapbox.mapboxsdk.style.layers.Property;
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
+import com.mapbox.mapboxsdk.utils.BitmapUtils;
 
-import java.util.ArrayList;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import timber.log.Timber;
+
+import static com.mapbox.core.constants.Constants.PRECISION_6;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAllowOverlap;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconIgnorePlacement;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconImage;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconOffset;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineCap;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineColor;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineJoin;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineWidth;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link LocationFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class LocationFragment extends Fragment  implements OnMapReadyCallback, PermissionsListener {
+public class LocationFragment extends Fragment implements OnMapReadyCallback, PermissionsListener {
 
-    private static final String DESTINATION_SYMBOL_LAYER_ID = "destination-symbol-layer-id";
-    private static final String DESTINATION_ICON_ID = "destination-icon-id";
-    private static final String DESTINATION_SOURCE_ID = "destination-source-id";
-    private PermissionsManager permissionsManager;
-    private MapboxMap mapboxMap;
+    private static final String ROUTE_LAYER_ID = "route-layer-id";
+    private static final String ROUTE_SOURCE_ID = "route-source-id";
+    private static final String ICON_LAYER_ID = "icon-layer-id";
+    private static final String ICON_SOURCE_ID = "icon-source-id";
+    private static final String RED_PIN_ICON_ID = "red-pin-icon-id";
     private MapView mapView;
+    private DirectionsRoute currentRoute;
+    private MapboxDirections client;
     private Point origin;
-
+    private Point destination;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -108,103 +130,147 @@ public class LocationFragment extends Fragment  implements OnMapReadyCallback, P
 
         mapView = layout.findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
-        mapView.getMapAsync(this);
+        mapView.getMapAsync(new OnMapReadyCallback() {
+
+            @Override
+            public void onMapReady(@NonNull MapboxMap mapboxMap) {
+                mapboxMap.setStyle(Style.MAPBOX_STREETS, new Style.OnStyleLoaded() {
+                    @Override
+                    public void onStyleLoaded(@NonNull Style style) {
+                        if (PermissionsManager.areLocationPermissionsGranted(getContext())) {
+                            LocationComponent locationComponent = mapboxMap.getLocationComponent();
+
+                            locationComponent.activateLocationComponent(
+                                    LocationComponentActivationOptions.builder(getContext(), style).build()
+                            );
+
+                            if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                                // TODO: Consider calling
+                                //    ActivityCompat#requestPermissions
+                                // here to request the missing permissions, and then overriding
+                                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                //                                          int[] grantResults)
+                                // to handle the case where the user grants the permission. See the documentation
+                                // for ActivityCompat#requestPermissions for more details.
+                                return;
+                            }
+                            locationComponent.setLocationComponentEnabled(true);
+
+                            locationComponent.setCameraMode(CameraMode.TRACKING);
+
+                            locationComponent.setRenderMode(RenderMode.COMPASS);
+                            origin = Point.fromLngLat(locationComponent.getLastKnownLocation().getLongitude(),
+                                    locationComponent.getLastKnownLocation().getLatitude());
+//                                Point.fromLngLat(110.414614,-10.780661);
+// Set the destination location to the Plaza del Triunfo in Granada, Spain.
+                            destination = Point.fromLngLat(110.414614,-7.780661);
+                            initSource(style);
+
+                            initLayers(style);
+
+// Get the directions route from the Mapbox Directions API
+                            getRoute(mapboxMap, origin, destination);
+                        }
+
+// Set the origin location to the Alhambra landmark in Granada, Spain.
+
+
+
+                    }
+                });
+            }
+        });
 
 
         return layout;
     }
 
 
+    private void initSource(@NonNull Style loadedMapStyle) {
+        loadedMapStyle.addSource(new GeoJsonSource(ROUTE_SOURCE_ID));
 
-    private void initLayer(@NonNull Style loadedMapStyle){
-        loadedMapStyle.addImage(DESTINATION_ICON_ID,
-                BitmapFactory.decodeResource(this.getResources(),R.drawable.mapbox_marker_icon_default));
-        GeoJsonSource geoJsonSource = new GeoJsonSource(DESTINATION_SOURCE_ID);
-        loadedMapStyle.addSource(geoJsonSource);
-        SymbolLayer destinationSymbolLayer = new SymbolLayer(DESTINATION_SYMBOL_LAYER_ID,DESTINATION_SOURCE_ID);
-        destinationSymbolLayer.withProperties(
-                iconImage(DESTINATION_ICON_ID),
-                iconAllowOverlap(true),
-                iconIgnorePlacement(true)
+        GeoJsonSource iconGeoJsonSource = new GeoJsonSource(ICON_SOURCE_ID, FeatureCollection.fromFeatures(new Feature[] {
+                Feature.fromGeometry(Point.fromLngLat(origin.longitude(), origin.latitude())),
+                Feature.fromGeometry(Point.fromLngLat(destination.longitude(), destination.latitude()))}));
+        loadedMapStyle.addSource(iconGeoJsonSource);
+    }
 
+    private void initLayers(@NonNull Style loadedMapStyle) {
+        LineLayer routeLayer = new LineLayer(ROUTE_LAYER_ID, ROUTE_SOURCE_ID);
+
+// Add the LineLayer to the map. This layer will display the directions route.
+        routeLayer.setProperties(
+                lineCap(Property.LINE_CAP_ROUND),
+                lineJoin(Property.LINE_JOIN_ROUND),
+                lineWidth(5f),
+                lineColor(Color.parseColor("#009688"))
         );
-        loadedMapStyle.addLayer(destinationSymbolLayer);
+        loadedMapStyle.addLayer(routeLayer);
+
+// Add the red marker icon image to the map
+        loadedMapStyle.addImage(RED_PIN_ICON_ID, BitmapUtils.getBitmapFromDrawable(
+                getResources().getDrawable(R.drawable.mapbox_marker_icon_default)));
+
+// Add the red marker icon SymbolLayer to the map
+        loadedMapStyle.addLayer(new SymbolLayer(ICON_LAYER_ID, ICON_SOURCE_ID).withProperties(
+                iconImage(RED_PIN_ICON_ID),
+                iconIgnorePlacement(true),
+                iconAllowOverlap(true),
+                iconOffset(new Float[] {0f, -9f})));
     }
 
-    @SuppressLint("MissingPermission")
-    private void enableLocationComponent(@NonNull Style loadedMapStyle){
-        if(PermissionsManager.areLocationPermissionsGranted(getActivity())){
-            LocationComponent locationComponent = mapboxMap.getLocationComponent();
+    private void getRoute(MapboxMap mapboxMap, Point origin, Point destination) {
+        client = MapboxDirections.builder()
+                .origin(origin)
+                .destination(destination)
+                .overview(DirectionsCriteria.OVERVIEW_FULL)
+                .profile(DirectionsCriteria.PROFILE_DRIVING)
+                .accessToken(getString(R.string.mapbox_access_token))
+                .build();
 
-            locationComponent.activateLocationComponent(
-                    LocationComponentActivationOptions.builder(getActivity(),loadedMapStyle).build()
-            );
+        client.enqueueCall(new Callback<DirectionsResponse>() {
+            @Override
+            public void onResponse(Call<DirectionsResponse> call, Response<DirectionsResponse> response) {
 
-            locationComponent.setLocationComponentEnabled(true);
-
-            locationComponent.setCameraMode(CameraMode.TRACKING);
-
-            locationComponent.setRenderMode(RenderMode.COMPASS);
-            this.origin = Point.fromLngLat(locationComponent.getLastKnownLocation().getLongitude(),
-                    locationComponent.getLastKnownLocation().getLatitude());
-
-        }
-        else{
-            permissionsManager = new PermissionsManager(this);
-            permissionsManager.requestLocationPermissions(getActivity());
-        }
-    }
-
-    @Override
-    public void onMapReady(@NonNull MapboxMap mapboxMap) {
-        this.mapboxMap = mapboxMap;
-        mapboxMap.setStyle(new Style.Builder().fromUri(Style.MAPBOX_STREETS),
-                new Style.OnStyleLoaded() {
-                    @Override
-                    public void onStyleLoaded(@NonNull Style style) {
-                        List<Feature> symbolLayerIconFeatureList = new ArrayList<>();
-                        enableLocationComponent(style);
-
-                        initLayer(style);
-
-                        mapboxMap.addOnMapClickListener(new MapboxMap.OnMapClickListener() {
-                            @Override
-                            public boolean onMapClick(@NonNull LatLng point) {
-                                symbolLayerIconFeatureList.add(Feature.fromGeometry(
-                                        Point.fromLngLat(point.getLongitude(),point.getLatitude())));
-
-                                GeoJsonSource source = mapboxMap.getStyle().getSourceAs(DESTINATION_SOURCE_ID);
-                                source.setGeoJson(FeatureCollection.fromFeatures(symbolLayerIconFeatureList));
-                                return true;
-                            }
-                        });
-                    }
-                });
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        permissionsManager.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
-
-    @Override
-    public void onExplanationNeeded(List<String> permissionsToExplain) {
-        Toast.makeText(getActivity(),"Grant Location Permission",Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void onPermissionResult(boolean granted) {
-        if(granted) {
-            mapboxMap.getStyle(new Style.OnStyleLoaded() {
-                @Override
-                public void onStyleLoaded(@NonNull Style style) {
-                    enableLocationComponent(style);
+                Timber.d("Response code: " + response.code());
+                if (response.body() == null) {
+                    Timber.e("No routes found, make sure you set the right user and access token.");
+                    return;
+                } else if (response.body().routes().size() < 1) {
+                    Timber.e("No routes found");
+                    return;
                 }
-            });
-        }else{
-            Toast.makeText(getActivity(),"Permission not granted",Toast.LENGTH_LONG).show();
-        }
+
+                currentRoute = response.body().routes().get(0);
+
+
+
+                if (mapboxMap != null) {
+                    mapboxMap.getStyle(new Style.OnStyleLoaded() {
+                        @Override
+                        public void onStyleLoaded(@NonNull Style style) {
+
+                            GeoJsonSource source = style.getSourceAs(ROUTE_SOURCE_ID);
+
+                            if (source != null) {
+                                source.setGeoJson(LineString.fromPolyline(currentRoute.geometry(), PRECISION_6));
+                            }
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DirectionsResponse> call, Throwable throwable) {
+                Timber.e("Error: " + throwable.getMessage());
+                Toast.makeText(getActivity(), "Error: " + throwable.getMessage(),
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
     }
+
+
+
 
     @Override
     public void onStart() {
@@ -258,5 +324,21 @@ public class LocationFragment extends Fragment  implements OnMapReadyCallback, P
     public void onLowMemory() {
         super.onLowMemory();
         mapView.onLowMemory();
+    }
+
+
+    @Override
+    public void onExplanationNeeded(List<String> permissionsToExplain) {
+
+    }
+
+    @Override
+    public void onPermissionResult(boolean granted) {
+
+    }
+
+    @Override
+    public void onMapReady(@NonNull MapboxMap mapboxMap) {
+
     }
 }
