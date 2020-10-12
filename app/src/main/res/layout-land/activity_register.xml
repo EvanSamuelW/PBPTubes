@@ -34,7 +34,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginLeft="10dp"
-                android:textColor="@color/PrimaryText"
+                android:textColor="@color/colorPrimary"
+                android:textStyle="bold"
                 android:text="Registration Form"
                 android:textAlignment="center"
                 android:textSize="30sp" />

@@ -25,7 +25,8 @@
         android:layout_gravity="center"
         android:layout_height="wrap_content"
         android:text="@string/hotel_peacocks"
-        android:textColor="@color/PrimaryText"
+        android:textStyle="bold"
+        android:textColor="@color/colorPrimary"
         android:textSize="40sp"
         app:layout_constraintTop_toBottomOf="@+id/logo" />
 
