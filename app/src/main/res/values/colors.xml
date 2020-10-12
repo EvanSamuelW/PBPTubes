@@ -8,6 +8,7 @@
     <color name="PrimaryText">#000000</color>
     <color name="SecondaryText">#1a1a1a</color>
     <color name="bg_color">#FFFFFF</color>
+    <color name="icon_color">#3498DB</color>
 
 
     <color name="cardBackground">#FFFFFF</color>

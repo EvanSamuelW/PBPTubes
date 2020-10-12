@@ -7,6 +7,7 @@
     <color name="PrimaryText">#FFFFFF</color>
     <color name="SecondaryText">#CFCFCF</color>
     <color name="bg_color">#212121</color>
+    <color name="icon_color">#ffffff</color>
 
 
     <color name="cardBackground">#1a1a1a</color>

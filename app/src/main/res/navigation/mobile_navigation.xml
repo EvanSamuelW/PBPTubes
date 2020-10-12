@@ -29,7 +29,7 @@
         <action
             android:id="@+id/action_nav_dashboard_to_nav_location"
             app:destination="@id/nav_location" />
-s
+
     </fragment>
 
 
@@ -38,7 +38,11 @@ s
         android:id="@+id/nav_book"
         android:name="com.evansamuel.pbptubes.ui.fitur.BookFragment"
         android:label="Book"
-        tools:layout="@layout/fragment_book"/>
+        tools:layout="@layout/fragment_book">
+    <action
+        android:id="@+id/action_nav_book_to_nav_order"
+        app:destination="@id/nav_order" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_food"
@@ -47,10 +51,17 @@ s
         tools:layout="@layout/fragment_food"/>
 
     <fragment
-        android:id="@+id/nav_location"
-        android:name="com.evansamuel.pbptubes.ui.fitur.LocationFragment"
-        android:label="Location"
-        tools:layout="@layout/fragment_location"/>
+    android:id="@+id/nav_location"
+    android:name="com.evansamuel.pbptubes.ui.fitur.LocationFragment"
+    android:label="Location"
+    tools:layout="@layout/fragment_location"/>
+
+
+    <fragment
+        android:id="@+id/nav_order"
+        android:name="com.evansamuel.pbptubes.ui.fitur.transaksi.AddTransactionFragment"
+        android:label="order"
+        tools:layout="@layout/fragment_add_transaction"/>
 
 
 </navigation>
