@@ -6,14 +6,48 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.fitur.LocationFragment">
-
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="7dp"
+        android:layout_marginTop="7dp"
+        android:gravity="center">
+    <androidx.cardview.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/cardBackground"
+        android:layout_gravity="center"
+        tools:context=".RecyclerViewAdapter"
+        app:cardCornerRadius="6dp"
+        app:cardElevation="4dp"
+        android:id="@+id/ParentAdapter">
     <com.mapbox.mapboxsdk.maps.MapView
+        android:layout_marginTop="45dp"
         android:id="@+id/mapView"
         android:layout_gravity="center"
         android:layout_width="300dp"
-        android:layout_height="500dp"
+        android:layout_height="510dp"
         mapbox:mapbox_cameraTargetLat="-7.780661"
         mapbox:mapbox_cameraTargetLng="110.414614"
         app:mapbox_cameraZoom="8"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingRight="45dp"
+            android:paddingLeft="40dp"
+            android:paddingTop="16.5dp"
+            android:paddingBottom="16.5dp"
+            android:background="@color/colorPrimary"
+            android:layout_gravity="center_horizontal"
+            android:text="Go To Our Location"
+            android:textColor="@color/bg_color"
+            android:textSize="25sp"
+            android:textStyle="bold" />
+    </androidx.cardview.widget.CardView>
+
+    </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

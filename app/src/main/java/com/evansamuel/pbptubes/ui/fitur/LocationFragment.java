@@ -190,7 +190,6 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback, Pe
         loadedMapStyle.addSource(new GeoJsonSource(ROUTE_SOURCE_ID));
 
         GeoJsonSource iconGeoJsonSource = new GeoJsonSource(ICON_SOURCE_ID, FeatureCollection.fromFeatures(new Feature[] {
-                Feature.fromGeometry(Point.fromLngLat(origin.longitude(), origin.latitude())),
                 Feature.fromGeometry(Point.fromLngLat(destination.longitude(), destination.latitude()))}));
         loadedMapStyle.addSource(iconGeoJsonSource);
     }
@@ -203,7 +202,7 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback, Pe
                 lineCap(Property.LINE_CAP_ROUND),
                 lineJoin(Property.LINE_JOIN_ROUND),
                 lineWidth(5f),
-                lineColor(Color.parseColor("#009688"))
+                lineColor(Color.parseColor("#3498DB"))
         );
         loadedMapStyle.addLayer(routeLayer);
 
