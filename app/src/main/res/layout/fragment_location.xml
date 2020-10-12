@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:mapbox="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.fitur.LocationFragment">
 
     <com.mapbox.mapboxsdk.maps.MapView
         android:id="@+id/mapView"
-        android:layout_marginTop="100dp"
-        android:layout_marginLeft="50dp"
-        android:layout_width="300dp"
-        android:layout_height="400dp"
-        app:mapbox_cameraZoom="8"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        mapbox:mapbox_cameraTargetLat="38.9098"
+        mapbox:mapbox_cameraTargetLng="-77.0295"
+        app:mapbox_cameraZoom="12"
         />
 
-</FrameLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
