@@ -13,7 +13,9 @@
 
     <fragment
         android:id="@+id/nav_logout"
-        android:label="Logout"/>
+        android:label="Logout"
+        android:name="com.evansamuel.pbptubes.logOutFragment"
+        tools:layout="@layout/fragment_log_out"/>
 
     <fragment
         android:id="@+id/nav_dashboard"
