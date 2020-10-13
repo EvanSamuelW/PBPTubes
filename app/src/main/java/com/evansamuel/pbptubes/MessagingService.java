@@ -19,7 +19,7 @@ public class MessagingService extends FirebaseMessagingService {
     public void showNotification(String title, String message){
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle(title)
-                .setSmallIcon(R.drawable.ic_launcher_background)
+                .setSmallIcon(R.drawable.ic_peacoks)
                 .setAutoCancel(true)
                 .setContentText(message);
 

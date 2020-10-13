@@ -41,11 +41,11 @@ public class  UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerV
         return new UserViewHolder(view);
     }
 
-    @SuppressLint("SetTextI18n")
+
     @Override
     public void onBindViewHolder(@NonNull UserViewHolder holder, int position) {
         Transaksi transaksi = transaksiList.get(position);
-        holder.textViewNumber.setText(transaksi.getId());
+//        holder.textViewNumber.setText(transaksi.getId());
         holder.textViewName.setText(transaksi.getName());
         holder.textViewPrice.setText("Rp. " + transaksi.getPrice());
     }

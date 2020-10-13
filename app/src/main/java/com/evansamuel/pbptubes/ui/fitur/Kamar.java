@@ -43,7 +43,7 @@ public class Kamar {
         return harga;
     }
 
-    public void setIpk(Integer harga) {
+    public void setHarga(Integer harga) {
         this.harga=harga;
     }
 
