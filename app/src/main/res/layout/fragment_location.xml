@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:mapbox="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+    android:background="@color/bg_color"
     android:layout_height="match_parent"
     tools:context=".ui.fitur.LocationFragment">
     <LinearLayout
@@ -40,10 +41,10 @@
             android:paddingLeft="40dp"
             android:paddingTop="16.5dp"
             android:paddingBottom="16.5dp"
-            android:background="#3498DB"
+            android:background="@color/colorPrimary"
             android:layout_gravity="center_horizontal"
             android:text="Go To Our Location"
-            android:textColor="#FFFFFF"
+            android:textColor="#fff"
             android:textSize="25sp"
             android:textStyle="bold" />
     </androidx.cardview.widget.CardView>
