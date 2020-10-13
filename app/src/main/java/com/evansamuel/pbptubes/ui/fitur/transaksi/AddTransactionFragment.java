@@ -1,12 +1,15 @@
 package com.evansamuel.pbptubes.ui.fitur.transaksi;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,7 +22,6 @@ import android.widget.Toast;
 
 import com.evansamuel.pbptubes.R;
 import com.evansamuel.pbptubes.ui.fitur.RecyclerViewAdapter;
-import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -49,8 +51,8 @@ public class AddTransactionFragment extends Fragment {
     FirebaseFirestore fStore;
     FirebaseUser user;
     StorageReference storageReference;
-    TextView nameView,fasilitasView,hargaView,roomView,checkInDate,checkOutDate;
-    private DatePickerDialog.OnDateSetListener mDateListener,mDateListener2;
+    TextView nameView, fasilitasView, hargaView, roomView, checkInDate, checkOutDate;
+    private DatePickerDialog.OnDateSetListener mDateListener, mDateListener2;
     Button btn_order;
 
     // TODO: Rename parameter arguments, choose names that match
@@ -98,7 +100,7 @@ public class AddTransactionFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View root = inflater.inflate(R.layout.fragment_add_transaction, container, false);
-       String jenis = getArguments().getString(RecyclerViewAdapter.Jenis);
+        String jenis = getArguments().getString(RecyclerViewAdapter.Jenis);
         String harga = getArguments().getString(RecyclerViewAdapter.Harga);
         String fasilitas = getArguments().getString(RecyclerViewAdapter.Fasilitas);
         fAuth = FirebaseAuth.getInstance();
@@ -111,7 +113,7 @@ public class AddTransactionFragment extends Fragment {
         hargaView = root.findViewById(R.id.HargaView);
         roomView = root.findViewById(R.id.roomView);
 
-        hargaView.setText("Rp"+ harga + " Per Malam");
+        hargaView.setText("Rp" + harga + " Per Malam");
         roomView.setText(jenis);
         fasilitasView.setText(fasilitas);
         userId = fAuth.getCurrentUser().getUid();
@@ -133,7 +135,7 @@ public class AddTransactionFragment extends Fragment {
                         getActivity(),
                         android.R.style.Theme_Holo_Light_Dialog_MinWidth,
                         mDateListener,
-                        year,month,day);
+                        year, month, day);
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 dialog.show();
 
@@ -152,7 +154,7 @@ public class AddTransactionFragment extends Fragment {
                         getActivity(),
                         android.R.style.Theme_Holo_Light_Dialog_MinWidth,
                         mDateListener2,
-                        year,month,day);
+                        year, month, day);
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 dialog.show();
 
@@ -163,10 +165,10 @@ public class AddTransactionFragment extends Fragment {
         mDateListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                month = month +1;
-                Log.d(TAG, "onDateSet: mm/dd/yyyy: " + month + "/" + day + "/" + year  );
+                month = month + 1;
+                Log.d(TAG, "onDateSet:dd/mm/yyyy: " + day + "/" + month + "/" + year);
 
-                String date2 = month + "/" + day + "/" + year;
+                String date2 = day + "/" + month + "/" + year;
                 checkInDate.setText(date2);
             }
         };
@@ -174,10 +176,10 @@ public class AddTransactionFragment extends Fragment {
         mDateListener2 = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                month = month +1;
-                Log.d(TAG, "onDateSet: mm/dd/yyyy: " + month + "/" + day + "/" + year  );
+                month = month + 1;
+                Log.d(TAG, "onDateSet: dd/mm/yyyy: " + day + "/" + month + "/" + year);
 
-                String date1 = month + "/" + day + "/" + year;
+                String date1 = day + "/" + month + "/" + year;
                 checkOutDate.setText(date1);
             }
         };
@@ -187,32 +189,39 @@ public class AddTransactionFragment extends Fragment {
             public void onClick(View view) {
                 String date1 = checkInDate.getText().toString();
                 String date2 = checkOutDate.getText().toString();
-                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/YYYY");
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/yyyy");
 
 
                 try {
                     Date dateIn = sdf.parse(date1);
                     Date dateOut = sdf.parse(date2);
+                    long difference = dateOut.getTime() - dateIn.getTime();
+                    long seconds = difference / 1000;
+                    long minutes = seconds / 60;
+                    long hours = minutes / 60;
+                    long days = hours / 24;
 
-                    if(dateOut.getTime()>dateIn.getTime())
-                    {
-                        long difference = dateOut.getTime()- dateIn.getTime();
-                        long difference_In_Days
-                                = (difference
-                                / (1000 * 60 * 60 * 24))
-                                % 365;
+                    if (days > 0) {
 
-                        long finalPrice = difference_In_Days*Integer.parseInt(harga);
-
-                        Toast.makeText(getActivity(),"Total Harga :" +Long.toString(finalPrice),Toast.LENGTH_SHORT).show();
+                        long finalPrice = days * Integer.parseInt(harga);
+                        Toast.makeText(getActivity(), "Total Harga :" + Long.toString(finalPrice), Toast.LENGTH_SHORT).show();
                         add();
 
-                    }else if(dateOut.getTime()==dateIn.getTime())
-                    {
-                        Toast.makeText(getActivity(),"Pemesanan kamar minimal satu malam",Toast.LENGTH_SHORT).show();
-                    }else
-                    {
-                        Toast.makeText(getActivity(),"Tanggal Check In tidak bisa lebih kecil dari tanggal Check In",Toast.LENGTH_SHORT).show();
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                        builder.setTitle("Thank you for your order")
+                                .setMessage("Please check your transaction history to see detailed data of your transaction")
+                                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        Navigation.findNavController(view).navigate(R.id.action_nav_order_to_nav_dashboard);
+
+                                    }
+                                }).create().show();
+
+                    } else if (days == 0) {
+                        Toast.makeText(getActivity(), "Pemesanan minimal satu malam", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getActivity(), "Tanggal check out tidak bisa lebih lama dari check in", Toast.LENGTH_SHORT).show();
 
                     }
 
@@ -239,7 +248,7 @@ public class AddTransactionFragment extends Fragment {
     }
 
 
-    private void add(){
+    private void add() {
         final String Room = roomView.getText().toString();
         final String Name = nameView.getText().toString();
         final String Price = hargaView.getText().toString();

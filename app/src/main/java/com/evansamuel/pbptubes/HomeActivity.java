@@ -24,10 +24,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -35,12 +37,24 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
+
+import javax.annotation.Nullable;
 
 public class HomeActivity extends AppCompatActivity {
     private String CHANNEL_ID = "channel 2";
@@ -48,8 +62,10 @@ public class HomeActivity extends AppCompatActivity {
     FirebaseUser firebaseUser;
     AppPreferencesManager preferencesManager;
     private AppBarConfiguration mAppBarConfiguration;
-
-
+    String userId;
+    FirebaseFirestore fStore;
+    FirebaseUser user;
+    StorageReference storageReference;
 
 
     @Override
@@ -69,8 +85,15 @@ public class HomeActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         firebaseAuth = firebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
+        fStore = FirebaseFirestore.getInstance();
+        storageReference = FirebaseStorage.getInstance().getReference();
+
         final DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        View headerView = navigationView.getHeaderView(0);
+        TextView navUsername = headerView.findViewById(R.id.username);
+        TextView navEmail =  headerView.findViewById(R.id.userEmail);
+        ImageView profile = headerView.findViewById(R.id.imageView);
         final ImageButton dark = findViewById(R.id.dark);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
@@ -84,7 +107,29 @@ public class HomeActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navigationView, navController);
 
 
+        StorageReference profileRef = storageReference.child("users/" + firebaseAuth.getCurrentUser().getUid() + "/profile.jpg");
+        profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Picasso.get().load(uri).into(profile);
+            }
+        });
 
+        userId = firebaseAuth.getCurrentUser().getUid();
+        user = firebaseAuth.getCurrentUser();
+
+        final DocumentReference documentReference = fStore.collection("users").document(userId);
+        documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                if (documentSnapshot.exists()) {
+                    navUsername.setText(documentSnapshot.getString("email"));
+                    navEmail.setText(documentSnapshot.getString("fName"));
+                } else {
+                    Log.d("tag", "onEvent: Document do not exists");
+                }
+            }
+        });
 
         dark.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,16 +151,6 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
     }
-
-
-
-    // Passing each menu ID as a set of Ids because each
-    // menu should be considered as top level destinations.
-
-
-
-
-
 
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
