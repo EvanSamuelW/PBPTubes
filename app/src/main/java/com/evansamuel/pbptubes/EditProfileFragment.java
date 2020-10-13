@@ -115,13 +115,13 @@ public class EditProfileFragment extends Fragment {
             }
         });
 
-//        StorageReference profileRef = storageReference.child("users/" + fAuth.getCurrentUser().getUid() + "/profile.jpg");
-//        profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-//            @Override
-//            public void onSuccess(Uri uri) {
-//                Picasso.get().load(uri).into(profileImageView);
-//            }
-//        });
+        StorageReference profileRef = storageReference.child("users/" + fAuth.getCurrentUser().getUid() + "/profile.jpg");
+        profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Picasso.get().load(uri).into(profileImageView);
+            }
+        });
 
         profileImageView.setOnClickListener(new View.OnClickListener() {
             @Override

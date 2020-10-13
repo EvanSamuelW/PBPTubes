@@ -102,11 +102,7 @@ public class HomeActivity extends AppCompatActivity {
                 .addOnCompleteListener(new OnCompleteListener<Void>(){
                     @Override
                     public void onComplete(@NonNull Task<Void> task){
-                        String mag = "Succesfull";
-                        if(!task.isSuccessful()){
-                            mag = "Failed";
-                        }
-                        Toast.makeText(HomeActivity.this, mag, Toast.LENGTH_SHORT).show();
+
                     }
                 });
 
