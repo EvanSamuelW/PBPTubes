@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,6 +36,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.squareup.picasso.Picasso;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -60,6 +62,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -76,6 +79,7 @@ public class EditProfileFragment extends Fragment {
     public static final String TAG = "TAG";
     private static final int CAMERA_PERM_CODE = 101;
     public static final int CAMERA_REQUEST_CODE = 102;
+    public static final int GALLERY_REQUEST_CODE = 1000;
     EditText profileName, profileAddress, profilePhone;
     FloatingActionButton cameraButton;
 
@@ -111,13 +115,13 @@ public class EditProfileFragment extends Fragment {
             }
         });
 
-        StorageReference profileRef = storageReference.child("users/" + fAuth.getCurrentUser().getUid() + "/profile.jpg");
-        profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                Picasso.get().load(uri).into(profileImageView);
-            }
-        });
+//        StorageReference profileRef = storageReference.child("users/" + fAuth.getCurrentUser().getUid() + "/profile.jpg");
+//        profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+//            @Override
+//            public void onSuccess(Uri uri) {
+//                Picasso.get().load(uri).into(profileImageView);
+//            }
+//        });
 
         profileImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -200,29 +204,60 @@ public class EditProfileFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @androidx.annotation.Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1000) {
-            Bitmap image = (Bitmap) data.getExtras().get("data");
-            profileImageView.setImageBitmap(image);
             if (resultCode == Activity.RESULT_OK) {
+                if (requestCode == CAMERA_REQUEST_CODE) {
+               onCaptureImageResult(data);
+            }
+        }
+        if (resultCode == Activity.RESULT_OK) {
+        if (requestCode == GALLERY_REQUEST_CODE) {
                 Uri imageUri = data.getData();
-                uploadImageToFirebase(imageUri);
+                uploadImageToFirebase1(imageUri);
             }
         }
     }
 
+    private void onCaptureImageResult(Intent data){
+        Bitmap image = (Bitmap) data.getExtras().get("data");
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        image.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+        byte bb[] = bytes.toByteArray();
+        String file = Base64.encodeToString(bb, Base64.DEFAULT);
+        profileImageView.setImageBitmap(image);
 
-    private void uploadImageToFirebase(Uri imageUri) {
+        uploadImageToFirebase(bb);
+    }
+
+    private void uploadImageToFirebase(byte[] bb) {
+//        // uplaod image to firebase storage
+        StorageReference fileRef = storageReference.child("users/" + fAuth.getCurrentUser().getUid() + "/profile.jpg");
+        fileRef.putBytes(bb).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Toast.makeText(getActivity(), "Uploaded", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getActivity(), "Failed.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void uploadImageToFirebase1(Uri imageUri) {
         // uplaod image to firebase storage
-        final StorageReference fileRef = storageReference.child("users/" + fAuth.getCurrentUser().getUid() + "/profile.jpg");
+        StorageReference fileRef = storageReference.child("users/" + fAuth.getCurrentUser().getUid() + "/profile.jpg");
         fileRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
+                        Log.d("tag", "onSuccess : Uploaded" + uri.toString());
                         Picasso.get().load(uri).into(profileImageView);
                     }
                 });
+                Toast.makeText(getActivity(), "Uploaded", Toast.LENGTH_SHORT).show();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
