@@ -35,6 +35,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.squareup.picasso.Picasso;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -76,6 +77,7 @@ public class EditProfileFragment extends Fragment {
     public static final String TAG = "TAG";
     private static final int CAMERA_PERM_CODE = 101;
     public static final int CAMERA_REQUEST_CODE = 102;
+    public static final int GALLERY_REQUEST_CODE = 1000;
     EditText profileName, profileAddress, profilePhone;
     FloatingActionButton cameraButton;
 
@@ -111,13 +113,13 @@ public class EditProfileFragment extends Fragment {
             }
         });
 
-        StorageReference profileRef = storageReference.child("users/" + fAuth.getCurrentUser().getUid() + "/profile.jpg");
-        profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                Picasso.get().load(uri).into(profileImageView);
-            }
-        });
+//        StorageReference profileRef = storageReference.child("users/" + fAuth.getCurrentUser().getUid() + "/profile.jpg");
+//        profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+//            @Override
+//            public void onSuccess(Uri uri) {
+//                Picasso.get().load(uri).into(profileImageView);
+//            }
+//        });
 
         profileImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -200,11 +202,19 @@ public class EditProfileFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @androidx.annotation.Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1000) {
-            Bitmap image = (Bitmap) data.getExtras().get("data");
-            profileImageView.setImageBitmap(image);
+        if (requestCode == CAMERA_REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                Bitmap image = (Bitmap) data.getExtras().get("data");
+                profileImageView.setImageBitmap(image);
+                Uri imageUri = data.getData();
+                uploadImageToFirebase(imageUri);
+            }
+        }
+
+        if (requestCode == GALLERY_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
                 Uri imageUri = data.getData();
+                profileImageView.setImageURI(imageUri);
                 uploadImageToFirebase(imageUri);
             }
         }
@@ -213,16 +223,18 @@ public class EditProfileFragment extends Fragment {
 
     private void uploadImageToFirebase(Uri imageUri) {
         // uplaod image to firebase storage
-        final StorageReference fileRef = storageReference.child("users/" + fAuth.getCurrentUser().getUid() + "/profile.jpg");
+        StorageReference fileRef = storageReference.child("users/" + fAuth.getCurrentUser().getUid() + "/profile.jpg");
         fileRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
+                        Log.d("tag", "onSuccess : Uploaded" + uri.toString());
                         Picasso.get().load(uri).into(profileImageView);
                     }
                 });
+                Toast.makeText(getActivity(), "Uploaded", Toast.LENGTH_SHORT).show();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
