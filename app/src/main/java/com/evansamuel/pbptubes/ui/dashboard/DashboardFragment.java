@@ -24,6 +24,7 @@ import android.view.ViewGroup;
 
 import com.evansamuel.pbptubes.R;
 import com.evansamuel.pbptubes.ui.fitur.BookFragment;
+import com.google.android.material.navigation.NavigationView;
 
 import static android.content.Context.LOCATION_SERVICE;
 import static androidx.core.content.ContextCompat.getSystemService;
@@ -31,7 +32,7 @@ import static androidx.core.content.ContextCompat.getSystemService;
 
 public class DashboardFragment extends Fragment {
 
-    private CardView cardHome,cardFood,cardLocation;
+    private CardView cardHome,cardFood,cardLocation,cardTransaksi;
     private final static String TAG_FRAGMENT = "TAG_FRAGMENT";
     Context context;
 
@@ -78,6 +79,7 @@ public class DashboardFragment extends Fragment {
         cardHome = view.findViewById(R.id.book);
         cardFood = view.findViewById(R.id.food);
         cardLocation = view.findViewById(R.id.cardLocation);
+        cardTransaksi = view.findViewById(R.id.card_transaksi);
         cardHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -99,6 +101,13 @@ public class DashboardFragment extends Fragment {
             @Override
             public void onClick(View view) {
                     Navigation.findNavController(view).navigate(R.id.action_nav_dashboard_to_nav_location);
+            }
+        });
+
+        cardTransaksi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Navigation.findNavController(view).navigate(R.id.action_nav_dashboard_to_nav_transaksi);
             }
         });
         return view;
