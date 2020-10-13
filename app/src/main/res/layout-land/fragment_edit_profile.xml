@@ -4,15 +4,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_margin="30dp"
-    android:layout_height="match_parent"
-
     android:background="@color/bg_color"
+    android:layout_height="match_parent"
     tools:context=".EditProfileFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp">
 
     <ImageView
         android:id="@+id/profileImageView"
@@ -122,9 +122,9 @@
                 android:layout_marginTop="120dp"
                 android:layout_marginLeft="50dp"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:backgroundTint="@color/colorPrimary"
+                android:backgroundTint="#3498DB"
                 android:src="@drawable/ic_baseline_camera_alt_24"
-                android:tint="@color/colorPrimary"
+                android:tint="#3498DB"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
 

@@ -26,7 +26,7 @@
         android:layout_height="wrap_content"
         android:text="@string/hotel_peacocks"
         android:textStyle="bold"
-        android:textColor="@color/colorPrimary"
+        android:textColor="#3498DB"
         android:textSize="40sp"
         app:layout_constraintTop_toBottomOf="@+id/logo" />
 
