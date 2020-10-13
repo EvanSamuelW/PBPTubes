@@ -3,16 +3,21 @@ package com.evansamuel.pbptubes.ui.fitur;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.location.LocationManager;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -86,7 +91,6 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback, Pe
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -122,15 +126,35 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback, Pe
         }
     }
 
+    private void locationEnabled () {
+
+
+
+//            new AlertDialog.Builder(getContext() )
+//                    .setMessage( "GPS Enable" )
+//                    .setPositiveButton( "Settings" , new
+//                            DialogInterface.OnClickListener() {
+//                                @Override
+//                                public void onClick (DialogInterface paramDialogInterface , int paramInt) {
+//                                    startActivity( new Intent(Settings. ACTION_LOCATION_SOURCE_SETTINGS )) ;
+//                                }
+//                            })
+//                    .setNegativeButton( "Cancel" , null )
+//                    .show() ;
+
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Mapbox.getInstance(getActivity(), getString(R.string.mapbox_access_token));
-        View layout = inflater.inflate(R.layout.fragment_location, container, false);
 
+        View layout = inflater.inflate(R.layout.fragment_location, container, false);
         mapView = layout.findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
+
         mapView.getMapAsync(new OnMapReadyCallback() {
+
 
             @Override
             public void onMapReady(@NonNull MapboxMap mapboxMap) {
@@ -152,15 +176,40 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback, Pe
                                 //                                          int[] grantResults)
                                 // to handle the case where the user grants the permission. See the documentation
                                 // for ActivityCompat#requestPermissions for more details.
+
                                 return;
                             }
-                            locationComponent.setLocationComponentEnabled(true);
+                            LocationManager lm = (LocationManager) getActivity().getSystemService(Context. LOCATION_SERVICE ) ;
+                            boolean gps_enabled = false;
+                            boolean network_enabled = false;
+                            try {
+                                gps_enabled = lm.isProviderEnabled(LocationManager. GPS_PROVIDER ) ;
+                            } catch (Exception e) {
+                                e.printStackTrace() ;
+                            }
+                            try {
+                                network_enabled = lm.isProviderEnabled(LocationManager. NETWORK_PROVIDER ) ;
+                            } catch (Exception e) {
+                                e.printStackTrace() ;
+                            }
+                            if (!gps_enabled && !network_enabled) {
 
-                            locationComponent.setCameraMode(CameraMode.TRACKING);
+                                origin = Point.fromLngLat(110.414614,-7.780661);
 
-                            locationComponent.setRenderMode(RenderMode.COMPASS);
-                            origin = Point.fromLngLat(locationComponent.getLastKnownLocation().getLongitude(),
-                                    locationComponent.getLastKnownLocation().getLatitude());
+                            }
+                            else{
+                                locationComponent.setLocationComponentEnabled(true);
+
+                                locationComponent.setCameraMode(CameraMode.TRACKING);
+
+                                locationComponent.setRenderMode(RenderMode.COMPASS);
+                                origin = Point.fromLngLat(locationComponent.getLastKnownLocation().getLongitude(),
+                                        locationComponent.getLastKnownLocation().getLatitude());
+
+                            }
+
+
+
 //                                Point.fromLngLat(110.414614,-10.780661);
 // Set the destination location to the Plaza del Triunfo in Granada, Spain.
                             destination = Point.fromLngLat(110.414614,-7.780661);

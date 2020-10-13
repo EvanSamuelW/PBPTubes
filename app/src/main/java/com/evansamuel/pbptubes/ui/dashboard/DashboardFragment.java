@@ -98,14 +98,7 @@ public class DashboardFragment extends Fragment {
         cardLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (ActivityCompat.checkSelfPermission(getActivity(),
-                        Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
-                }
-                else
-                {
                     Navigation.findNavController(view).navigate(R.id.action_nav_dashboard_to_nav_location);
-                }
             }
         });
         return view;
@@ -114,16 +107,7 @@ public class DashboardFragment extends Fragment {
 
 
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode,String[] permissions, int[] grantResults) {
-        if (requestCode == REQUEST_LOCATION) {
-            if(grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-            } else {
-                // Permission was denied or request was cancelled
-            }
-        }
-    }
 
 
 }
