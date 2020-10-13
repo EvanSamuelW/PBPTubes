@@ -36,6 +36,9 @@ import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.geojson.LineString;
 import com.mapbox.geojson.Point;
 import com.mapbox.mapboxsdk.Mapbox;
+import com.mapbox.mapboxsdk.camera.CameraPosition;
+import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
+import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.location.LocationComponent;
 import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions;
 import com.mapbox.mapboxsdk.location.modes.CameraMode;
@@ -193,9 +196,11 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback, Pe
                                 e.printStackTrace() ;
                             }
                             if (!gps_enabled && !network_enabled) {
-
+                                mapboxMap.animateCamera(CameraUpdateFactory.newCameraPosition(
+                                        new CameraPosition.Builder()
+                                                .zoom(14)
+                                                .build()),4000);
                                 origin = Point.fromLngLat(110.414614,-7.780661);
-
                             }
                             else{
                                 locationComponent.setLocationComponentEnabled(true);
