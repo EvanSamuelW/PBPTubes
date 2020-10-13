@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -61,6 +62,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -202,38 +204,35 @@ public class EditProfileFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @androidx.annotation.Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == CAMERA_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
-                Bitmap image = (Bitmap) data.getExtras().get("data");
-                profileImageView.setImageBitmap(image);
-                Uri imageUri = data.getData();
-                uploadImageToFirebase(imageUri);
+                if (requestCode == CAMERA_REQUEST_CODE) {
+               onCaptureImageResult(data);
             }
         }
-
+        if (resultCode == Activity.RESULT_OK) {
         if (requestCode == GALLERY_REQUEST_CODE) {
-            if (resultCode == Activity.RESULT_OK) {
-                Uri imageUri = data.getData();
-                profileImageView.setImageURI(imageUri);
-                uploadImageToFirebase(imageUri);
+                onCaptureImageResult(data);
             }
         }
     }
 
+    private void onCaptureImageResult(Intent data){
+        Bitmap image = (Bitmap) data.getExtras().get("data");
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        image.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+        byte bb[] = bytes.toByteArray();
+        String file = Base64.encodeToString(bb, Base64.DEFAULT);
+        profileImageView.setImageBitmap(image);
 
-    private void uploadImageToFirebase(Uri imageUri) {
-        // uplaod image to firebase storage
+        uploadImageToFirebase(bb);
+    }
+
+    private void uploadImageToFirebase(byte[] bb) {
+//        // uplaod image to firebase storage
         StorageReference fileRef = storageReference.child("users/" + fAuth.getCurrentUser().getUid() + "/profile.jpg");
-        fileRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+        fileRef.putBytes(bb).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        Log.d("tag", "onSuccess : Uploaded" + uri.toString());
-                        Picasso.get().load(uri).into(profileImageView);
-                    }
-                });
                 Toast.makeText(getActivity(), "Uploaded", Toast.LENGTH_SHORT).show();
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -242,6 +241,29 @@ public class EditProfileFragment extends Fragment {
                 Toast.makeText(getActivity(), "Failed.", Toast.LENGTH_SHORT).show();
             }
         });
+
+
+//    private void uploadImageToFirebase(Uri imageUri) {
+//        // uplaod image to firebase storage
+//        StorageReference fileRef = storageReference.child("users/" + fAuth.getCurrentUser().getUid() + "/profile.jpg");
+//        fileRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//            @Override
+//            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+//                    @Override
+//                    public void onSuccess(Uri uri) {
+//                        Log.d("tag", "onSuccess : Uploaded" + uri.toString());
+//                        Picasso.get().load(uri).into(profileImageView);
+//                    }
+//                });
+//                Toast.makeText(getActivity(), "Uploaded", Toast.LENGTH_SHORT).show();
+//            }
+//        }).addOnFailureListener(new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception e) {
+//                Toast.makeText(getActivity(), "Failed.", Toast.LENGTH_SHORT).show();
+//            }
+//        });
 
     }
 }
