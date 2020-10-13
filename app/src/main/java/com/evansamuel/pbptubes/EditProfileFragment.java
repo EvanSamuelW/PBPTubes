@@ -211,7 +211,8 @@ public class EditProfileFragment extends Fragment {
         }
         if (resultCode == Activity.RESULT_OK) {
         if (requestCode == GALLERY_REQUEST_CODE) {
-                onCaptureImageResult(data);
+                Uri imageUri = data.getData();
+                uploadImageToFirebase1(imageUri);
             }
         }
     }
@@ -241,29 +242,29 @@ public class EditProfileFragment extends Fragment {
                 Toast.makeText(getActivity(), "Failed.", Toast.LENGTH_SHORT).show();
             }
         });
+    }
 
-
-//    private void uploadImageToFirebase(Uri imageUri) {
-//        // uplaod image to firebase storage
-//        StorageReference fileRef = storageReference.child("users/" + fAuth.getCurrentUser().getUid() + "/profile.jpg");
-//        fileRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-//            @Override
-//            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-//                fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-//                    @Override
-//                    public void onSuccess(Uri uri) {
-//                        Log.d("tag", "onSuccess : Uploaded" + uri.toString());
-//                        Picasso.get().load(uri).into(profileImageView);
-//                    }
-//                });
-//                Toast.makeText(getActivity(), "Uploaded", Toast.LENGTH_SHORT).show();
-//            }
-//        }).addOnFailureListener(new OnFailureListener() {
-//            @Override
-//            public void onFailure(@NonNull Exception e) {
-//                Toast.makeText(getActivity(), "Failed.", Toast.LENGTH_SHORT).show();
-//            }
-//        });
+    private void uploadImageToFirebase1(Uri imageUri) {
+        // uplaod image to firebase storage
+        StorageReference fileRef = storageReference.child("users/" + fAuth.getCurrentUser().getUid() + "/profile.jpg");
+        fileRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        Log.d("tag", "onSuccess : Uploaded" + uri.toString());
+                        Picasso.get().load(uri).into(profileImageView);
+                    }
+                });
+                Toast.makeText(getActivity(), "Uploaded", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getActivity(), "Failed.", Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 }
