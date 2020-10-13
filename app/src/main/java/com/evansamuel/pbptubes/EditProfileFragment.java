@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -35,16 +36,49 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
+
+import android.Manifest;
+import android.app.Activity;
+import android.content.ContentResolver;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.util.Log;
+import android.view.View;
+import android.webkit.MimeTypeMap;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.Toast;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.annotation.Nullable;
+import retrofit2.http.GET;
+
 
 public class EditProfileFragment extends Fragment {
 
     public static final String TAG = "TAG";
+    private static final int CAMERA_PERM_CODE = 101;
+    public static final int CAMERA_REQUEST_CODE = 102;
     EditText profileName, profileAddress, profilePhone;
+    FloatingActionButton cameraButton;
+
     ImageView profileImageView;
     Button saveBtn;
     FirebaseAuth fAuth;
@@ -61,6 +95,7 @@ public class EditProfileFragment extends Fragment {
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
+        cameraButton = root.findViewById(R.id.camera);
 
         profileName = root.findViewById(R.id.profileName);
         profileAddress = root.findViewById(R.id.profileAddress);
@@ -68,6 +103,13 @@ public class EditProfileFragment extends Fragment {
         profileImageView = root.findViewById(R.id.profileImageView);
         saveBtn = root.findViewById(R.id.saveProfileInfo);
 
+        cameraButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                askCameraPermissions();
+                Toast.makeText(getActivity(), "Camera is Clicked", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         StorageReference profileRef = storageReference.child("users/" + fAuth.getCurrentUser().getUid() + "/profile.jpg");
         profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -131,17 +173,43 @@ public class EditProfileFragment extends Fragment {
         return root;
     }
 
+    private void askCameraPermissions() {
+        if(ContextCompat.checkSelfPermission(getActivity(),Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(getActivity(),new String[] {Manifest.permission.CAMERA}, CAMERA_PERM_CODE);
+        }else {
+            openCamera();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if(requestCode == CAMERA_PERM_CODE){
+            if(grantResults.length < 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                openCamera();
+            }else {
+                Toast.makeText(getActivity(), "Camera Permission is Required to Use camera.", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void openCamera() {
+        Intent cameraX = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(cameraX, CAMERA_REQUEST_CODE);
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @androidx.annotation.Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1000) {
+            Bitmap image = (Bitmap) data.getExtras().get("data");
+            profileImageView.setImageBitmap(image);
             if (resultCode == Activity.RESULT_OK) {
                 Uri imageUri = data.getData();
                 uploadImageToFirebase(imageUri);
             }
         }
-
     }
+
 
     private void uploadImageToFirebase(Uri imageUri) {
         // uplaod image to firebase storage
