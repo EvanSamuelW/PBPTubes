@@ -128,7 +128,7 @@ public class AddTransactionFragment extends Fragment {
 
 
         final DocumentReference documentReference = fStore.collection("users").document(userId);
-        documentReference.addSnapshotListener((Executor)this, new EventListener<DocumentSnapshot>() {
+        documentReference.addSnapshotListener(getActivity(), new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                 if (documentSnapshot.exists()) {
