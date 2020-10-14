@@ -36,6 +36,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.concurrent.Executor;
 
 import javax.annotation.Nullable;
 
@@ -117,6 +118,28 @@ public class AddTransactionFragment extends Fragment {
         checkInDate = root.findViewById(R.id.checkInDate);
         checkOutDate = root.findViewById(R.id.checkOutDate);
         btn_order = root.findViewById(R.id.btn_order);
+
+
+        fAuth = FirebaseAuth.getInstance();
+        fStore = FirebaseFirestore.getInstance();
+        storageReference = FirebaseStorage.getInstance().getReference();
+        userId = fAuth.getCurrentUser().getUid();
+        user = fAuth.getCurrentUser();
+
+
+        final DocumentReference documentReference = fStore.collection("users").document(userId);
+        documentReference.addSnapshotListener((Executor)this, new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                if (documentSnapshot.exists()) {
+                    nameView.setText(documentSnapshot.getString("fName"));
+                } else {
+                    Log.d("tag", "onEvent: Document do not exists");
+                }
+            }
+        });
+
+
 
         checkInDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -211,10 +234,8 @@ public class AddTransactionFragment extends Fragment {
                             @Override
                             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                                 if (documentSnapshot.exists()) {
-                                    nameView.setText(documentSnapshot.getString("fName"));
                                     email = documentSnapshot.getString("email");
                                     add(finalPrice, email);
-
 
                                 } else {
                                     Log.d("tag", "onEvent: Document do not exists");

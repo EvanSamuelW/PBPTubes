@@ -1,54 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_marginBottom="16dp"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="16dp"
+    android:orientation="vertical">
 
 
     <!-- Nama user !-->
     <TextView
-        style="@style/TextAppearance.MaterialComponents.Overline"
-        android:layout_marginStart="5dp"
         android:id="@+id/number_text"
+        style="@style/TextAppearance.MaterialComponents.Overline"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp" />
 
     <!-- Check In Date !-->
     <TextView
-        style="@style/TextAppearance.MaterialComponents.Overline"
-        android:layout_marginStart="5dp"
         android:id="@+id/name_text"
+        style="@style/TextAppearance.MaterialComponents.Overline"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp" />
 
     <!-- Check Out Date !-->
     <TextView
-        style="@style/TextAppearance.MaterialComponents.Overline"
-        android:layout_marginStart="5dp"
         android:id="@+id/price_text"
+        style="@style/TextAppearance.MaterialComponents.Overline"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp" />
 
     <!-- Jenis kamar !-->
 
     <TextView
-        style="@style/TextAppearance.MaterialComponents.Overline"
-        android:layout_marginStart="5dp"
         android:id="@+id/room_text"
+        style="@style/TextAppearance.MaterialComponents.Overline"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp" />
 
     <!-- Harga kamar !-->
 
     <TextView
-        style="@style/TextAppearance.MaterialComponents.Overline"
-        android:layout_marginStart="5dp"
         android:id="@+id/harga"
+        style="@style/TextAppearance.MaterialComponents.Overline"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp" />
 
 
     <LinearLayout
@@ -59,22 +57,20 @@
             android:id="@+id/btn_edit"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
-            android:text="Edit"
             android:layout_marginLeft="200dp"
             android:layout_marginRight="20dp"
-            android:background="#0000FF" />
+            android:background="#0000FF"
+            android:text="Edit" />
 
         <Button
             android:id="@+id/btn_delete"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
-            android:text="Delete"
-            android:background="#FF0000" />
+            android:background="#FF0000"
+            android:text="Delete" />
 
 
     </LinearLayout>
-
-
 
 
 </LinearLayout>
