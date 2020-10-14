@@ -11,9 +11,6 @@
 
     </style>
 
-    <style name="MyDatePickerStyle" parent="@android:style/Theme_Material_Light_Dialog_MinWidth">
-        <item name="android:headerBackground">@color/colorPrimary</item>
-    </style>
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
