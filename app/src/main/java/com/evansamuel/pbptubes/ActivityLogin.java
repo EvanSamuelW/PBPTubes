@@ -25,10 +25,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 
 public class ActivityLogin extends AppCompatActivity {
-    private String CHANNEL_ID = "channel 1";
+    private String CHANNEL_ID = "channel 2";
     TextInputEditText emailLogin,passwordLogin;
     Button Login,Register;
     FirebaseAuth firebaseAuth;
@@ -49,6 +50,30 @@ public class ActivityLogin extends AppCompatActivity {
         passwordLogin = findViewById(R.id.edtPasswordLogin);
         firebaseAuth = FirebaseAuth.getInstance();
         Register = findViewById(R.id.btnRegister1);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            String CHANNEL_ID = "Channel 1";
+            CharSequence name = "Channel 1";
+            String description = "This is Channel 1";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+
+        FirebaseMessaging.getInstance().subscribeToTopic("news")
+                .addOnCompleteListener(new OnCompleteListener<Void>(){
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task){
+                        String mag = "Welcome!!";
+                        if(!task.isSuccessful()){
+                            mag = "Failed";
+                        }
+                        Toast.makeText(ActivityLogin.this, mag, Toast.LENGTH_SHORT).show();
+                    }
+                });
+
         Register.setPaintFlags(Register.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         Register.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,8 +120,8 @@ public class ActivityLogin extends AppCompatActivity {
 
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = "Channel 1";
-            String description = "This Channel 1";
+            CharSequence name = "Channel 2";
+            String description = "This Channel 2";
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
             channel.setDescription(description);
