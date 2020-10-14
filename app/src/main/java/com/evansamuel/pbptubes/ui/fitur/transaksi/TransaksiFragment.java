@@ -3,11 +3,13 @@ package com.evansamuel.pbptubes.ui.fitur.transaksi;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +21,11 @@ import com.evansamuel.pbptubes.UserRecyclerViewAdapter;
 import com.evansamuel.pbptubes.databinding.FragmentBookBinding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -37,12 +43,15 @@ public class TransaksiFragment extends Fragment {
     private RecyclerView.LayoutManager mLayoutManager;
     FragmentBookBinding binding;
     FirebaseAuth fAuth;
-    private SwipeRefreshLayout refreshLayout;
-    //    String userId,username="Evan Samuel";
+    SwipeRefreshLayout refreshLayout;
     FirebaseFirestore fStore;
     FirebaseUser user;
     StorageReference storageReference;
-    Button order;
+    String userId;
+    private String email;
+
+
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -88,29 +97,38 @@ public class TransaksiFragment extends Fragment {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_transaksi, container, false);
 
-
+        refreshLayout = root.findViewById(R.id.swipe_refresh);
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
         recyclerView = root.findViewById(R.id.user_rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-//        userId = fAuth.getCurrentUser().getUid();
-//        user = fAuth.getCurrentUser();
-//
-//        final DocumentReference documentReference = fStore.collection("users").document(userId);
-//        documentReference.addSnapshotListener(getActivity(), new EventListener<DocumentSnapshot>() {
-//            @Override
-//            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-//                if (documentSnapshot.exists()) {
-//                    username = documentSnapshot.getString("fName");
-//                } else {
-//                    Log.d("tag", "onEvent: Document do not exists");
-//                }
-//            }
-//        });
-//        Toast.makeText(getActivity(),username,Toast.LENGTH_LONG).show();
-        getUsers();
+        userId = fAuth.getCurrentUser().getUid();
+        user = fAuth.getCurrentUser();
+
+        final DocumentReference documentReference = fStore.collection("users").document(userId);
+        documentReference.addSnapshotListener(getActivity(), new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                if (documentSnapshot.exists()) {
+                   email = documentSnapshot.getString("email");
+                    getUsers();
+
+                    refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                        @Override
+                        public void onRefresh() {
+                            getUsers();
+                            refreshLayout.setRefreshing(false);
+                        }
+                    });
+
+                } else {
+                    Log.d("tag", "onEvent: Document do not exists");
+                }
+            }
+        });
+
 
 
         return root;
@@ -130,7 +148,7 @@ public class TransaksiFragment extends Fragment {
                         .getInstance(getActivity())
                         .getDatabase()
                         .transaksiDAO()
-                        .loadAllUserTransaction();
+                        .loadAllUserTransaction(email);
                 return pegawaiList;
             }
 

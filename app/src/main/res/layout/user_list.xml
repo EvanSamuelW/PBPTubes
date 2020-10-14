@@ -6,6 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+
+    <!-- Nama user !-->
     <TextView
         style="@style/TextAppearance.MaterialComponents.Overline"
         android:layout_marginStart="5dp"
@@ -13,6 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
+    <!-- Check In Date !-->
     <TextView
         style="@style/TextAppearance.MaterialComponents.Overline"
         android:layout_marginStart="5dp"
@@ -20,12 +23,34 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
+    <!-- Check Out Date !-->
     <TextView
         style="@style/TextAppearance.MaterialComponents.Overline"
         android:layout_marginStart="5dp"
         android:id="@+id/price_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
+
+    <!-- Jenis kamar !-->
+
+    <TextView
+        style="@style/TextAppearance.MaterialComponents.Overline"
+        android:layout_marginStart="5dp"
+        android:id="@+id/room_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <!-- Harga kamar !-->
+
+    <TextView
+        style="@style/TextAppearance.MaterialComponents.Overline"
+        android:layout_marginStart="5dp"
+        android:id="@+id/harga"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">

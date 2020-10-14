@@ -119,21 +119,21 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        userId = firebaseAuth.getCurrentUser().getUid();
-        user = firebaseAuth.getCurrentUser();
-
-        final DocumentReference documentReference = fStore.collection("users").document(userId);
-        documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                if (documentSnapshot.exists()) {
-                    navUsername.setText(documentSnapshot.getString("email"));
-                    navEmail.setText(documentSnapshot.getString("fName"));
-                } else {
-                    Log.d("tag", "onEvent: Document do not exists");
-                }
-            }
-        });
+//        userId = firebaseAuth.getCurrentUser().getUid();
+//        user = firebaseAuth.getCurrentUser();
+//
+//        final DocumentReference documentReference = fStore.collection("users").document(userId);
+//        documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
+//            @Override
+//            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+//                if (documentSnapshot.exists()) {
+//                    navUsername.setText(documentSnapshot.getString("email"));
+//                    navEmail.setText(documentSnapshot.getString("fName"));
+//                } else {
+//                    Log.d("tag", "onEvent: Document do not exists");
+//                }
+//            }
+//        });
 
         dark.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -154,6 +154,8 @@ public class HomeActivity extends AppCompatActivity {
                         .create().show();
             }
         });
+
+
     }
 
     private void createNotificationChannel() {

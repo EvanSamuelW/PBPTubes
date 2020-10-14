@@ -27,6 +27,9 @@ public class Transaksi implements Serializable {
     @ColumnInfo(name = "price")
     public String price;
 
+    @ColumnInfo(name = "email")
+    public String email;
+
     public int getId() {
         return id;
     }
@@ -73,6 +76,14 @@ public class Transaksi implements Serializable {
 
     public void setPrice(String price) {
         this.price = price;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }
 

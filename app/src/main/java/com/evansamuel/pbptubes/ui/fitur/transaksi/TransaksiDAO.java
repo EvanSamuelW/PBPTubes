@@ -17,9 +17,8 @@ import java.util.List;
 @Dao
 public interface TransaksiDAO {
 
-//    @Query("SELECT * FROM transaksi WHERE name = :user")
-    @Query("SELECT * FROM transaksi")
-    List<Transaksi> loadAllUserTransaction();
+    @Query("SELECT * FROM transaksi WHERE email= :user")
+    List<Transaksi> loadAllUserTransaction(String user);
 
     @Insert
     void insert(Transaksi transaksi);

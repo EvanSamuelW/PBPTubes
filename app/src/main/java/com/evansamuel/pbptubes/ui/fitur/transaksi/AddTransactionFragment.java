@@ -47,7 +47,7 @@ import javax.annotation.Nullable;
 public class AddTransactionFragment extends Fragment {
     public static final String TAG = "TAG";
     FirebaseAuth fAuth;
-    String userId;
+    String userId,email;
     FirebaseFirestore fStore;
     FirebaseUser user;
     StorageReference storageReference;
@@ -103,9 +103,9 @@ public class AddTransactionFragment extends Fragment {
         String jenis = getArguments().getString(RecyclerViewAdapter.Jenis);
         String harga = getArguments().getString(RecyclerViewAdapter.Harga);
         String fasilitas = getArguments().getString(RecyclerViewAdapter.Fasilitas);
-        fAuth = FirebaseAuth.getInstance();
-        fStore = FirebaseFirestore.getInstance();
-        storageReference = FirebaseStorage.getInstance().getReference();
+
+
+
 
 
         nameView = root.findViewById(R.id.nameView);
@@ -116,8 +116,6 @@ public class AddTransactionFragment extends Fragment {
         hargaView.setText("Rp" + harga + " Per Malam");
         roomView.setText(jenis);
         fasilitasView.setText(fasilitas);
-        userId = fAuth.getCurrentUser().getUid();
-        user = fAuth.getCurrentUser();
 
         checkInDate = root.findViewById(R.id.checkInDate);
         checkOutDate = root.findViewById(R.id.checkOutDate);
@@ -204,19 +202,44 @@ public class AddTransactionFragment extends Fragment {
                     if (days > 0) {
 
                         long finalPrice = days * Integer.parseInt(harga);
-                        Toast.makeText(getActivity(), "Total Harga :" + Long.toString(finalPrice), Toast.LENGTH_SHORT).show();
-                        add();
 
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                        builder.setTitle("Thank you for your order")
-                                .setMessage("Please check your transaction history to see detailed data of your transaction")
-                                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        Navigation.findNavController(view).navigate(R.id.action_nav_order_to_nav_dashboard);
+                        fAuth = FirebaseAuth.getInstance();
+                        fStore = FirebaseFirestore.getInstance();
+                        storageReference = FirebaseStorage.getInstance().getReference();
+                        userId = fAuth.getCurrentUser().getUid();
+                        user = fAuth.getCurrentUser();
 
-                                    }
-                                }).create().show();
+                        final DocumentReference documentReference = fStore.collection("users").document(userId);
+                        documentReference.addSnapshotListener(getActivity(), new EventListener<DocumentSnapshot>() {
+                            @Override
+                            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                                if (documentSnapshot.exists()) {
+                                    nameView.setText(documentSnapshot.getString("fName"));
+                                    email = documentSnapshot.getString("email");
+                                    add(finalPrice,email);
+
+
+
+                                } else {
+                                    Log.d("tag", "onEvent: Document do not exists");
+                                }
+
+                                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                builder.setTitle("Thank you for your order")
+                                        .setMessage("Please check your transaction history to see detailed data of your transaction")
+                                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                                Navigation.findNavController(view).navigate(R.id.action_nav_order_to_nav_dashboard);
+
+                                            }
+                                        }).create().show();
+
+                            }
+                        });
+
+
+
 
                     } else if (days == 0) {
                         Toast.makeText(getActivity(), "Pemesanan minimal satu malam", Toast.LENGTH_SHORT).show();
@@ -232,28 +255,20 @@ public class AddTransactionFragment extends Fragment {
 
             }
         });
-        final DocumentReference documentReference = fStore.collection("users").document(userId);
-        documentReference.addSnapshotListener(getActivity(), new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                if (documentSnapshot.exists()) {
-                    nameView.setText(documentSnapshot.getString("fName"));
-                } else {
-                    Log.d("tag", "onEvent: Document do not exists");
-                }
-            }
-        });
 
         return root;
     }
 
 
-    private void add() {
+    private void add(Long finalPrice,String email) {
         final String Room = roomView.getText().toString();
         final String Name = nameView.getText().toString();
-        final String Price = hargaView.getText().toString();
+        final String Price = Long.toString(finalPrice);
         final String CheckInDate = checkInDate.getText().toString();
         final String CheckOutDate = checkOutDate.getText().toString();
+        final String emailUser = email;
+
+
 
         class AddTransaksi extends AsyncTask<Void, Void, Void> {
 
@@ -265,6 +280,7 @@ public class AddTransactionFragment extends Fragment {
                 transaksi.setPrice(Price);
                 transaksi.setCheckInDate(CheckInDate);
                 transaksi.setCheckOutDate(CheckOutDate);
+                transaksi.setEmail(emailUser);
 
                 DatabaseClient.getInstance(getActivity().getApplicationContext()).getDatabase()
                         .transaksiDAO()
