@@ -151,10 +151,10 @@ public class AddTransactionFragment extends Fragment {
 
                 DatePickerDialog dialog = new DatePickerDialog(
                         getActivity(),
-                        android.R.style.Theme_Holo_Light_Dialog_MinWidth,
+                        android.R.style.Theme_Material_Light_Dialog_MinWidth,
                         mDateListener,
                         year, month, day);
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialog.getWindow();
                 dialog.show();
 
 
@@ -170,10 +170,10 @@ public class AddTransactionFragment extends Fragment {
                 int day = cal.get(Calendar.DAY_OF_MONTH);
                 DatePickerDialog dialog = new DatePickerDialog(
                         getActivity(),
-                        android.R.style.Theme_Holo_Light_Dialog_MinWidth,
+                        android.R.style.Theme_Material_Light_Dialog_MinWidth,
                         mDateListener2,
                         year, month, day);
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialog.getWindow();
                 dialog.show();
 
 

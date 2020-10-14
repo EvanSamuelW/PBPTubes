@@ -4,10 +4,16 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccent">@color/colorPrimary</item>
         <item name="cardBackgroundColor">@color/colorPrimary</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
     </style>
+
+
+    <style name="MyDatePickerStyle" parent="@android:style/Theme_Material_Light_Dialog_MinWidth">
+        <item name="android:headerBackground">@color/colorPrimary</item>
+    </style>
+
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>

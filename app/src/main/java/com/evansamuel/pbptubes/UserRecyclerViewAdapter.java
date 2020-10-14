@@ -111,10 +111,10 @@ public class  UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerV
 
                                     DatePickerDialog dialog = new DatePickerDialog(
                                             context,
-                                            android.R.style.Theme_Holo_Light_Dialog_MinWidth,
+                                            android.R.style.Theme_Material_Light_Dialog_MinWidth,
                                             mDateListener,
                                             year, month, day);
-                                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                    dialog.getWindow();
                                     dialog.show();
 
 
