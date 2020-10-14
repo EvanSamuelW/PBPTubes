@@ -95,8 +95,8 @@ public class HomeActivity extends AppCompatActivity {
         final DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         View headerView = navigationView.getHeaderView(0);
-        TextView navUsername = headerView.findViewById(R.id.username);
-        TextView navEmail =  headerView.findViewById(R.id.userEmail);
+//        TextView navUsername = headerView.findViewById(R.id.username);
+//        TextView navEmail =  headerView.findViewById(R.id.userEmail);
         ImageView profile = headerView.findViewById(R.id.imageView);
         final ImageButton dark = findViewById(R.id.dark);
         // Passing each menu ID as a set of Ids because each
