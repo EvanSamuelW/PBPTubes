@@ -47,7 +47,7 @@ import javax.annotation.Nullable;
 public class AddTransactionFragment extends Fragment {
     public static final String TAG = "TAG";
     FirebaseAuth fAuth;
-    String userId,email;
+    String userId, email;
     FirebaseFirestore fStore;
     FirebaseUser user;
     StorageReference storageReference;
@@ -103,9 +103,6 @@ public class AddTransactionFragment extends Fragment {
         String jenis = getArguments().getString(RecyclerViewAdapter.Jenis);
         String harga = getArguments().getString(RecyclerViewAdapter.Harga);
         String fasilitas = getArguments().getString(RecyclerViewAdapter.Fasilitas);
-
-
-
 
 
         nameView = root.findViewById(R.id.nameView);
@@ -216,8 +213,7 @@ public class AddTransactionFragment extends Fragment {
                                 if (documentSnapshot.exists()) {
                                     nameView.setText(documentSnapshot.getString("fName"));
                                     email = documentSnapshot.getString("email");
-                                    add(finalPrice,email);
-
+                                    add(finalPrice, email);
 
 
                                 } else {
@@ -239,8 +235,6 @@ public class AddTransactionFragment extends Fragment {
                         });
 
 
-
-
                     } else if (days == 0) {
                         Toast.makeText(getActivity(), "Pemesanan minimal satu malam", Toast.LENGTH_SHORT).show();
                     } else {
@@ -260,14 +254,13 @@ public class AddTransactionFragment extends Fragment {
     }
 
 
-    private void add(Long finalPrice,String email) {
+    private void add(Long finalPrice, String email) {
         final String Room = roomView.getText().toString();
         final String Name = nameView.getText().toString();
         final String Price = Long.toString(finalPrice);
         final String CheckInDate = checkInDate.getText().toString();
         final String CheckOutDate = checkOutDate.getText().toString();
         final String emailUser = email;
-
 
 
         class AddTransaksi extends AsyncTask<Void, Void, Void> {
@@ -292,10 +285,6 @@ public class AddTransactionFragment extends Fragment {
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
                 Toast.makeText(getActivity().getApplicationContext(), "Transaction Saved", Toast.LENGTH_SHORT).show();
-                roomView.setText("");
-                nameView.setText("");
-                hargaView.setText("");
-
 
             }
         }
