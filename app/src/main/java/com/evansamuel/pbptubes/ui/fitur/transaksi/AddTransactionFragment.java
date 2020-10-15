@@ -111,7 +111,7 @@ public class AddTransactionFragment extends Fragment {
         hargaView = root.findViewById(R.id.HargaView);
         roomView = root.findViewById(R.id.roomView);
 
-        hargaView.setText("Rp" + harga + " Per Malam");
+        hargaView.setText("Rp" + harga + " Per Night");
         roomView.setText(jenis);
         fasilitasView.setText(fasilitas);
 
@@ -156,6 +156,8 @@ public class AddTransactionFragment extends Fragment {
                         year, month, day);
                 dialog.getWindow();
                 dialog.show();
+                dialog.getButton(DatePickerDialog.BUTTON_NEGATIVE).setTextColor(Color.BLACK);
+                dialog.getButton(DatePickerDialog.BUTTON_POSITIVE).setTextColor(Color.BLACK);
 
 
             }
@@ -175,6 +177,8 @@ public class AddTransactionFragment extends Fragment {
                         year, month, day);
                 dialog.getWindow();
                 dialog.show();
+                dialog.getButton(DatePickerDialog.BUTTON_NEGATIVE).setTextColor(Color.BLACK);
+                dialog.getButton(DatePickerDialog.BUTTON_POSITIVE).setTextColor(Color.BLACK);
 
 
             }
@@ -252,14 +256,15 @@ public class AddTransactionFragment extends Fragment {
                                             }
                                         }).create().show();
 
+
                             }
                         });
 
 
                     } else if (days == 0) {
-                        Toast.makeText(getActivity(), "Pemesanan minimal satu malam", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "This hotel has 1 night minimum stay", Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(getActivity(), "Tanggal check out tidak bisa lebih lama dari check in", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Check out date is invalid", Toast.LENGTH_SHORT).show();
 
                     }
 

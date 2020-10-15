@@ -48,7 +48,7 @@
             android:layout_marginTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="55dp"
-            android:hint="Nama"
+            android:hint="Name"
             app:boxStrokeColor="#3498DB"
             android:textColorHint="#3498DB"
             app:hintTextColor="#3498DB"
@@ -70,7 +70,7 @@
             android:layout_marginTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="55dp"
-            android:hint="Alamat"
+            android:hint="Address"
             app:boxStrokeColor="#3498DB"
             android:textColorHint="#3498DB"
             app:hintTextColor="#3498DB"
@@ -204,7 +204,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="sudah punya akun ?"
+                    android:text="already a member ?"
                     android:textAlignment="center" />
 
                 <Button

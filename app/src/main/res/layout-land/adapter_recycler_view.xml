@@ -51,7 +51,7 @@
                     <TextView
                         android:layout_width="90dp"
                         android:layout_height="wrap_content"
-                        android:text="Jenis Kamar"
+                        android:text="Room Type"
                         android:textSize="14dp"
                         android:textColor="@color/PrimaryText"
                         android:textStyle="bold" />
@@ -74,7 +74,7 @@
                     <TextView
                         android:layout_width="90dp"
                         android:layout_height="wrap_content"
-                        android:text="Fasilitas"
+                        android:text="Facilities"
                         android:textColor="@color/PrimaryText"
                         android:textSize="14dp"
                         android:textStyle="bold" />
@@ -97,7 +97,7 @@
                     <TextView
                         android:layout_width="90dp"
                         android:layout_height="wrap_content"
-                        android:text="Harga"
+                        android:text="Price"
                         android:textSize="14dp"
                         android:textColor="@color/PrimaryText"
                         android:textStyle="bold" />

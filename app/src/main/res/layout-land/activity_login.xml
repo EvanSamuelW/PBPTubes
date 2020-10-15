@@ -116,7 +116,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:textColor="@color/SecondaryText"
-            android:text="Belum punya akun?"
+            android:text="Not a member?"
             android:textAlignment="center" />
 
         <Button

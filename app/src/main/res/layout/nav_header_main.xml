@@ -24,4 +24,17 @@
         app:civ_border_color="#ffffff"
         android:src="@drawable/ic_baseline_account_circle_24"/>
 
+    <TextView
+        android:id="@+id/username"
+        android:textColor="#FFFFFF"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/email"
+        android:textColor="#FFFFFF"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+
 </LinearLayout>

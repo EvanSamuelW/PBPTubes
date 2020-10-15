@@ -55,7 +55,7 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
         android:layout_width="match_parent"
         android:layout_height="55dp"
-        android:hint="No Telepon"
+        android:hint="Phone Number"
         android:layout_marginTop="40dp"
         android:textColorHint="#3498DB"
         app:boxStrokeColor="#3498DB"

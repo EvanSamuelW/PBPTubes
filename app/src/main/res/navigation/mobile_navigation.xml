@@ -69,7 +69,7 @@
     <fragment
         android:id="@+id/nav_order"
         android:name="com.evansamuel.pbptubes.ui.fitur.transaksi.AddTransactionFragment"
-        android:label="order"
+        android:label="Order"
         tools:layout="@layout/fragment_add_transaction">
     <action
         android:id="@+id/action_nav_order_to_nav_dashboard"

@@ -27,9 +27,9 @@ import java.util.List;
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder> {
     private Context context;
     private List<Kamar> result;
-    public static final String Jenis="Jenis kamar tidak ditemukan";
-    public static final String Harga="Harga kamar tidak ditemukan";
-    public static final String Fasilitas="Fasilitas Kamar tidak ditemukan";
+    public static final String Jenis="Room type is not found";
+    public static final String Harga="Room price is not found";
+    public static final String Fasilitas="Room facilities is not found";
 
 
 

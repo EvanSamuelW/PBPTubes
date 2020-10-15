@@ -1,7 +1,6 @@
 package com.evansamuel.pbptubes;
 
 
-
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -42,7 +41,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class  UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerViewAdapter.UserViewHolder> {
+public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerViewAdapter.UserViewHolder> {
     public static final String TAG = "TAG";
     private Context context;
     private List<Transaksi> transaksiList;
@@ -81,8 +80,8 @@ public class  UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerV
 
     public class UserViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        TextView textViewName, userName, CheckOutDate,PriceTag,CheckInDate,room;
-        Button edit,delete;
+        TextView textViewName, userName, CheckOutDate, PriceTag, CheckInDate, room;
+        Button edit, delete;
 
         public UserViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -116,6 +115,8 @@ public class  UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerV
                                             year, month, day);
                                     dialog.getWindow();
                                     dialog.show();
+                                    dialog.getButton(DatePickerDialog.BUTTON_NEGATIVE).setTextColor(Color.BLACK);
+                                    dialog.getButton(DatePickerDialog.BUTTON_POSITIVE).setTextColor(Color.BLACK);
 
 
                                 }
@@ -155,16 +156,15 @@ public class  UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerV
                             update(transaksi);
 
                         } else if (days == 0) {
-                            Toast.makeText(context, "Pemesanan minimal satu malam", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, "This hotel has 1 night minimum stay", Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(context, "Tanggal check out tidak bisa lebih lama dari check in", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, "Check out date is invalid", Toast.LENGTH_SHORT).show();
 
                         }
 
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
-
 
 
                 }
@@ -190,7 +190,6 @@ public class  UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerV
         }
 
 
-
         @Override
         public void onClick(View v) {
 
@@ -199,8 +198,7 @@ public class  UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerV
     }
 
 
-
-    private void update(final Transaksi transaksi){
+    private void update(final Transaksi transaksi) {
         class UpdateUser extends AsyncTask<Void, Void, Void> {
 
             @Override
@@ -224,7 +222,7 @@ public class  UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerV
         update.execute();
     }
 
-    private void delete(final Transaksi user){
+    private void delete(final Transaksi user) {
         class DeleteUser extends AsyncTask<Void, Void, Void> {
 
             @Override
@@ -247,7 +245,6 @@ public class  UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerV
         DeleteUser delete = new DeleteUser();
         delete.execute();
     }
-
 
 
 }

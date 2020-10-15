@@ -85,15 +85,15 @@ public class RegisterActivity extends AppCompatActivity {
 
 
                 if (nama.getText().toString().isEmpty()) {
-                    Toast.makeText(RegisterActivity.this, "Nama tidak boleh kosong", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterActivity.this, "Name field must be filled", Toast.LENGTH_SHORT).show();
                 }else if(alamat.getText().toString().isEmpty()) {
-                    Toast.makeText(RegisterActivity.this, "Alamat tidak boleh kosong", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterActivity.this, "Address field must be filled", Toast.LENGTH_SHORT).show();
                 }else if (telepon.getText().toString().isEmpty()) {
-                    Toast.makeText(RegisterActivity.this, "Telepon tidak boleh kosong", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterActivity.this, "Phone number field must be filled", Toast.LENGTH_SHORT).show();
                 }else if (username.getText().toString().isEmpty()){
-                    Toast.makeText(RegisterActivity.this, "Username tidak boleh kosong", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterActivity.this, "Username field must be filled", Toast.LENGTH_SHORT).show();
                 }else if (email.getText().toString().isEmpty() && password.getText().toString().isEmpty()) {
-                    Toast.makeText(RegisterActivity.this, "Email atau password salah", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterActivity.this, "Email or password is incorrect", Toast.LENGTH_SHORT).show();
                 } else if (email.getText().toString().isEmpty()) {
                     Toast.makeText(RegisterActivity.this, "Email Invalid", Toast.LENGTH_SHORT).show();
                 } else if (password.getText().toString().isEmpty()) {

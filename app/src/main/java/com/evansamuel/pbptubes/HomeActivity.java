@@ -95,8 +95,8 @@ public class HomeActivity extends AppCompatActivity {
         final DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         View headerView = navigationView.getHeaderView(0);
-//        TextView navUsername = headerView.findViewById(R.id.username);
-//        TextView navEmail =  headerView.findViewById(R.id.userEmail);
+        TextView navUsername = headerView.findViewById(R.id.username);
+        TextView navEmail =  headerView.findViewById(R.id.email);
         ImageView profile = headerView.findViewById(R.id.imageView);
         final ImageButton dark = findViewById(R.id.dark);
         // Passing each menu ID as a set of Ids because each
@@ -111,6 +111,27 @@ public class HomeActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navigationView, navController);
 
 
+        if(user!=null)
+        {
+            firebaseAuth = firebaseAuth.getInstance();
+            firebaseUser = firebaseAuth.getCurrentUser();
+            firebaseAuth = FirebaseAuth.getInstance();
+            user = firebaseAuth.getCurrentUser();
+            userId = user.getUid();
+            final DocumentReference documentReference = fStore.collection("users").document(userId);
+            documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
+                @Override
+                public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                    if (documentSnapshot.exists()) {
+                        navUsername.setText(documentSnapshot.getString("email"));
+                        navEmail.setText(documentSnapshot.getString("fName"));
+                    } else {
+                        Log.d("tag", "onEvent: Document do not exists");
+                    }
+                }
+            });
+        }
+
         StorageReference profileRef = storageReference.child("users/" + firebaseAuth.getCurrentUser().getUid() + "/profile.jpg");
         profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
@@ -119,28 +140,17 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-//        userId = firebaseAuth.getCurrentUser().getUid();
-//        user = firebaseAuth.getCurrentUser();
-//
-//        final DocumentReference documentReference = fStore.collection("users").document(userId);
-//        documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
-//            @Override
-//            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-//                if (documentSnapshot.exists()) {
-//                    navUsername.setText(documentSnapshot.getString("email"));
-//                    navEmail.setText(documentSnapshot.getString("fName"));
-//                } else {
-//                    Log.d("tag", "onEvent: Document do not exists");
-//                }
-//            }
-//        });
+
+
+
+
 
         dark.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
-                builder.setTitle("Dark Mode")
-                        .setMessage("Enabling/Disabling dark mode requires app to restart! Do you want to continue?")
+                builder.setTitle("Changing Thme")
+                        .setMessage("Changing your current theme requires the app to restart. Proceed?")
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
@@ -172,7 +182,7 @@ public class HomeActivity extends AppCompatActivity {
     }
     private void darkMode (boolean b){
         preferencesManager.setDarkModeState(b);
-        Toast.makeText(this,"Changing dark mode!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this,"Changing theme!", Toast.LENGTH_SHORT).show();
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
@@ -190,7 +200,7 @@ public class HomeActivity extends AppCompatActivity {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_launcher_background)
                 .setContentTitle("Berhasil Logout")
-                .setContentText("Sampai Jumpa")
+                .setContentText("We hope to see you again")
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
         Intent notificationIntent = new Intent(this, MainActivity.class);
