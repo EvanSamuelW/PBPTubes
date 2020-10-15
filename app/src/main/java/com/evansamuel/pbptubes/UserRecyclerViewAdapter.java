@@ -134,23 +134,30 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
                     String date2 = day + "/" + month + "/" + year;
                     Transaksi transaksi = transaksiList.get(getAdapterPosition());
 
-                    String dateMasuk = transaksi.getCheckInDate();
+                    String dateMasuk = CheckInDate.getText().toString();
                     String dateKeluar = date2;
                     SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/yyyy");
-
+                    String dateTampung = transaksi.getCheckOutDate();
 
                     try {
                         Date dateIn = sdf.parse(dateMasuk);
                         Date dateOut = sdf.parse(dateKeluar);
+                        Date dateT = sdf.parse(dateTampung);
                         long difference = dateOut.getTime() - dateIn.getTime();
+                        long difference2 = dateT.getTime() - dateIn.getTime();
                         long seconds = difference / 1000;
                         long minutes = seconds / 60;
                         long hours = minutes / 60;
                         long days = hours / 24;
 
+                        long seconds2 = difference2 / 1000;
+                        long minutes2 = seconds2 / 60;
+                        long hours2 = minutes2 / 60;
+                        long days2 = hours2 / 24;
+
                         if (days > 0) {
 
-                            long finalPrice = days * Integer.parseInt(transaksi.getPrice());
+                            long finalPrice = days * ((Integer.parseInt(transaksi.getPrice()))/days2);
                             transaksi.setPrice(String.valueOf(finalPrice));
                             transaksi.setCheckOutDate(date2);
                             update(transaksi);
