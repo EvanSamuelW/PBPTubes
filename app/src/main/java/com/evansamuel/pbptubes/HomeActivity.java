@@ -95,8 +95,8 @@ public class HomeActivity extends AppCompatActivity {
         final DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         View headerView = navigationView.getHeaderView(0);
-        TextView navUsername = headerView.findViewById(R.id.username);
-        TextView navEmail =  headerView.findViewById(R.id.email);
+//        TextView navUsername = headerView.findViewById(R.id.username);
+//        TextView navEmail =  headerView.findViewById(R.id.email);
         ImageView profile = headerView.findViewById(R.id.imageView);
         final ImageButton dark = findViewById(R.id.dark);
         // Passing each menu ID as a set of Ids because each
@@ -111,26 +111,26 @@ public class HomeActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navigationView, navController);
 
 
-        if(user!=null)
-        {
-            firebaseAuth = firebaseAuth.getInstance();
-            firebaseUser = firebaseAuth.getCurrentUser();
-            firebaseAuth = FirebaseAuth.getInstance();
-            user = firebaseAuth.getCurrentUser();
-            userId = user.getUid();
-            final DocumentReference documentReference = fStore.collection("users").document(userId);
-            documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
-                @Override
-                public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                    if (documentSnapshot.exists()) {
-                        navUsername.setText(documentSnapshot.getString("email"));
-                        navEmail.setText(documentSnapshot.getString("fName"));
-                    } else {
-                        Log.d("tag", "onEvent: Document do not exists");
-                    }
-                }
-            });
-        }
+//        if(user!=null)
+//        {
+//            firebaseAuth = firebaseAuth.getInstance();
+//            firebaseUser = firebaseAuth.getCurrentUser();
+//            firebaseAuth = FirebaseAuth.getInstance();
+//            user = firebaseAuth.getCurrentUser();
+//            userId = user.getUid();
+////            final DocumentReference documentReference = fStore.collection("users").document(userId);
+////            documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
+////                @Override
+////                public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+////                    if (documentSnapshot.exists()) {
+////                        navUsername.setText(documentSnapshot.getString("email"));
+////                        navEmail.setText(documentSnapshot.getString("fName"));
+////                    } else {
+////                        Log.d("tag", "onEvent: Document do not exists");
+////                    }
+////                }
+////            });
+//        }
 
         StorageReference profileRef = storageReference.child("users/" + firebaseAuth.getCurrentUser().getUid() + "/profile.jpg");
         profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
