@@ -12,58 +12,85 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/cardBackground"
-        android:layout_marginBottom="5dp"
+        android:layout_margin="20dp"
         tools:context=".RecyclerViewAdapter"
         app:cardCornerRadius="6dp"
         app:cardElevation="4dp"
         android:id="@+id/ParentAdapter">
-    <TextView
-        style="@style/TextAppearance.MaterialComponents.Overline"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="20dp"
-        android:id="@+id/number_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
 
-    <TextView
-        style="@style/TextAppearance.MaterialComponents.Overline"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="40dp"
-        android:id="@+id/name_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        <!-- Nama user !-->
+        <TextView
+            style="@style/TextAppearance.MaterialComponents.Overline"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="20dp"
+            android:id="@+id/number_text"
+            android:textStyle="bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
-    <TextView
-        style="@style/TextAppearance.MaterialComponents.Overline"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="60dp"
-        android:id="@+id/price_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-        
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        <!-- Check In Date !-->
+        <TextView
+            style="@style/TextAppearance.MaterialComponents.Overline"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="40dp"
+            android:id="@+id/name_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
-        <Button
-            android:id="@+id/btn_edit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Edit"
+        <!-- Check Out Date !-->
+        <TextView
+            style="@style/TextAppearance.MaterialComponents.Overline"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="60dp"
+            android:id="@+id/price_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <!-- Jenis kamar !-->
+
+        <TextView
+            style="@style/TextAppearance.MaterialComponents.Overline"
+            android:layout_marginStart="5dp"
             android:layout_marginTop="80dp"
-            android:layout_marginLeft="470dp"
-            android:layout_marginRight="20dp"
-            android:backgroundTint="#3498DB"/>
+            android:id="@+id/room_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
-        <Button
-            android:id="@+id/btn_delete"
-            android:layout_width="wrap_content"
+        <!-- Harga kamar !-->
+
+        <TextView
+            style="@style/TextAppearance.MaterialComponents.Overline"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="100dp"
+            android:id="@+id/harga"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="80dp"
-            android:text="Delete"
-            android:backgroundTint="#ff4040" />
-    </LinearLayout>
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_edit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="120dp"
+                android:layout_marginEnd="30dp"
+                android:layout_toStartOf="@+id/btn_delete"
+                android:backgroundTint="#3498DB"
+                android:text="Edit" />
+
+            <Button
+                android:id="@+id/btn_delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="120dp"
+                android:layout_alignParentRight="true"
+                android:text="Delete"
+                android:backgroundTint="#ff4040" />
+        </RelativeLayout>
     </androidx.cardview.widget.CardView>
 
 
