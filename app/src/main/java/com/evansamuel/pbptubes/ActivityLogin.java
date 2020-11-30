@@ -103,6 +103,7 @@ public class ActivityLogin extends AppCompatActivity {
                                 startActivity(intent);
                                 createNotificationChannel();
                                 addNotification();
+                                finish();
                             } else {
                                 Toast.makeText(ActivityLogin.this,task.getException().getMessage(), Toast.LENGTH_LONG).show();
                             }
