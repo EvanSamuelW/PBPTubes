@@ -36,6 +36,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -199,8 +200,8 @@ public class AddTransactionFragment extends Fragment {
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 month = month + 1;
                 Log.d(TAG, "onDateSet:yyyy-mm-dd: " + year + "-" + month + "-" + day);
-
-                String date2 = year + "-" + month + "-" + day;
+                DecimalFormat mFormat= new DecimalFormat("00");
+                String date2 =  mFormat.format(Double.valueOf(year)) + "-" +  mFormat.format(Double.valueOf(month)) + "-" +  mFormat.format(Double.valueOf(day));
                 checkInDate.setText(date2);
             }
         };
@@ -210,8 +211,9 @@ public class AddTransactionFragment extends Fragment {
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 month = month + 1;
                 Log.d(TAG, "onDateSet:yyyy-mm-dd: " + year + "-" + month + "-" + day);
+                DecimalFormat mFormat= new DecimalFormat("00");
 
-                String date1 = year + "-" + month + "-" + day;
+                String date1 =  mFormat.format(Double.valueOf(year)) + "-" +  mFormat.format(Double.valueOf(month)) + "-" +  mFormat.format(Double.valueOf(day));
                 checkOutDate.setText(date1);
             }
         };
@@ -306,7 +308,7 @@ public class AddTransactionFragment extends Fragment {
         add.enqueue(new Callback<TransaksiResponse>() {
             @Override
             public void onResponse(Call<TransaksiResponse> call, Response<TransaksiResponse> response) {
-                Toast.makeText(getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
                 progressDialog.dismiss();
             }
 
