@@ -36,7 +36,6 @@ public class FoodFragment extends Fragment {
     private RecyclerView recyclerView;
     private MenuRecyclerAdapter recyclerAdapter;
     private List<MenuDao> user = new ArrayList<>();
-    private SearchView searchView;
     private FloatingActionButton addBtn;
     private View v;
     private SwipeRefreshLayout swipeRefresh;

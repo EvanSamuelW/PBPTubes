@@ -2,6 +2,7 @@ package com.evansamuel.pbptubes.ui.fitur.transaksi;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -22,6 +23,9 @@ import android.widget.Toast;
 
 import com.evansamuel.pbptubes.R;
 import com.evansamuel.pbptubes.ui.fitur.RecyclerViewAdapter;
+import com.evansamuel.pbptubes.ui.fitur.menu.ApiClient;
+import com.evansamuel.pbptubes.ui.fitur.menu.ApiInterface;
+import com.evansamuel.pbptubes.ui.fitur.menu.MenuResponse;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -40,6 +44,10 @@ import java.util.concurrent.Executor;
 
 import javax.annotation.Nullable;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link AddTransactionFragment#newInstance} factory method to
@@ -55,6 +63,8 @@ public class AddTransactionFragment extends Fragment {
     TextView nameView, fasilitasView, hargaView, roomView, checkInDate, checkOutDate;
     private DatePickerDialog.OnDateSetListener mDateListener, mDateListener2;
     Button btn_order;
+    private ProgressDialog progressDialog;
+
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -102,16 +112,17 @@ public class AddTransactionFragment extends Fragment {
 
         View root = inflater.inflate(R.layout.fragment_add_transaction, container, false);
         String jenis = getArguments().getString(RecyclerViewAdapter.Jenis);
-        String harga = getArguments().getString(RecyclerViewAdapter.Harga);
+        Double harga = getArguments().getDouble(RecyclerViewAdapter.Harga);
         String fasilitas = getArguments().getString(RecyclerViewAdapter.Fasilitas);
 
+        progressDialog = new ProgressDialog(getContext());
 
         nameView = root.findViewById(R.id.nameView);
         fasilitasView = root.findViewById(R.id.FasilitasView);
         hargaView = root.findViewById(R.id.HargaView);
         roomView = root.findViewById(R.id.roomView);
 
-        hargaView.setText("Rp" + harga + " Per Night");
+        hargaView.setText("Rp" + harga.toString() + " Per Night");
         roomView.setText(jenis);
         fasilitasView.setText(fasilitas);
 
@@ -138,7 +149,6 @@ public class AddTransactionFragment extends Fragment {
                 }
             }
         });
-
 
 
         checkInDate.setOnClickListener(new View.OnClickListener() {
@@ -188,9 +198,9 @@ public class AddTransactionFragment extends Fragment {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 month = month + 1;
-                Log.d(TAG, "onDateSet:dd/mm/yyyy: " + day + "/" + month + "/" + year);
+                Log.d(TAG, "onDateSet:yyyy-mm-dd: " + year + "-" + month + "-" + day);
 
-                String date2 = day + "/" + month + "/" + year;
+                String date2 = year + "-" + month + "-" + day;
                 checkInDate.setText(date2);
             }
         };
@@ -199,9 +209,9 @@ public class AddTransactionFragment extends Fragment {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 month = month + 1;
-                Log.d(TAG, "onDateSet: dd/mm/yyyy: " + day + "/" + month + "/" + year);
+                Log.d(TAG, "onDateSet:yyyy-mm-dd: " + year + "-" + month + "-" + day);
 
-                String date1 = day + "/" + month + "/" + year;
+                String date1 = year + "-" + month + "-" + day;
                 checkOutDate.setText(date1);
             }
         };
@@ -211,7 +221,7 @@ public class AddTransactionFragment extends Fragment {
             public void onClick(View view) {
                 String date1 = checkInDate.getText().toString();
                 String date2 = checkOutDate.getText().toString();
-                SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/yyyy");
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
 
 
                 try {
@@ -225,8 +235,8 @@ public class AddTransactionFragment extends Fragment {
 
                     if (days > 0) {
 
-                        long finalPrice = days * Integer.parseInt(harga);
-
+                        long finalPrice = days * (harga).longValue();
+                        Double d = Long.valueOf(finalPrice).doubleValue();
                         fAuth = FirebaseAuth.getInstance();
                         fStore = FirebaseFirestore.getInstance();
                         storageReference = FirebaseStorage.getInstance().getReference();
@@ -239,8 +249,11 @@ public class AddTransactionFragment extends Fragment {
                             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                                 if (documentSnapshot.exists()) {
                                     email = documentSnapshot.getString("email");
-                                    add(finalPrice, email);
-
+                                    try {
+                                        saveBooking(d, email);
+                                    } catch (ParseException parseException) {
+                                        parseException.printStackTrace();
+                                    }
                                 } else {
                                     Log.d("tag", "onEvent: Document do not exists");
                                 }
@@ -279,43 +292,30 @@ public class AddTransactionFragment extends Fragment {
         return root;
     }
 
-
-    private void add(Long finalPrice, String email) {
+    private void saveBooking(Double finalPrice, String email) throws ParseException {
         final String Room = roomView.getText().toString();
         final String Name = nameView.getText().toString();
-        final String Price = Long.toString(finalPrice);
+        final Double Price = finalPrice;
         final String CheckInDate = checkInDate.getText().toString();
         final String CheckOutDate = checkOutDate.getText().toString();
         final String emailUser = email;
+        ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
+        Call<TransaksiResponse> add = apiService.createBooking(emailUser, Name, Room, CheckInDate, CheckOutDate, Price);
 
 
-        class AddTransaksi extends AsyncTask<Void, Void, Void> {
-
+        add.enqueue(new Callback<TransaksiResponse>() {
             @Override
-            protected Void doInBackground(Void... voids) {
-                Transaksi transaksi = new Transaksi();
-                transaksi.setName(Name);
-                transaksi.setRoom(Room);
-                transaksi.setPrice(Price);
-                transaksi.setCheckInDate(CheckInDate);
-                transaksi.setCheckOutDate(CheckOutDate);
-                transaksi.setEmail(emailUser);
-
-                DatabaseClient.getInstance(getActivity().getApplicationContext()).getDatabase()
-                        .transaksiDAO()
-                        .insert(transaksi);
-                return null;
+            public void onResponse(Call<TransaksiResponse> call, Response<TransaksiResponse> response) {
+                Toast.makeText(getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
             }
 
             @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-                Toast.makeText(getActivity().getApplicationContext(), "Transaction Saved", Toast.LENGTH_SHORT).show();
+            public void onFailure(Call<TransaksiResponse> call, Throwable t) {
+                progressDialog.dismiss();
 
             }
-        }
-
-        AddTransaksi add = new AddTransaksi();
-        add.execute();
+        });
     }
+
 }

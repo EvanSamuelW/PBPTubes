@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -19,6 +20,11 @@ import android.widget.Toast;
 import com.evansamuel.pbptubes.R;
 import com.evansamuel.pbptubes.UserRecyclerViewAdapter;
 import com.evansamuel.pbptubes.databinding.FragmentBookBinding;
+import com.evansamuel.pbptubes.ui.fitur.menu.ApiClient;
+import com.evansamuel.pbptubes.ui.fitur.menu.ApiInterface;
+import com.evansamuel.pbptubes.ui.fitur.menu.MenuDao;
+import com.evansamuel.pbptubes.ui.fitur.menu.MenuRecyclerAdapter;
+import com.evansamuel.pbptubes.ui.fitur.menu.MenuResponse;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -32,13 +38,18 @@ import com.google.firebase.storage.StorageReference;
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link TransaksiFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class TransaksiFragment extends Fragment {
-    private ArrayList<Transaksi> ListTransaksi;
+    private ArrayList<TransaksiDAO> ListTransaksi = new ArrayList<>();
+    private UserRecyclerViewAdapter recyclerAdapter;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
     FragmentBookBinding binding;
@@ -49,7 +60,7 @@ public class TransaksiFragment extends Fragment {
     StorageReference storageReference;
     String userId;
     private String email;
-
+    View v;
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -95,13 +106,13 @@ public class TransaksiFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View root = inflater.inflate(R.layout.fragment_transaksi, container, false);
+        v = inflater.inflate(R.layout.fragment_transaksi, container, false);
 
-        refreshLayout = root.findViewById(R.id.swipe_refresh);
+        refreshLayout = v.findViewById(R.id.swipe_refresh);
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
-        recyclerView = root.findViewById(R.id.user_rv);
+        recyclerView = v.findViewById(R.id.user_rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         userId = fAuth.getCurrentUser().getUid();
@@ -112,13 +123,13 @@ public class TransaksiFragment extends Fragment {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                 if (documentSnapshot.exists()) {
-                   email = documentSnapshot.getString("email");
-                    getUsers();
+                    email = documentSnapshot.getString("email");
+                    loadBooking(email);
 
                     refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                         @Override
                         public void onRefresh() {
-                            getUsers();
+                            loadBooking(email);
                             refreshLayout.setRefreshing(false);
                         }
                     });
@@ -130,41 +141,40 @@ public class TransaksiFragment extends Fragment {
         });
 
 
-
-        return root;
-
+        return v;
 
 
     }
 
 
+    public void loadBooking(String email) {
+        ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
+        Call<TransaksiResponse> call = apiService.getBookingByEmail(email, "data");
 
-    private void getUsers(){
-        class GetUsers extends AsyncTask<Void, Void, List<Transaksi>> {
-
+        call.enqueue(new Callback<TransaksiResponse>() {
             @Override
-            protected List  <Transaksi> doInBackground(Void... voids) {
-                List<Transaksi> pegawaiList = DatabaseClient
-                        .getInstance(getActivity())
-                        .getDatabase()
-                        .transaksiDAO()
-                        .loadAllUserTransaction(email);
-                return pegawaiList;
+            public void onResponse(Call<TransaksiResponse> call, Response<TransaksiResponse> response) {
+                generateDataList(response.body().getTransactions());
+                refreshLayout.setRefreshing(false);
             }
 
             @Override
-            protected void onPostExecute(List<Transaksi> users) {
-                super.onPostExecute(users);
-                UserRecyclerViewAdapter adapter = new UserRecyclerViewAdapter(getContext(), users);
-                recyclerView.setAdapter(adapter);
-                if (users.isEmpty()){
-                    Toast.makeText(getActivity(), "Empty List", Toast.LENGTH_SHORT).show();
-                }
+            public void onFailure(Call<TransaksiResponse> call, Throwable t) {
+//                Toast.makeText(getContext(), "Kesalahan Jaringan", Toast.LENGTH_SHORT).show();
+                refreshLayout.setRefreshing(false);
             }
-        }
-
-        GetUsers get = new GetUsers();
-        get.execute();
+        });
     }
 
+
+    private void generateDataList(List<TransaksiDAO> customerList) {
+
+        recyclerView = v.findViewById(R.id.user_rv);
+        recyclerAdapter = new UserRecyclerViewAdapter(getContext(), customerList);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(recyclerAdapter);
+
+    }
 }
