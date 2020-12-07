@@ -52,7 +52,17 @@
         android:id="@+id/nav_food"
         android:name="com.evansamuel.pbptubes.ui.fitur.menu.FoodFragment"
         android:label="Food"
-        tools:layout="@layout/fragment_food"/>
+        tools:layout="@layout/fragment_food">
+        <action
+            android:id="@+id/action_nav_food_to_nav_addFood"
+            app:destination="@id/nav_addFood" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_addFood"
+        android:name="com.evansamuel.pbptubes.ui.fitur.menu.AddFoodFragment"
+        android:label="Add Food"
+        tools:layout="@layout/fragment_add_food"/>
 
     <fragment
     android:id="@+id/nav_location"

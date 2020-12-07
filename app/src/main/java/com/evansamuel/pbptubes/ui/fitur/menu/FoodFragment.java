@@ -3,6 +3,7 @@ package com.evansamuel.pbptubes.ui.fitur.menu;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,6 +17,7 @@ import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.evansamuel.pbptubes.R;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +37,7 @@ public class FoodFragment extends Fragment {
     private MenuRecyclerAdapter recyclerAdapter;
     private List<MenuDao> user = new ArrayList<>();
     private SearchView searchView;
+    private FloatingActionButton addBtn;
     private View v;
     private SwipeRefreshLayout swipeRefresh;
 
@@ -86,6 +89,15 @@ public class FoodFragment extends Fragment {
 
         swipeRefresh = v.findViewById(R.id.swipe_refresh);
         swipeRefresh.setRefreshing(true);
+        addBtn = v.findViewById(R.id.addBtn);
+
+        addBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Navigation.findNavController(view).navigate(R.id.action_nav_food_to_nav_addFood);
+
+            }
+        });
         loadMenu();
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
