@@ -30,7 +30,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public static final String Jenis="Room type is not found";
     public static final String Harga="Room price is not found";
     public static final String Fasilitas="Room facilities is not found";
-
+    public static final Double harga2=0.0;
 
 
 
@@ -58,6 +58,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         String nama = holder.adapterRecyclerViewBinding.tvNpm.getText().toString();
         String harga = holder.adapterRecyclerViewBinding.tvFakultas.getText().toString();
         String fasilitas = holder.adapterRecyclerViewBinding.tvNama.getText().toString();
+        Double harga2 = Double.parseDouble(harga);
 
 
         holder.adapterRecyclerViewBinding.order.setOnClickListener(new View.OnClickListener() {
@@ -65,7 +66,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             public void onClick(View view) {
                 Bundle bundle = new Bundle();
                 bundle.putString(Jenis,nama);
-                bundle.putString(Harga,harga);
+                bundle.putDouble(Harga,harga2);
                 bundle.putString(Fasilitas,fasilitas);
 
 

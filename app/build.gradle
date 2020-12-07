@@ -64,15 +64,11 @@ dependencies {
     //card view
     implementation "androidx.cardview:cardview:1.0.0"
 
-    def room_version = "2.2.5"
-
-    implementation "androidx.room:room-runtime:$room_version"
-    annotationProcessor "androidx.room:room-compiler:$room_version"
 
     //circle
     implementation 'de.hdodenhof:circleimageview:3.1.0'
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'com.github.bumptech.glide:glide:4.11.0'
-
+    implementation 'com.google.android.gms:play-services-basement:17.5.0'
 
 }

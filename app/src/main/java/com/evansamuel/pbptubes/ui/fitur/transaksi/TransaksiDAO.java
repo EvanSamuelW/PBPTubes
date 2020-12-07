@@ -1,31 +1,97 @@
 package com.evansamuel.pbptubes.ui.fitur.transaksi;
 
-import androidx.room.Dao;
-import androidx.room.Delete;
-import androidx.room.Insert;
-import androidx.room.Query;
-import androidx.room.Update;
-import com.evansamuel.pbptubes.ui.fitur.transaksi.Transaksi;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
-import java.util.List;
+import com.google.gson.annotations.SerializedName;
 
-@Dao
-public interface TransaksiDAO {
+import java.util.Date;
 
-    @Query("SELECT * FROM transaksi WHERE email= :user")
-    List<Transaksi> loadAllUserTransaction(String user);
 
-    @Insert
-    void insert(Transaksi transaksi);
+public class TransaksiDAO {
 
-    @Update
-    void update(Transaksi transaksi);
+    @SerializedName("id")
+    private String id;
 
-    @Delete
-    void delete(Transaksi transaksi);
+    @SerializedName("check_in_date")
+    private Date check_in_date;
+
+    @SerializedName("check_out_date")
+    private Date check_out_date;
+
+    @SerializedName("room")
+    private String room;
+
+    @SerializedName("email")
+    private String email;
+
+    @SerializedName("name")
+    private String name;
+
+    @SerializedName("price")
+    private Double price;
+
+    public TransaksiDAO(String id, Date check_in_date, Date check_out_date, String room, String email, String name, Double price) {
+        this.id = id;
+        this.check_in_date = check_in_date;
+        this.check_out_date = check_out_date;
+        this.room = room;
+        this.email = email;
+        this.name = name;
+        this.price = price;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public Date getCheck_in_date() {
+        return check_in_date;
+    }
+
+    public void setCheck_in_date(Date check_in_date) {
+        this.check_in_date = check_in_date;
+    }
+
+    public Date getCheck_out_date() {
+        return check_out_date;
+    }
+
+    public void setCheck_out_date(Date check_out_date) {
+        this.check_out_date = check_out_date;
+    }
+
+    public String getRoom() {
+        return room;
+    }
+
+    public void setRoom(String room) {
+        this.room = room;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
 }
