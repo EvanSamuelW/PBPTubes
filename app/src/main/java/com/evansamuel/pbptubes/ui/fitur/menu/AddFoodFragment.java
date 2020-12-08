@@ -32,7 +32,7 @@ import retrofit2.Response;
 public class AddFoodFragment extends Fragment {
     private ProgressDialog progressDialog;
     private EditText etName, etPrice, etImage;
-    private Button addBtn,editBtn,cancelBtn;
+    private Button addBtn, editBtn, cancelBtn;
     private String status;
     private MenuDao menu;
 
@@ -82,10 +82,9 @@ public class AddFoodFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_add_food, container, false);
-        menu   = (MenuDao) getArguments().getSerializable("menu");
+        menu = (MenuDao) getArguments().getSerializable("menu");
 
         progressDialog = new ProgressDialog(getContext());
-
 
 
         etName = v.findViewById(R.id.edtMenuName);
@@ -97,38 +96,28 @@ public class AddFoodFragment extends Fragment {
         cancelBtn = v.findViewById(R.id.btn_cancel);
 
         status = getArguments().getString("status");
-        if(status.equals("edit"))
-        {
+        if (status.equals("edit")) {
             etName.setText(menu.getNama());
             etPrice.setText(String.valueOf(Math.round(menu.getPrice())));
             etImage.setText(menu.getPhoto());
             addBtn.setVisibility(View.GONE);
-        }
-        else if(status.equals("tambah"))
-        {
+        } else if (status.equals("tambah")) {
             editBtn.setVisibility(View.GONE);
             cancelBtn.setVisibility(View.GONE);
         }
         addBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(etName.getText().toString().isEmpty())
-                {
+                if (etName.getText().toString().isEmpty()) {
                     etName.setError("Field name must be filled");
                     etName.requestFocus();
-                }
-                else if(etPrice.getText().toString().isEmpty())
-                {
+                } else if (etPrice.getText().toString().isEmpty()) {
                     etPrice.setError("Field price must be filled");
                     etPrice.requestFocus();
-                }
-                else if(etImage.getText().toString().isEmpty())
-                {
+                } else if (etImage.getText().toString().isEmpty()) {
                     etImage.setError("Image URL must be filled");
                     etImage.requestFocus();
-                }
-                else
-                {
+                } else {
                     saveMenu();
 
                 }
@@ -138,23 +127,16 @@ public class AddFoodFragment extends Fragment {
         editBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(etName.getText().toString().isEmpty())
-                {
+                if (etName.getText().toString().isEmpty()) {
                     etName.setError("Field name must be filled");
                     etName.requestFocus();
-                }
-                else if(etPrice.getText().toString().isEmpty())
-                {
+                } else if (etPrice.getText().toString().isEmpty()) {
                     etPrice.setError("Field price must be filled");
                     etPrice.requestFocus();
-                }
-                else if(etImage.getText().toString().isEmpty())
-                {
+                } else if (etImage.getText().toString().isEmpty()) {
                     etImage.setError("Image URL must be filled");
                     etImage.requestFocus();
-                }
-                else
-                {
+                } else {
                     updateMenu(menu.getId());
                 }
             }
@@ -166,7 +148,7 @@ public class AddFoodFragment extends Fragment {
     private void saveMenu() {
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
         Call<MenuResponse> add = apiService.createMenu(etName.getText().toString(),
-                Double.parseDouble(etPrice.getText().toString()),etImage.getText().toString());
+                Double.parseDouble(etPrice.getText().toString()), etImage.getText().toString());
 
 
         add.enqueue(new Callback<MenuResponse>() {
@@ -187,13 +169,13 @@ public class AddFoodFragment extends Fragment {
 
     private void updateMenu(String sId) {
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-        Call<MenuResponse> update = apiService.updateMenu(sId,etName.getText().toString(),Double.valueOf(etPrice.getText().toString()),etImage.getText().toString());
+        Call<MenuResponse> update = apiService.updateMenu(sId, etName.getText().toString(), Double.valueOf(etPrice.getText().toString()), etImage.getText().toString());
 
 
         update.enqueue(new Callback<MenuResponse>() {
             @Override
             public void onResponse(Call<MenuResponse> call, Response<MenuResponse> response) {
-                Toast.makeText(getContext(), "Update Berhasil",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Update Berhasil", Toast.LENGTH_SHORT).show();
                 progressDialog.dismiss();
 
 

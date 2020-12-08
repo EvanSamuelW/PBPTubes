@@ -22,7 +22,6 @@ public interface ApiInterface {
     Call<MenuResponse> getAllMenu(@Query("data") String data);
 
 
-
     @POST("menu/insert")
     @FormUrlEncoded
     Call<MenuResponse> createMenu(@Field("name") String nama,
@@ -45,25 +44,24 @@ public interface ApiInterface {
     Call<TransaksiResponse> getAllBooking(@Query("data") String data);
 
 
-
     @POST("room/insert")
     @FormUrlEncoded
     Call<TransaksiResponse> createBooking(
-                                    @Field("email") String email,
-                                  @Field("name") String name,
-                                  @Field("room") String room,
-                                    @Field("check_in_date") String check_in_date,
-                                    @Field("check_out_date") String check_out_date,
-                                    @Field("price") Double price );
+            @Field("email") String email,
+            @Field("name") String name,
+            @Field("room") String room,
+            @Field("check_in_date") String check_in_date,
+            @Field("check_out_date") String check_out_date,
+            @Field("price") Double price);
 
     @PUT("room/update/{id}")
     @FormUrlEncoded
     Call<TransaksiResponse> updateBooking(@Path("id") String id,
                                           @Field("email") String email,
-                                          @Field("name") Double name,
+                                          @Field("name") String name,
                                           @Field("room") String room,
-                                          @Field("check_in_date") Date check_in_date,
-                                          @Field("check_out_date") Date check_out_date,
+                                          @Field("check_in_date") String check_in_date,
+                                          @Field("check_out_date") String check_out_date,
                                           @Field("price") Double price);
 
 

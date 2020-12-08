@@ -42,6 +42,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.Executor;
+import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nullable;
 
@@ -223,17 +224,15 @@ public class AddTransactionFragment extends Fragment {
             public void onClick(View view) {
                 String date1 = checkInDate.getText().toString();
                 String date2 = checkOutDate.getText().toString();
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
 
                 try {
                     Date dateIn = sdf.parse(date1);
                     Date dateOut = sdf.parse(date2);
                     long difference = dateOut.getTime() - dateIn.getTime();
-                    long seconds = difference / 1000;
-                    long minutes = seconds / 60;
-                    long hours = minutes / 60;
-                    long days = hours / 24;
+                    long days = TimeUnit.DAYS.convert(difference, TimeUnit.MILLISECONDS);
+
 
                     if (days > 0) {
 
