@@ -54,7 +54,7 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
     public void onBindViewHolder(@NonNull UserViewHolder holder, int position) {
         TransaksiDAO transaksi = transaksiList.get(position);
         holder.userName.setText(transaksi.getName());
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
             String dateIn = sdf.format(transaksi.getCheck_in_date());
             String dateOut = sdf.format(transaksi.getCheck_out_date());

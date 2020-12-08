@@ -41,7 +41,7 @@ public class MenuRecyclerAdapter extends RecyclerView.Adapter<MenuRecyclerAdapte
 
 
     public MenuRecyclerAdapter(Context context, List<MenuDao> dataList) {
-        this.dataList = dataList;
+        this.dataList = dataList; //d
         this.filteredDataList = dataList;
         this.context = context;
     }
