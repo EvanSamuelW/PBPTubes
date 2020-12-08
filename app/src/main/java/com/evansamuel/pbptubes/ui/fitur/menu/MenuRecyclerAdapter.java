@@ -69,6 +69,15 @@ public class MenuRecyclerAdapter extends RecyclerView.Adapter<MenuRecyclerAdapte
 
 
 
+        holder.orderBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("menu",brg);
+                Navigation.findNavController(v).navigate(R.id.action_nav_food_to_nav_food_transaksi,bundle);
+            }
+        });
+
 
         holder.twName.setText(brg.getNama());
         holder.twPrice.setText("Rp" + brg.getPrice().toString());
@@ -107,6 +116,7 @@ public class MenuRecyclerAdapter extends RecyclerView.Adapter<MenuRecyclerAdapte
                 FragmentManager fragmentManager = ((AppCompatActivity) context).getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.view, fragment1);
+                fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
             }
         });

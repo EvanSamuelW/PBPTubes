@@ -2,6 +2,7 @@ package com.evansamuel.pbptubes.ui.fitur.menu;
 
 import android.view.Menu;
 
+import com.evansamuel.pbptubes.ui.fitur.foodorder.TransaksiFoodResponse;
 import com.evansamuel.pbptubes.ui.fitur.transaksi.TransaksiResponse;
 
 import java.util.Date;
@@ -38,6 +39,39 @@ public interface ApiInterface {
 
     @DELETE("menu/delete/{id}")
     Call<MenuResponse> deleteMenu(@Path("id") String id);
+
+
+    @GET("food")
+    Call<TransaksiFoodResponse> getAllFood(@Query("data") String data);
+
+
+    @POST("food/insert")
+    @FormUrlEncoded
+    Call<TransaksiFoodResponse> createFoodTransaksi(
+            @Field("menu") String menu,
+            @Field("price") Double price,
+            @Field("amount") int amount,
+            @Field("email") String customer_name,
+            @Field("photo") String photo);
+
+    @PUT("food/update/{id}")
+    @FormUrlEncoded
+    Call<TransaksiResponse> updateBooking(@Path("id") String id,
+                                          @Field("menu") String menu,
+                                          @Field("price") Double price,
+                                          @Field("amount") int amount,
+                                          @Field("email") String customer_name,
+                                          @Field("photo") String photo);
+
+
+    @DELETE("food/delete/{id}")
+    Call<TransaksiFoodResponse> deleteFoodTransaksi(@Path("id") String id);
+
+
+    @GET("food/{email}")
+    Call<TransaksiFoodResponse> getFoodTransaksiByEmail(
+            @Path("email") String email,
+            @Query("data") String data);
 
 
     @GET("room")

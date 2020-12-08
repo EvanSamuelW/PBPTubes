@@ -119,6 +119,7 @@ public class FoodFragment extends Fragment {
                 FragmentManager fragmentManager = getFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.view, fragment1);
+                fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
 
 

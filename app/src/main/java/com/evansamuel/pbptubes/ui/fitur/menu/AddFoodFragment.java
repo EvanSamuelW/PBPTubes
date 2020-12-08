@@ -34,7 +34,7 @@ import retrofit2.Response;
 public class AddFoodFragment extends Fragment {
     private ProgressDialog progressDialog;
     private EditText etName, etPrice, etImage;
-    private Button addBtn, editBtn, cancelBtn;
+    private Button addBtn, editBtn;
     private String status;
     private MenuDao menu;
 
@@ -95,7 +95,6 @@ public class AddFoodFragment extends Fragment {
 
         addBtn = v.findViewById(R.id.btnAdd);
         editBtn = v.findViewById(R.id.btn_edit);
-        cancelBtn = v.findViewById(R.id.btn_cancel);
 
         status = getArguments().getString("status");
         if (status.equals("edit")) {
@@ -108,16 +107,7 @@ public class AddFoodFragment extends Fragment {
 
         }
 
-        cancelBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FoodFragment fragment1 = new FoodFragment();
-                FragmentManager fragmentManager = getFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.frame_layout, fragment1);
-                fragmentTransaction.commit();
-            }
-        });
+
 
         addBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -203,6 +193,5 @@ public class AddFoodFragment extends Fragment {
             }
         });
     }
-
 
 }

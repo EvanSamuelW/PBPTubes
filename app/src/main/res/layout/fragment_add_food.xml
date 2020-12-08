@@ -76,7 +76,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <RelativeLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content">
         <Button
             android:id="@+id/btnAdd"
@@ -85,30 +85,19 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="Add Menu"
-            android:layout_alignParentLeft="true"
+            android:layout_centerHorizontal="true"
             android:textAlignment="gravity"
             app:backgroundTint="#3498DB"
             android:textSize="20sp" />
 
-        <Button
-            android:id="@+id/btn_cancel"
-            android:layout_marginTop="20dp"
-            android:layout_width="130dp"
-            android:layout_alignParentRight="true"
-            android:layout_height="wrap_content"
-            android:layout_gravity="left"
-            android:text="Cancel"
-            android:textAlignment="gravity"
-            app:backgroundTint="#ff4040"
-            android:textSize="20sp" />
+
 
         <Button
             android:id="@+id/btn_edit"
             android:layout_marginTop="20dp"
             android:layout_width="130dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="left"
-            android:layout_alignParentLeft="true"
+            android:layout_centerHorizontal="true"
             android:text="Save"
             android:textAlignment="gravity"
             app:backgroundTint="#3498DB"
