@@ -16,6 +16,9 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -99,8 +102,12 @@ public class MenuRecyclerAdapter extends RecyclerView.Adapter<MenuRecyclerAdapte
                 bundle.putSerializable("menu",brg);
                 bundle.putString("status", "edit");
 
-                Navigation.findNavController(view).navigate(R.id.action_nav_food_to_nav_addFood,bundle);
-
+                AddFoodFragment fragment1 = new AddFoodFragment();
+                fragment1.setArguments(bundle);
+                FragmentManager fragmentManager = ((AppCompatActivity) context).getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.view, fragment1);
+                fragmentTransaction.commit();
             }
         });
 

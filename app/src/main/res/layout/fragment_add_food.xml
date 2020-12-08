@@ -3,12 +3,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/bg_color"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.fitur.menu.AddFoodFragment">
-
+    <LinearLayout
+        android:id="@+id/viewfood"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_margin="20dp"
         android:orientation="vertical">
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/menuNameLayout"
@@ -70,13 +75,17 @@
                 android:textSize="25sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
         <Button
             android:id="@+id/btnAdd"
             android:layout_marginTop="20dp"
-            android:layout_width="208dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="Add Menu"
+            android:layout_alignParentLeft="true"
             android:textAlignment="gravity"
             app:backgroundTint="#3498DB"
             android:textSize="20sp" />
@@ -85,11 +94,12 @@
             android:id="@+id/btn_cancel"
             android:layout_marginTop="20dp"
             android:layout_width="130dp"
+            android:layout_alignParentRight="true"
             android:layout_height="wrap_content"
             android:layout_gravity="left"
             android:text="Cancel"
             android:textAlignment="gravity"
-            app:backgroundTint="#3498DB"
+            app:backgroundTint="#ff4040"
             android:textSize="20sp" />
 
         <Button
@@ -98,13 +108,14 @@
             android:layout_width="130dp"
             android:layout_height="wrap_content"
             android:layout_gravity="left"
+            android:layout_alignParentLeft="true"
             android:text="Save"
             android:textAlignment="gravity"
             app:backgroundTint="#3498DB"
             android:textSize="20sp" />
-
+        </RelativeLayout>
     </LinearLayout>
-
+    </LinearLayout>
 
 
 </FrameLayout>

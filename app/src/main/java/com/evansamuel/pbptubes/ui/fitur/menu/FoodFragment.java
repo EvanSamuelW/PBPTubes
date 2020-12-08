@@ -3,6 +3,8 @@ package com.evansamuel.pbptubes.ui.fitur.menu;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -112,7 +114,13 @@ public class FoodFragment extends Fragment {
         addBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Navigation.findNavController(view).navigate(R.id.action_nav_food_to_nav_addFood,bundle);
+                AddFoodFragment fragment1 = new AddFoodFragment();
+                fragment1.setArguments(bundle);
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.view, fragment1);
+                fragmentTransaction.commit();
+
 
             }
         });

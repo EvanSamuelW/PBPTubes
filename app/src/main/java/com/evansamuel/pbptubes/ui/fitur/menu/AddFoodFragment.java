@@ -6,6 +6,8 @@ import android.os.Bundle;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 
 import android.view.LayoutInflater;
@@ -103,8 +105,20 @@ public class AddFoodFragment extends Fragment {
             addBtn.setVisibility(View.GONE);
         } else if (status.equals("tambah")) {
             editBtn.setVisibility(View.GONE);
-            cancelBtn.setVisibility(View.GONE);
+
         }
+
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FoodFragment fragment1 = new FoodFragment();
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.frame_layout, fragment1);
+                fragmentTransaction.commit();
+            }
+        });
+
         addBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -189,4 +203,6 @@ public class AddFoodFragment extends Fragment {
             }
         });
     }
+
+
 }
