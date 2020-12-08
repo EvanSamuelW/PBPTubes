@@ -22,6 +22,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.evansamuel.pbptubes.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 
 import java.util.List;
@@ -37,6 +39,9 @@ public class MenuRecyclerAdapter extends RecyclerView.Adapter<MenuRecyclerAdapte
     private List<MenuDao> filteredDataList;
     private Context context;
     private ProgressDialog progressDialog;
+    private Button deletebtn,orderbtn,editbtn;
+    FirebaseAuth fAuth;
+    FirebaseUser usercek;
 
 
     public MenuRecyclerAdapter(Context context, List<MenuDao> dataList) {
@@ -58,6 +63,10 @@ public class MenuRecyclerAdapter extends RecyclerView.Adapter<MenuRecyclerAdapte
     @Override
     public void onBindViewHolder(@NonNull MenuRecyclerAdapter.RoomViewHolder holder, int position) {
         final MenuDao brg = filteredDataList.get(position);
+
+
+
+
         holder.twName.setText(brg.getNama());
         holder.twPrice.setText("Rp" + brg.getPrice().toString());
         Glide.with(context)
@@ -107,11 +116,13 @@ public class MenuRecyclerAdapter extends RecyclerView.Adapter<MenuRecyclerAdapte
         private TextView twName, twPrice;
         private ImageView ivMenu;
         private LinearLayout mParent;
-        private Button editBtn, deleteBtn;
+        private Button editBtn, deleteBtn,orderBtn;
+
 
         public RoomViewHolder(@NonNull View itemView) {
             super(itemView);
-
+            fAuth = FirebaseAuth.getInstance();
+            usercek = fAuth.getCurrentUser();
             progressDialog = new ProgressDialog(context);
 
             twName = itemView.findViewById(R.id.twName);
@@ -120,6 +131,15 @@ public class MenuRecyclerAdapter extends RecyclerView.Adapter<MenuRecyclerAdapte
             mParent = itemView.findViewById(R.id.linearLayout);
             editBtn = itemView.findViewById(R.id.edit);
             deleteBtn = itemView.findViewById(R.id.delete);
+            orderBtn = itemView.findViewById(R.id.order);
+
+            if(usercek!=null){
+                deleteBtn.setVisibility(View.GONE);
+                editBtn.setVisibility(View.GONE);
+            }
+            else{
+                orderBtn.setVisibility(View.GONE);
+            }
         }
     }
 

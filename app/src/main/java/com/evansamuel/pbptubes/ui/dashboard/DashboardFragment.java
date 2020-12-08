@@ -112,7 +112,7 @@ public class DashboardFragment extends Fragment {
         cardTransaksi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Navigation.findNavController(view).navigate(R.id.action_nav_dashboard_to_nav_transaksi);
+                Navigation.findNavController(view).navigate(R.id.action_nav_dashboard_to_nav_transaksi_dashboard);
             }
         });
         return view;

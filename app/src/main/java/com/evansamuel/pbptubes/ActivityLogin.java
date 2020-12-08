@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -20,6 +22,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.evansamuel.pbptubes.ui.fitur.menu.FoodFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
@@ -87,35 +90,46 @@ public class ActivityLogin extends AppCompatActivity {
         Login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (emailLogin.getText().toString().isEmpty() && passwordLogin.getText().toString().isEmpty()) {
-                    Toast.makeText(ActivityLogin.this, "Authentication Failed", Toast.LENGTH_SHORT).show();
-                } else if (emailLogin.getText().toString().isEmpty()) {
-                    Toast.makeText(ActivityLogin.this, "Email Invalid", Toast.LENGTH_SHORT).show();
-                } else if (passwordLogin.getText().toString().isEmpty()) {
-                    Toast.makeText(ActivityLogin.this, "Password Invalid", Toast.LENGTH_SHORT).show();
-                } else if (!(emailLogin.getText().toString().isEmpty() && passwordLogin.getText().toString().isEmpty())) {
-                    firebaseAuth.signInWithEmailAndPassword(emailLogin.getText().toString(), passwordLogin.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                if(firebaseAuth.getCurrentUser().isEmailVerified()){
-                                    Toast.makeText(ActivityLogin.this, "Login successfully", Toast.LENGTH_LONG).show();
-                                    Intent intent = new Intent(ActivityLogin.this, HomeActivity.class);
-                                    startActivity(intent);
-                                    createNotificationChannel();
-                                    addNotification();
-                                    finish();
-                                }else{
-                                    Toast.makeText(ActivityLogin.this, "Please Verify Your Email !!", Toast.LENGTH_SHORT).show();
-                                }
-                            } else {
-                                Toast.makeText(ActivityLogin.this,task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                            }
-                        }
-                    });
-                }else{
-                    Toast.makeText(ActivityLogin.this, "Error", Toast.LENGTH_SHORT).show();
+                if(emailLogin.getText().toString().equalsIgnoreCase("admin") && passwordLogin.getText().toString().trim().equalsIgnoreCase("admin"))
+                {
+                    Toast.makeText(ActivityLogin.this, "Success", Toast.LENGTH_SHORT).show();
+                    Fragment fragment = new FoodFragment();
+                    FragmentManager fragmentManager = getSupportFragmentManager();
+                    fragmentManager.beginTransaction().replace(R.id.admin, fragment).commit();
                 }
+                else
+                {
+                    if (emailLogin.getText().toString().isEmpty() && passwordLogin.getText().toString().isEmpty()) {
+                        Toast.makeText(ActivityLogin.this, "Authentication Failed", Toast.LENGTH_SHORT).show();
+                    } else if (emailLogin.getText().toString().isEmpty()) {
+                        Toast.makeText(ActivityLogin.this, "Email Invalid", Toast.LENGTH_SHORT).show();
+                    } else if (passwordLogin.getText().toString().isEmpty()) {
+                        Toast.makeText(ActivityLogin.this, "Password Invalid", Toast.LENGTH_SHORT).show();
+                    } else if (!(emailLogin.getText().toString().isEmpty() && passwordLogin.getText().toString().isEmpty())) {
+                        firebaseAuth.signInWithEmailAndPassword(emailLogin.getText().toString(), passwordLogin.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    if(firebaseAuth.getCurrentUser().isEmailVerified()){
+                                        Toast.makeText(ActivityLogin.this, "Login successfully", Toast.LENGTH_LONG).show();
+                                        Intent intent = new Intent(ActivityLogin.this, HomeActivity.class);
+                                        startActivity(intent);
+                                        createNotificationChannel();
+                                        addNotification();
+                                        finish();
+                                    }else{
+                                        Toast.makeText(ActivityLogin.this, "Please Verify Your Email !!", Toast.LENGTH_SHORT).show();
+                                    }
+                                } else {
+                                    Toast.makeText(ActivityLogin.this,task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        });
+                    }else{
+                        Toast.makeText(ActivityLogin.this, "Error", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
             }
         });
 

@@ -11,4 +11,6 @@
 
 
     <color name="cardBackground">#1a1a1a</color>
+    <color name="admin">#FFFFFF</color>
+    <color name="backadmin">#1a1a1a</color>
 </resources>

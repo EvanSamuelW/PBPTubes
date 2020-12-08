@@ -8,8 +8,23 @@
     android:background="@color/bg_color"
     android:layout_height="match_parent"
     tools:context=".ui.fitur.menu.FoodFragment">
-
+    <LinearLayout
+        android:id="@+id/bar"
+        android:layout_width="match_parent"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:textColor="@color/admin"
+            android:text="Admin"
+            android:textSize="20dp"/>
+    </LinearLayout>
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_below="@+id/bar"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 

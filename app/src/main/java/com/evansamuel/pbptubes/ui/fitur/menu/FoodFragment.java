@@ -13,11 +13,15 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.evansamuel.pbptubes.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +43,8 @@ public class FoodFragment extends Fragment {
     private FloatingActionButton addBtn;
     private View v;
     private SwipeRefreshLayout swipeRefresh;
+    FirebaseAuth fAuth;
+    FirebaseUser usercek;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -85,12 +91,23 @@ public class FoodFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         v = inflater.inflate(R.layout.fragment_food, container, false);
-
+        fAuth = FirebaseAuth.getInstance();
+        usercek = fAuth.getCurrentUser();
         Bundle bundle = new Bundle();
         bundle.putString("status","tambah");
         swipeRefresh = v.findViewById(R.id.swipe_refresh);
         swipeRefresh.setRefreshing(true);
+
         addBtn = v.findViewById(R.id.addBtn);
+        if(usercek!=null){
+            LinearLayout linearLayout = (LinearLayout) v.findViewById(R.id.bar);
+            linearLayout.setVisibility(View.GONE);
+            addBtn.setVisibility(View.GONE);
+
+        }
+
+
+
 
         addBtn.setOnClickListener(new View.OnClickListener() {
             @Override

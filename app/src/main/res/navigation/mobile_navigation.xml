@@ -32,8 +32,8 @@
             android:id="@+id/action_nav_dashboard_to_nav_location"
             app:destination="@id/nav_location" />
         <action
-            android:id="@+id/action_nav_dashboard_to_nav_transaksi"
-            app:destination="@id/nav_transaksi" />
+            android:id="@+id/action_nav_dashboard_to_nav_transaksi_dashboard"
+            app:destination="@id/nav_dashboard_transaksi" />
     </fragment>
 
 
@@ -69,6 +69,16 @@
     android:name="com.evansamuel.pbptubes.ui.fitur.LocationFragment"
     android:label="Location"
     tools:layout="@layout/fragment_location"/>
+
+    <fragment
+        android:id="@+id/nav_dashboard_transaksi"
+        android:name="com.evansamuel.pbptubes.ui.dashboard.TransaksiDashboardFragment"
+        android:label="Dashboard Transaksi"
+        tools:layout="@layout/fragment_transaksi_dashboard">
+    <action
+        android:id="@+id/action_nav_dashboard_transaksi_to_nav_transaksi"
+        app:destination="@id/nav_transaksi" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_transaksi"
