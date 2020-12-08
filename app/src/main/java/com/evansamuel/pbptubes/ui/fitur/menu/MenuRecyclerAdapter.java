@@ -8,8 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -24,14 +22,13 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.evansamuel.pbptubes.R;
 
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MenuRecyclerAdapter extends RecyclerView.Adapter<MenuRecyclerAdapter.RoomViewHolder> implements Filterable {
+public class MenuRecyclerAdapter extends RecyclerView.Adapter<MenuRecyclerAdapter.RoomViewHolder> {
 
 
     private List<MenuDao> dataList;
@@ -46,35 +43,7 @@ public class MenuRecyclerAdapter extends RecyclerView.Adapter<MenuRecyclerAdapte
         this.context = context;
     }
 
-    @Override
-    public Filter getFilter() {
-        return new Filter() {
-            @Override
-            protected FilterResults performFiltering(CharSequence constraint) {
-                String charSequenceString = constraint.toString();
-                if (charSequenceString.isEmpty()) {
-                    filteredDataList = dataList;
-                } else {
-                    List<MenuDao> filteredList = new ArrayList<>();
-                    for (MenuDao UserDAO : dataList) {
-                        if (UserDAO.getNama().toLowerCase().contains(charSequenceString.toLowerCase())) {
-                            filteredList.add(UserDAO);
-                        }
-                        filteredDataList = filteredList;
-                    }
-                }
-                FilterResults results = new FilterResults();
-                results.values = filteredDataList;
-                return results;
-            }
 
-            @Override
-            protected void publishResults(CharSequence constraint, FilterResults results) {
-                filteredDataList = (List<MenuDao>) results.values;
-                notifyDataSetChanged();
-            }
-        };
-    }
 
     @NonNull
     @Override
