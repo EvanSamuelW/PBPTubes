@@ -1,4 +1,4 @@
-package com.evansamuel.pbptubes;
+package com.evansamuel.pbptubes.ui.fitur.transaksi;
 
 
 import android.app.AlertDialog;
@@ -6,14 +6,10 @@ import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Color;
-import android.os.AsyncTask;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,15 +17,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.evansamuel.pbptubes.R;
 import com.evansamuel.pbptubes.ui.fitur.menu.ApiClient;
 import com.evansamuel.pbptubes.ui.fitur.menu.ApiInterface;
-import com.evansamuel.pbptubes.ui.fitur.transaksi.TransaksiDAO;
-import com.evansamuel.pbptubes.ui.fitur.transaksi.TransaksiResponse;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import retrofit2.Call;
@@ -62,10 +54,15 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
     public void onBindViewHolder(@NonNull UserViewHolder holder, int position) {
         TransaksiDAO transaksi = transaksiList.get(position);
         holder.userName.setText(transaksi.getName());
-        holder.CheckInDate.setText(transaksi.getCheck_in_date().toString());
-        holder.CheckOutDate.setText(transaksi.getCheck_out_date().toString());
-        holder.room.setText(transaksi.getRoom());
-        holder.PriceTag.setText("Rp. " + transaksi.getPrice().toString());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
+
+            String dateIn = sdf.format(transaksi.getCheck_in_date());
+            String dateOut = sdf.format(transaksi.getCheck_out_date());
+            holder.CheckInDate.setText(dateIn);
+            holder.CheckOutDate.setText(dateOut);
+            holder.room.setText(transaksi.getRoom());
+            holder.PriceTag.setText("Rp. " + transaksi.getPrice().toString());
+
     }
 
     @Override

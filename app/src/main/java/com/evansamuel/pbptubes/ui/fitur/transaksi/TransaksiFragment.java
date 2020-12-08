@@ -1,6 +1,6 @@
 package com.evansamuel.pbptubes.ui.fitur.transaksi;
 
-import android.os.AsyncTask;
+import android.animation.TimeAnimator;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -14,17 +14,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.evansamuel.pbptubes.R;
-import com.evansamuel.pbptubes.UserRecyclerViewAdapter;
 import com.evansamuel.pbptubes.databinding.FragmentBookBinding;
 import com.evansamuel.pbptubes.ui.fitur.menu.ApiClient;
 import com.evansamuel.pbptubes.ui.fitur.menu.ApiInterface;
-import com.evansamuel.pbptubes.ui.fitur.menu.MenuDao;
-import com.evansamuel.pbptubes.ui.fitur.menu.MenuRecyclerAdapter;
-import com.evansamuel.pbptubes.ui.fitur.menu.MenuResponse;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -155,12 +150,13 @@ public class TransaksiFragment extends Fragment {
             @Override
             public void onResponse(Call<TransaksiResponse> call, Response<TransaksiResponse> response) {
                 generateDataList(response.body().getTransactions());
+                Toast.makeText(getContext(),"Data Retrieved Successfully", Toast.LENGTH_SHORT).show();
                 refreshLayout.setRefreshing(false);
             }
 
             @Override
             public void onFailure(Call<TransaksiResponse> call, Throwable t) {
-//                Toast.makeText(getContext(), "Kesalahan Jaringan", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Kesalahan Jaringan", Toast.LENGTH_SHORT).show();
                 refreshLayout.setRefreshing(false);
             }
         });

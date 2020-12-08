@@ -38,7 +38,6 @@ public interface ApiInterface {
 
 
     @POST("menu/delete/{id}")
-    @FormUrlEncoded
     Call<MenuResponse> deleteMenu(@Path("id") String id);
 
 
