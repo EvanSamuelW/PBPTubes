@@ -80,6 +80,29 @@
             android:textAlignment="gravity"
             app:backgroundTint="#3498DB"
             android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/btn_cancel"
+            android:layout_marginTop="20dp"
+            android:layout_width="130dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:text="Cancel"
+            android:textAlignment="gravity"
+            app:backgroundTint="#3498DB"
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/btn_edit"
+            android:layout_marginTop="20dp"
+            android:layout_width="130dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:text="Save"
+            android:textAlignment="gravity"
+            app:backgroundTint="#3498DB"
+            android:textSize="20sp" />
+
     </LinearLayout>
 
 

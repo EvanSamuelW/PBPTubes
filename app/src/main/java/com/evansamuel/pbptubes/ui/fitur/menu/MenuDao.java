@@ -2,7 +2,9 @@ package com.evansamuel.pbptubes.ui.fitur.menu;
 
 import com.google.gson.annotations.SerializedName;
 
-public class MenuDao {
+import java.io.Serializable;
+
+public class MenuDao implements Serializable {
 
     @SerializedName("id")
     private String id;

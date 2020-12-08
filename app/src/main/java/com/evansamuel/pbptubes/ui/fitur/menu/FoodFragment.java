@@ -86,6 +86,8 @@ public class FoodFragment extends Fragment {
         // Inflate the layout for this fragment
         v = inflater.inflate(R.layout.fragment_food, container, false);
 
+        Bundle bundle = new Bundle();
+        bundle.putString("status","tambah");
         swipeRefresh = v.findViewById(R.id.swipe_refresh);
         swipeRefresh.setRefreshing(true);
         addBtn = v.findViewById(R.id.addBtn);
@@ -93,7 +95,7 @@ public class FoodFragment extends Fragment {
         addBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Navigation.findNavController(view).navigate(R.id.action_nav_food_to_nav_addFood);
+                Navigation.findNavController(view).navigate(R.id.action_nav_food_to_nav_addFood,bundle);
 
             }
         });
