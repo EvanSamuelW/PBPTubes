@@ -37,7 +37,7 @@ public interface ApiInterface {
                                   @Field("photo") String photo);
 
 
-    @POST("menu/delete/{id}")
+    @DELETE("menu/delete/{id}")
     Call<MenuResponse> deleteMenu(@Path("id") String id);
 
 
@@ -67,7 +67,7 @@ public interface ApiInterface {
                                           @Field("price") Double price);
 
 
-    @POST("room/delete/{id}")
+    @DELETE("room/delete/{id}")
     Call<TransaksiResponse> deleteBooking(@Path("id") String id);
 
 

@@ -84,7 +84,7 @@ public class FoodFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        v= inflater.inflate(R.layout.fragment_food, container, false);
+        v = inflater.inflate(R.layout.fragment_food, container, false);
 
         swipeRefresh = v.findViewById(R.id.swipe_refresh);
         swipeRefresh.setRefreshing(true);
@@ -114,8 +114,11 @@ public class FoodFragment extends Fragment {
         call.enqueue(new Callback<MenuResponse>() {
             @Override
             public void onResponse(Call<MenuResponse> call, Response<MenuResponse> response) {
+
                 generateDataList(response.body().getMenus());
                 swipeRefresh.setRefreshing(false);
+
+
             }
 
             @Override
@@ -130,7 +133,7 @@ public class FoodFragment extends Fragment {
     private void generateDataList(List<MenuDao> customerList) {
 
         recyclerView = v.findViewById(R.id.user_rv);
-        recyclerAdapter = new MenuRecyclerAdapter(getContext(),customerList);
+        recyclerAdapter = new MenuRecyclerAdapter(getContext(), customerList);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setLayoutManager(layoutManager);

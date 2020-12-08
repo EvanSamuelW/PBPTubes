@@ -52,12 +52,12 @@ public class MenuRecyclerAdapter extends RecyclerView.Adapter<MenuRecyclerAdapte
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
                 String charSequenceString = constraint.toString();
-                if(charSequenceString.isEmpty()) {
+                if (charSequenceString.isEmpty()) {
                     filteredDataList = dataList;
                 } else {
                     List<MenuDao> filteredList = new ArrayList<>();
                     for (MenuDao UserDAO : dataList) {
-                        if(UserDAO.getNama().toLowerCase().contains(charSequenceString.toLowerCase())) {
+                        if (UserDAO.getNama().toLowerCase().contains(charSequenceString.toLowerCase())) {
                             filteredList.add(UserDAO);
                         }
                         filteredDataList = filteredList;
@@ -119,11 +119,11 @@ public class MenuRecyclerAdapter extends RecyclerView.Adapter<MenuRecyclerAdapte
         return filteredDataList.size();
     }
 
-    public class RoomViewHolder extends RecyclerView.ViewHolder{
+    public class RoomViewHolder extends RecyclerView.ViewHolder {
         private TextView twName, twPrice;
         private ImageView ivMenu;
         private LinearLayout mParent;
-        private Button editBtn,deleteBtn;
+        private Button editBtn, deleteBtn;
 
         public RoomViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -138,6 +138,7 @@ public class MenuRecyclerAdapter extends RecyclerView.Adapter<MenuRecyclerAdapte
             deleteBtn = itemView.findViewById(R.id.delete);
         }
     }
+
     private void deleteMenu(String id) {
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
         Call<MenuResponse> delete = apiService.deleteMenu(id);
@@ -146,13 +147,15 @@ public class MenuRecyclerAdapter extends RecyclerView.Adapter<MenuRecyclerAdapte
         delete.enqueue(new Callback<MenuResponse>() {
             @Override
             public void onResponse(Call<MenuResponse> call, Response<MenuResponse> response) {
-                Toast.makeText(context, "Delete Berhasil", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Kesalahan Jaringan", Toast.LENGTH_SHORT).show();
+
                 progressDialog.dismiss();
             }
 
             @Override
             public void onFailure(Call<MenuResponse> call, Throwable t) {
-                Toast.makeText(context, "Kesalahan Jaringan", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Delete Berhasil", Toast.LENGTH_SHORT).show();
+
                 progressDialog.dismiss();
 
             }

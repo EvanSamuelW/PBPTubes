@@ -308,7 +308,7 @@ public class AddTransactionFragment extends Fragment {
         add.enqueue(new Callback<TransaksiResponse>() {
             @Override
             public void onResponse(Call<TransaksiResponse> call, Response<TransaksiResponse> response) {
-//                Toast.makeText(getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
                 progressDialog.dismiss();
             }
 
