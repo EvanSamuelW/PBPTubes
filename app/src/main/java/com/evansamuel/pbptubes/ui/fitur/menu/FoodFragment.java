@@ -13,6 +13,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -39,7 +40,7 @@ public class FoodFragment extends Fragment {
     private RecyclerView recyclerView;
     private MenuRecyclerAdapter recyclerAdapter;
     private List<MenuDao> user = new ArrayList<>();
-    private FloatingActionButton addBtn;
+    private Button addBtn;
     private View v;
     private SwipeRefreshLayout swipeRefresh;
     FirebaseAuth fAuth;
@@ -130,6 +131,7 @@ public class FoodFragment extends Fragment {
             }
         });
         return v;
+
     }
 
     public void loadMenu() {
