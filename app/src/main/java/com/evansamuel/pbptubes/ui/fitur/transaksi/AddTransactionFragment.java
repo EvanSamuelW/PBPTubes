@@ -201,8 +201,8 @@ public class AddTransactionFragment extends Fragment {
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 month = month + 1;
                 Log.d(TAG, "onDateSet:yyyy-mm-dd: " + year + "-" + month + "-" + day);
-                DecimalFormat mFormat= new DecimalFormat("00");
-                String date2 =  mFormat.format(Double.valueOf(year)) + "-" +  mFormat.format(Double.valueOf(month)) + "-" +  mFormat.format(Double.valueOf(day));
+                DecimalFormat mFormat = new DecimalFormat("00");
+                String date2 = mFormat.format(Double.valueOf(year)) + "-" + mFormat.format(Double.valueOf(month)) + "-" + mFormat.format(Double.valueOf(day));
                 checkInDate.setText(date2);
             }
         };
@@ -212,9 +212,9 @@ public class AddTransactionFragment extends Fragment {
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 month = month + 1;
                 Log.d(TAG, "onDateSet:yyyy-mm-dd: " + year + "-" + month + "-" + day);
-                DecimalFormat mFormat= new DecimalFormat("00");
+                DecimalFormat mFormat = new DecimalFormat("00");
 
-                String date1 =  mFormat.format(Double.valueOf(year)) + "-" +  mFormat.format(Double.valueOf(month)) + "-" +  mFormat.format(Double.valueOf(day));
+                String date1 = mFormat.format(Double.valueOf(year)) + "-" + mFormat.format(Double.valueOf(month)) + "-" + mFormat.format(Double.valueOf(day));
                 checkOutDate.setText(date1);
             }
         };
