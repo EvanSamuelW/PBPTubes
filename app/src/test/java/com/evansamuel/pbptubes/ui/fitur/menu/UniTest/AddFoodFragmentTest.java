@@ -10,13 +10,17 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AddFoodFragmentTest {
-    @Mock
+     @Mock
     AddFoodFragment fragment;
 
     @Test
     public void shouldShowErrorMessageWhenNameIsEmpty() throws Exception {
         when(fragment.getName()).thenReturn("");
         System.out.println("menu name: " + fragment.getName());
+        when(fragment.getPrice()).thenReturn("");
+        System.out.println("Price: " + fragment.getPrice());
+        when(fragment.getImage()).thenReturn("");
+        System.out.println("Image URL: " + fragment.getImage());
         fragment.onAddClick();
         verify(fragment).showNameError("Name must be filled");
 
@@ -25,6 +29,8 @@ public class AddFoodFragmentTest {
 
     @Test
     public void shouldShowErrorMessageWhenPriceIsEmpty() throws Exception {
+        when(fragment.getName()).thenReturn("Nasi Padang");
+        System.out.println("menu name: " + fragment.getName());
         when(fragment.getPrice()).thenReturn("");
         System.out.println("price: " + fragment.getPrice());
         fragment.onAddClick();
@@ -35,6 +41,10 @@ public class AddFoodFragmentTest {
 
     @Test
     public void shouldShowErrorMessageWhenImageIsEmpty() throws Exception {
+        when(fragment.getName()).thenReturn("Nasi Padang");
+        System.out.println("menu name: " + fragment.getName());
+        when(fragment.getPrice()).thenReturn("15000");
+        System.out.println("price: " + fragment.getPrice());
         when(fragment.getImage()).thenReturn("");
         System.out.println("Image URL: " + fragment.getImage());
         fragment.onAddClick();
@@ -55,6 +65,7 @@ public class AddFoodFragmentTest {
         System.out.println("Hasil : " + fragment.getValid(fragment, fragment.getName(), fragment.getPrice(), fragment.getImage()));
         fragment.onAddClick();
     }
+
 
 
 }
