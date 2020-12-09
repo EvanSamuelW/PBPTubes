@@ -25,7 +25,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.database.DatabaseReference;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -34,6 +37,7 @@ public class RegisterActivity extends AppCompatActivity {
     public static final String TAG = "TAG";
     public static final String TAG1 = "TAG";
     TextInputEditText email,nama,alamat,telepon,username,password;
+    TextView result;
     Button register;
     Button backLogin;
     FirebaseAuth firebaseAuth;
@@ -55,6 +59,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
         setContentView(R.layout.activity_register);
 
+        result = findViewById(R.id.textview);
         firebaseAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
         email = findViewById(R.id.edtEmailRegister);
@@ -78,12 +83,15 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                computeMD5Hash(password.toString());
+
                 final String Fusername = username.getText().toString();
                 final String Fnama = nama.getText().toString();
                 final String Ftelp = telepon.getText().toString();
                 final String Falamat = alamat.getText().toString();
                 final String Femail = email.getText().toString().trim();
-
+                final String Fpass = password.getText().toString().trim();
+                final String emPass = result.getText().toString().trim();
 
                 if (nama.getText().toString().isEmpty()) {
                     Toast.makeText(RegisterActivity.this, "Name field must be filled", Toast.LENGTH_SHORT).show();
@@ -128,6 +136,8 @@ public class RegisterActivity extends AppCompatActivity {
                                 user.put("email", Femail);
                                 user.put("telp", Ftelp);
                                 user.put("username", Fusername);
+                                user.put("password", emPass);
+
                                 documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
@@ -148,5 +158,27 @@ public class RegisterActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+    public void computeMD5Hash(String password) {
+
+        try {
+            // Create MD5 Hash
+            MessageDigest digest = java.security.MessageDigest.getInstance("MD5");
+            digest.update(password.getBytes());
+            byte messageDigest[] = digest.digest();
+
+            StringBuffer MD5Hash = new StringBuffer();
+            for (int i = 0; i < messageDigest.length; i++) {
+                String h = Integer.toHexString(0xFF & messageDigest[i]);
+                while (h.length() < 2)
+                    h = "0" + h;
+                MD5Hash.append(h);
+            }
+
+            result.setText(MD5Hash);
+
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
     }
 }
