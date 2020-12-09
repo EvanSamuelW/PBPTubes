@@ -63,7 +63,7 @@
 
     <fragment
         android:id="@+id/nav_addFood"
-        android:name="com.evansamuel.pbptubes.ui.fitur.menu.AddFoodFragment"
+        android:name="com.evansamuel.pbptubes.ui.fitur.menu.UniTest.AddFoodFragment"
         android:label="Add Food"
         tools:layout="@layout/fragment_add_food"/>
 

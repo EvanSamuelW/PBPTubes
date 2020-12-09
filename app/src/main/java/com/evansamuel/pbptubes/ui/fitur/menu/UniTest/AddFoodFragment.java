@@ -1,26 +1,22 @@
-package com.evansamuel.pbptubes.ui.fitur.menu;
+package com.evansamuel.pbptubes.ui.fitur.menu.UniTest;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.navigation.NavController;
 
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.evansamuel.pbptubes.R;
+import com.evansamuel.pbptubes.ui.fitur.menu.ApiClient;
+import com.evansamuel.pbptubes.ui.fitur.menu.ApiInterface;
+import com.evansamuel.pbptubes.ui.fitur.menu.MenuDao;
+import com.evansamuel.pbptubes.ui.fitur.menu.MenuResponse;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -37,6 +33,7 @@ public class AddFoodFragment extends Fragment {
     private Button addBtn, editBtn;
     private String status;
     private MenuDao menu;
+    private AddCallback callback;
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -102,31 +99,19 @@ public class AddFoodFragment extends Fragment {
             etPrice.setText(String.valueOf(Math.round(menu.getPrice())));
             etImage.setText(menu.getPhoto());
             addBtn.setVisibility(View.GONE);
-        } else if (status.equals("tambah")) {
+        } else {
             editBtn.setVisibility(View.GONE);
-
         }
-
 
 
         addBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (etName.getText().toString().isEmpty()) {
-                    etName.setError("Field name must be filled");
-                    etName.requestFocus();
-                } else if (etPrice.getText().toString().isEmpty()) {
-                    etPrice.setError("Field price must be filled");
-                    etPrice.requestFocus();
-                } else if (etImage.getText().toString().isEmpty()) {
-                    etImage.setError("Image URL must be filled");
-                    etImage.requestFocus();
-                } else {
-                    saveMenu();
-
-                }
+                onAddClick();
             }
         });
+
+
 
         editBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,7 +134,7 @@ public class AddFoodFragment extends Fragment {
         return v;
     }
 
-    private void saveMenu() {
+    public void saveMenu(AddCallback callback) {
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
         Call<MenuResponse> add = apiService.createMenu(etName.getText().toString(),
                 Double.parseDouble(etPrice.getText().toString()), etImage.getText().toString());
@@ -194,4 +179,61 @@ public class AddFoodFragment extends Fragment {
         });
     }
 
+    public String getName() {
+        return etName.getText().toString();
+    }
+
+    public String getPrice() {
+        return etPrice.getText().toString();
+    }
+
+    public String getImage() {
+        return etImage.getText().toString();
+    }
+
+    public void showNameError(String message)
+    {
+        etName.setError(message);
+    }
+
+    public void showPriceError(String message)
+    {
+        etPrice.setError(message);
+    }
+
+    public void showImageError(String message)
+    {
+        etImage.setError(message);
+    }
+
+
+    public void onAddClick() {
+        if (etName.getText().toString().isEmpty()) {
+            showNameError("Field name must be filled");
+        } else if (etPrice.getText().toString().isEmpty()) {
+            showPriceError("Field price must be filled");
+        } else if (etImage.getText().toString().isEmpty()) {
+            showImageError("Image URL must be filled");
+        } else {
+            saveMenu(callback);
+
+        }
+    }
+
+    public Boolean getValid(final AddFoodFragment fragment, String name, String price, String image) {
+        final Boolean[] bool = new Boolean[1];
+        saveMenu(new AddCallback() {
+            @Override
+            public void onSuccess(boolean value) {
+                bool[0] = true;
+            }
+
+            @Override
+            public void onError() {
+                bool[0] = true;
+
+            }
+        });
+        return bool[0];
+    }
 }
