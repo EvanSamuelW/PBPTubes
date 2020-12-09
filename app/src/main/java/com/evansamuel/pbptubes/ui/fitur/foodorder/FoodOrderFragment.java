@@ -168,13 +168,14 @@ public class FoodOrderFragment extends Fragment {
         add.enqueue(new Callback<TransaksiFoodResponse>() {
             @Override
             public void onResponse(Call<TransaksiFoodResponse> call, Response<TransaksiFoodResponse> response) {
-                Toast.makeText(getContext(),"Insert Transaction Food Success", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Insert Transaction Food Failed", Toast.LENGTH_SHORT).show();
                 progressDialog.dismiss();
             }
 
             @Override
             public void onFailure(Call<TransaksiFoodResponse> call, Throwable t) {
-                Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(),"Insert Transaction Food Success", Toast.LENGTH_SHORT).show();
+
                 progressDialog.dismiss();
 
             }

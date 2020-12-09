@@ -78,7 +78,11 @@ public class MenuRecyclerAdapter extends RecyclerView.Adapter<MenuRecyclerAdapte
             }
         });
 
-
+        Glide.with(context)
+                .load(brg.getPhoto())
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
+                .into(holder.ivMenu);
         holder.twName.setText(brg.getNama());
         holder.twPrice.setText("Rp" + brg.getPrice().toString());
         Glide.with(context)

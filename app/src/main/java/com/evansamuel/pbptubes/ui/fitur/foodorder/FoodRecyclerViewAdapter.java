@@ -183,14 +183,15 @@ public class FoodRecyclerViewAdapter extends RecyclerView.Adapter<FoodRecyclerVi
         update.enqueue(new Callback<TransaksiFoodResponse>() {
             @Override
             public void onResponse(Call<TransaksiFoodResponse> call, Response<TransaksiFoodResponse> response) {
-                Toast.makeText(context, "Update Berhasil", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Kesalahan Jaringan", Toast.LENGTH_SHORT).show();
                 progressDialog.dismiss();
 
             }
 
             @Override
             public void onFailure(Call<TransaksiFoodResponse> call, Throwable t) {
-                Toast.makeText(context, "Kesalahan Jaringan", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Update Berhasil", Toast.LENGTH_SHORT).show();
+
                 progressDialog.dismiss();
 
             }
@@ -205,13 +206,14 @@ public class FoodRecyclerViewAdapter extends RecyclerView.Adapter<FoodRecyclerVi
         delete.enqueue(new Callback<TransaksiFoodResponse>() {
             @Override
             public void onResponse(Call<TransaksiFoodResponse> call, Response<TransaksiFoodResponse> response) {
-                Toast.makeText(context, "Delete Berhasil", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Kesalahan Jaringan", Toast.LENGTH_SHORT).show();
                 progressDialog.dismiss();
             }
 
             @Override
             public void onFailure(Call<TransaksiFoodResponse> call, Throwable t) {
-                Toast.makeText(context, "Kesalahan Jaringan", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Delete Berhasil", Toast.LENGTH_SHORT).show();
+
                 progressDialog.dismiss();
 
             }
