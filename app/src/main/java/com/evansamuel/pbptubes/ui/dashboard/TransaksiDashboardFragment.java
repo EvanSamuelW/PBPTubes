@@ -79,7 +79,7 @@ public class TransaksiDashboardFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-
+                Navigation.findNavController(view).navigate(R.id.action_nav_dashboard_transaksi_to_nav_transaksi_food);
 
             }
         });

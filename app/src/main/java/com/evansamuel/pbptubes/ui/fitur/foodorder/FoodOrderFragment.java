@@ -1,12 +1,19 @@
 package com.evansamuel.pbptubes.ui.fitur.foodorder;
 
+import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
 import android.widget.TextView;
@@ -18,9 +25,21 @@ import com.evansamuel.pbptubes.R;
 import com.evansamuel.pbptubes.ui.fitur.menu.ApiClient;
 import com.evansamuel.pbptubes.ui.fitur.menu.ApiInterface;
 import com.evansamuel.pbptubes.ui.fitur.menu.MenuDao;
+import com.evansamuel.pbptubes.ui.fitur.menu.MenuResponse;
 import com.evansamuel.pbptubes.ui.fitur.transaksi.TransaksiResponse;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.text.ParseException;
+
+import javax.annotation.Nullable;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -41,6 +60,13 @@ public class FoodOrderFragment extends Fragment {
     private TextView twName, twPrice;
     private NumberPicker amount;
     private ImageView ivMenu;
+    String userId, email,customer;
+    FirebaseFirestore fStore;
+    FirebaseAuth fAuth;
+    FirebaseUser user;
+    StorageReference storageReference;
+    Button btn_order;
+    private ProgressDialog progressDialog;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -85,42 +111,75 @@ public class FoodOrderFragment extends Fragment {
         twPrice = v.findViewById(R.id.foodprice);
         ivMenu = v.findViewById(R.id.ivFood);
         amount = v.findViewById(R.id.amount);
+        btn_order = v.findViewById(R.id.btn_order);
+        progressDialog = new ProgressDialog(getContext());
 
         amount.setValue(1);
         amount.setMinValue(1);
         amount.setMaxValue(100);
         menu = (MenuDao) getArguments().getSerializable("menu");
         twName.setText(menu.getNama());
-        twPrice.setText("Rp" + menu.getPrice().toString());
+        twPrice.setText( menu.getPrice().toString());
         Glide.with(getContext())
                 .load(menu.getPhoto())
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .skipMemoryCache(true)
                 .into(ivMenu);
 
+        fAuth = FirebaseAuth.getInstance();
+        fStore = FirebaseFirestore.getInstance();
+        storageReference = FirebaseStorage.getInstance().getReference();
+        userId = fAuth.getCurrentUser().getUid();
+        user = fAuth.getCurrentUser();
 
 
+        btn_order.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final DocumentReference documentReference = fStore.collection("users").document(userId);
+                documentReference.addSnapshotListener(getActivity(), new EventListener<DocumentSnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                        if (documentSnapshot.exists()) {
+                            email = documentSnapshot.getString("email");
+                            customer = documentSnapshot.getString("fName");
+
+                                saveFood(customer, email);
+                        } else {
+                            Log.d("tag", "onEvent: Document do not exists");
+                        }
+                    }
+                });
+
+            }
+        });
         return v;
     }
 
-    private void saveBooking(Double finalPrice, String email) throws ParseException {
+    private void saveFood(String customer, String email)  {
+        final String Menu = twName.getText().toString();
+        final Double Price = Double.parseDouble(twPrice.getText().toString()) * amount.getValue();
+        final String Photo = menu.getPhoto();
+        final String emailUser = email;
+        final String customer_name = customer;
+        ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
+        Call<TransaksiFoodResponse> add  = apiService.createFoodTransaksi(twName.getText().toString(),Price,amount.getValue(), emailUser, customer_name, menu.getPhoto());
 
-//        ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-//        Call<TransaksiResponse> add = apiService.createBooking(emailUser, Name, Room, CheckInDate, CheckOutDate, Price);
-//
-//
-//        add.enqueue(new Callback<TransaksiResponse>() {
-//            @Override
-//            public void onResponse(Call<TransaksiResponse> call, Response<TransaksiResponse> response) {
-//                Toast.makeText(getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
-//                progressDialog.dismiss();
-//            }
-//
-//            @Override
-//            public void onFailure(Call<TransaksiResponse> call, Throwable t) {
-//                progressDialog.dismiss();
-//
-//            }
-//        });
+        add.enqueue(new Callback<TransaksiFoodResponse>() {
+            @Override
+            public void onResponse(Call<TransaksiFoodResponse> call, Response<TransaksiFoodResponse> response) {
+                Toast.makeText(getContext(),"Insert Transaction Food Success", Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(Call<TransaksiFoodResponse> call, Throwable t) {
+                Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
+
+            }
+        });
     }
+
+
 }

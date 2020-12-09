@@ -51,17 +51,14 @@ public interface ApiInterface {
             @Field("menu") String menu,
             @Field("price") Double price,
             @Field("amount") int amount,
-            @Field("email") String customer_name,
+            @Field("email") String email,
+            @Field("customer_name") String customer_name,
             @Field("photo") String photo);
 
     @PUT("food/update/{id}")
     @FormUrlEncoded
-    Call<TransaksiResponse> updateBooking(@Path("id") String id,
-                                          @Field("menu") String menu,
-                                          @Field("price") Double price,
-                                          @Field("amount") int amount,
-                                          @Field("email") String customer_name,
-                                          @Field("photo") String photo);
+    Call<TransaksiFoodResponse> updatefood(@Path("id") String id,
+                                          @Field("amount") int amount);
 
 
     @DELETE("food/delete/{id}")

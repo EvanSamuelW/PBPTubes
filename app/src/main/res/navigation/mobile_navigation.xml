@@ -81,6 +81,9 @@
     <action
         android:id="@+id/action_nav_dashboard_transaksi_to_nav_transaksi"
         app:destination="@id/nav_transaksi" />
+    <action
+        android:id="@+id/action_nav_dashboard_transaksi_to_nav_transaksi_food"
+        app:destination="@id/nav_transaksi_food" />
     </fragment>
 
     <fragment
@@ -88,6 +91,12 @@
         android:name="com.evansamuel.pbptubes.ui.fitur.transaksi.TransaksiFragment"
         android:label="Transaksi"
         tools:layout="@layout/fragment_transaksi"/>
+
+    <fragment
+        android:id="@+id/nav_transaksi_food"
+        android:name="com.evansamuel.pbptubes.ui.fitur.foodorder.TransaksiFoodFragment"
+        android:label="Transaksi Food"
+        tools:layout="@layout/fragment_transaksi_food"/>
 
     <fragment
         android:id="@+id/nav_food_transaksi"
