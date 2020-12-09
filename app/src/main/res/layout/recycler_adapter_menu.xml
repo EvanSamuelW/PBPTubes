@@ -136,7 +136,6 @@
                         android:layout_marginEnd="3dp"
                         android:layout_marginTop="20dp"
                         android:layout_marginRight="15dp"
-                        android:layout_toStartOf="@+id/edit"
                         android:text="Delete"
                         app:backgroundTint="#ff4040" />
 
