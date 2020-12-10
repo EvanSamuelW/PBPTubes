@@ -43,7 +43,6 @@ public class MenuRecyclerAdapter extends RecyclerView.Adapter<MenuRecyclerAdapte
     private List<MenuDao> filteredDataList;
     private Context context;
     private ProgressDialog progressDialog;
-    private Button deletebtn,orderbtn,editbtn;
     FirebaseAuth fAuth;
     FirebaseUser usercek;
 
@@ -85,7 +84,7 @@ public class MenuRecyclerAdapter extends RecyclerView.Adapter<MenuRecyclerAdapte
                 .skipMemoryCache(true)
                 .into(holder.ivMenu);
         holder.twName.setText(brg.getNama());
-        holder.twPrice.setText("Rp" + brg.getPrice().toString());
+        holder.twPrice.setText("Rp" + Math.round(brg.getPrice()));
         Glide.with(context)
                 .load(brg.getPhoto())
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
