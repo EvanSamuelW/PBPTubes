@@ -72,7 +72,7 @@ public class FoodRecyclerViewAdapter extends RecyclerView.Adapter<FoodRecyclerVi
                 .skipMemoryCache(true)
                 .into(holder.ivMenu);
         holder.menu.setText(transaksi.getMenu());
-        holder.price.setText(transaksi.getPrice().toString());
+        holder.price.setText("Rp" + Math.round(transaksi.getPrice()));
         holder.amount.setText(transaksi.getAmount());
         holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,7 +95,7 @@ public class FoodRecyclerViewAdapter extends RecyclerView.Adapter<FoodRecyclerVi
             public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setTitle("Edit Your Transaction")
-                        .setMessage("You can only change your check out date. Proceed?")
+                        .setMessage("You can only change the amount of your order. Proceed?")
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {

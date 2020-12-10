@@ -13,6 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +30,7 @@ import com.evansamuel.pbptubes.ui.fitur.menu.MenuResponse;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -37,7 +40,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerViewAdapter.UserViewHolder> {
+public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerViewAdapter.UserViewHolder>{
     public static final String TAG = "TAG";
     private Context context;
     private List<TransaksiDAO> transaksiList;
@@ -129,8 +132,7 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
                         String dateKeluar = date2;
                         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                         String dateTampung1 = dateOut;
-                        Toast.makeText(context, dateMasuk, Toast.LENGTH_SHORT).show();
-                        Toast.makeText(context, dateTampung1, Toast.LENGTH_SHORT).show();
+
 
                         try {
                             Date dateIn = sdf.parse(dateMasuk);
@@ -175,6 +177,8 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
     public int getItemCount() {
         return transaksiList.size();
     }
+
+
 
 
     public class UserViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
