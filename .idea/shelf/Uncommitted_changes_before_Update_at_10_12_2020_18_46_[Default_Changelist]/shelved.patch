@@ -1,0 +1,240 @@
+Index: app/src/main/java/com/evansamuel/pbptubes/ui/fitur/transaksi/TransaksiFragment.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.evansamuel.pbptubes.ui.fitur.transaksi;\r\n\r\nimport android.animation.TimeAnimator;\r\nimport android.os.Bundle;\r\n\r\nimport androidx.annotation.Nullable;\r\nimport androidx.fragment.app.Fragment;\r\nimport androidx.recyclerview.widget.DefaultItemAnimator;\r\nimport androidx.recyclerview.widget.LinearLayoutManager;\r\nimport androidx.recyclerview.widget.RecyclerView;\r\nimport androidx.swiperefreshlayout.widget.SwipeRefreshLayout;\r\n\r\nimport android.util.Log;\r\nimport android.view.LayoutInflater;\r\nimport android.view.View;\r\nimport android.view.ViewGroup;\r\nimport android.widget.Toast;\r\n\r\nimport com.evansamuel.pbptubes.R;\r\nimport com.evansamuel.pbptubes.databinding.FragmentBookBinding;\r\nimport com.evansamuel.pbptubes.ui.fitur.menu.ApiClient;\r\nimport com.evansamuel.pbptubes.ui.fitur.menu.ApiInterface;\r\nimport com.google.firebase.auth.FirebaseAuth;\r\nimport com.google.firebase.auth.FirebaseUser;\r\nimport com.google.firebase.firestore.DocumentReference;\r\nimport com.google.firebase.firestore.DocumentSnapshot;\r\nimport com.google.firebase.firestore.EventListener;\r\nimport com.google.firebase.firestore.FirebaseFirestore;\r\nimport com.google.firebase.firestore.FirebaseFirestoreException;\r\nimport com.google.firebase.storage.FirebaseStorage;\r\nimport com.google.firebase.storage.StorageReference;\r\n\r\nimport java.util.ArrayList;\r\nimport java.util.List;\r\n\r\nimport retrofit2.Call;\r\nimport retrofit2.Callback;\r\nimport retrofit2.Response;\r\n\r\n/**\r\n * A simple {@link Fragment} subclass.\r\n * Use the {@link TransaksiFragment#newInstance} factory method to\r\n * create an instance of this fragment.\r\n */\r\npublic class TransaksiFragment extends Fragment {\r\n    private ArrayList<TransaksiDAO> ListTransaksi = new ArrayList<>();\r\n    private UserRecyclerViewAdapter recyclerAdapter;\r\n    private RecyclerView recyclerView;\r\n    private RecyclerView.LayoutManager mLayoutManager;\r\n    FragmentBookBinding binding;\r\n    FirebaseAuth fAuth;\r\n    SwipeRefreshLayout refreshLayout;\r\n    FirebaseFirestore fStore;\r\n    FirebaseUser user;\r\n    StorageReference storageReference;\r\n    String userId;\r\n    private String email;\r\n    View v;\r\n\r\n\r\n    // TODO: Rename parameter arguments, choose names that match\r\n    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER\r\n    private static final String ARG_PARAM1 = \"param1\";\r\n    private static final String ARG_PARAM2 = \"param2\";\r\n\r\n    // TODO: Rename and change types of parameters\r\n    private String mParam1;\r\n    private String mParam2;\r\n\r\n    public TransaksiFragment() {\r\n        // Required empty public constructor\r\n    }\r\n\r\n    /**\r\n     * Use this factory method to create a new instance of\r\n     * this fragment using the provided parameters.\r\n     *\r\n     * @param param1 Parameter 1.\r\n     * @param param2 Parameter 2.\r\n     * @return A new instance of fragment TransaksiFragment.\r\n     */\r\n    // TODO: Rename and change types and number of parameters\r\n    public static TransaksiFragment newInstance(String param1, String param2) {\r\n        TransaksiFragment fragment = new TransaksiFragment();\r\n        Bundle args = new Bundle();\r\n        args.putString(ARG_PARAM1, param1);\r\n        args.putString(ARG_PARAM2, param2);\r\n        fragment.setArguments(args);\r\n        return fragment;\r\n    }\r\n\r\n    @Override\r\n    public void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        if (getArguments() != null) {\r\n            mParam1 = getArguments().getString(ARG_PARAM1);\r\n            mParam2 = getArguments().getString(ARG_PARAM2);\r\n        }\r\n    }\r\n\r\n    public View onCreateView(LayoutInflater inflater, ViewGroup container,\r\n                             Bundle savedInstanceState) {\r\n        // Inflate the layout for this fragment\r\n        v = inflater.inflate(R.layout.fragment_transaksi, container, false);\r\n\r\n        refreshLayout = v.findViewById(R.id.swipe_refresh);\r\n        fAuth = FirebaseAuth.getInstance();\r\n        fStore = FirebaseFirestore.getInstance();\r\n        storageReference = FirebaseStorage.getInstance().getReference();\r\n        recyclerView = v.findViewById(R.id.user_rv);\r\n        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));\r\n\r\n        userId = fAuth.getCurrentUser().getUid();\r\n        user = fAuth.getCurrentUser();\r\n\r\n        final DocumentReference documentReference = fStore.collection(\"users\").document(userId);\r\n        documentReference.addSnapshotListener(getActivity(), new EventListener<DocumentSnapshot>() {\r\n            @Override\r\n            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {\r\n                if (documentSnapshot.exists()) {\r\n                    email = documentSnapshot.getString(\"email\");\r\n                    loadBooking(email);\r\n\r\n                    refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {\r\n                        @Override\r\n                        public void onRefresh() {\r\n                            loadBooking(email);\r\n                            refreshLayout.setRefreshing(false);\r\n                        }\r\n                    });\r\n\r\n                } else {\r\n                    Log.d(\"tag\", \"onEvent: Document do not exists\");\r\n                }\r\n            }\r\n        });\r\n\r\n\r\n        return v;\r\n\r\n\r\n    }\r\n\r\n\r\n    public void loadBooking(String email) {\r\n        ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);\r\n        Call<TransaksiResponse> call = apiService.getBookingByEmail(email, \"data\");\r\n\r\n\r\n        call.enqueue(new Callback<TransaksiResponse>() {\r\n            @Override\r\n            public void onResponse(Call<TransaksiResponse> call, Response<TransaksiResponse> response) {\r\n                if (response.body()==null) {\r\n                    ListTransaksi = new ArrayList<>();\r\n                    generateDataList(ListTransaksi);\r\n                    Toast.makeText(getContext(),\"Data Retrieved Successfully\", Toast.LENGTH_SHORT).show();\r\n                    refreshLayout.setRefreshing(false);\r\n                }else{\r\n                    generateDataList(response.body().getTransactions());\r\n                    Toast.makeText(getContext(),\"Data Retrieved Successfully\", Toast.LENGTH_SHORT).show();\r\n                }\r\n\r\n            }\r\n\r\n            @Override\r\n            public void onFailure(Call<TransaksiResponse> call, Throwable t) {\r\n                Toast.makeText(getContext(), \"Kesalahan Jaringan\", Toast.LENGTH_SHORT).show();\r\n                refreshLayout.setRefreshing(false);\r\n            }\r\n        });\r\n    }\r\n\r\n\r\n    private void generateDataList(List<TransaksiDAO> customerList) {\r\n\r\n        recyclerView = v.findViewById(R.id.user_rv);\r\n        recyclerAdapter = new UserRecyclerViewAdapter(getContext(), customerList);\r\n        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());\r\n        recyclerView.setItemAnimator(new DefaultItemAnimator());\r\n        recyclerView.setLayoutManager(layoutManager);\r\n        recyclerView.setAdapter(recyclerAdapter);\r\n\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/evansamuel/pbptubes/ui/fitur/transaksi/TransaksiFragment.java	(revision e7ee44a74b852fc3d6d7f926d134b61158ca318e)
++++ app/src/main/java/com/evansamuel/pbptubes/ui/fitur/transaksi/TransaksiFragment.java	(date 1607598787596)
+@@ -146,20 +146,12 @@
+         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
+         Call<TransaksiResponse> call = apiService.getBookingByEmail(email, "data");
+ 
+-
+         call.enqueue(new Callback<TransaksiResponse>() {
+             @Override
+             public void onResponse(Call<TransaksiResponse> call, Response<TransaksiResponse> response) {
+-                if (response.body()==null) {
+-                    ListTransaksi = new ArrayList<>();
+-                    generateDataList(ListTransaksi);
+-                    Toast.makeText(getContext(),"Data Retrieved Successfully", Toast.LENGTH_SHORT).show();
+-                    refreshLayout.setRefreshing(false);
+-                }else{
+-                    generateDataList(response.body().getTransactions());
+-                    Toast.makeText(getContext(),"Data Retrieved Successfully", Toast.LENGTH_SHORT).show();
+-                }
+-
++                generateDataList(response.body().getTransactions());
++                Toast.makeText(getContext(),"Data Retrieved Successfully", Toast.LENGTH_SHORT).show();
++                refreshLayout.setRefreshing(false);
+             }
+ 
+             @Override
+Index: app/src/main/java/com/evansamuel/pbptubes/ui/fitur/foodorder/FoodRecyclerViewAdapter.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.evansamuel.pbptubes.ui.fitur.foodorder;\r\n\r\nimport android.app.AlertDialog;\r\nimport android.app.DatePickerDialog;\r\nimport android.app.ProgressDialog;\r\nimport android.content.Context;\r\nimport android.content.DialogInterface;\r\nimport android.graphics.Color;\r\nimport android.util.Log;\r\nimport android.view.LayoutInflater;\r\nimport android.view.View;\r\nimport android.view.ViewGroup;\r\nimport android.widget.Button;\r\nimport android.widget.DatePicker;\r\nimport android.widget.ImageView;\r\nimport android.widget.NumberPicker;\r\nimport android.widget.TextView;\r\nimport android.widget.Toast;\r\n\r\nimport androidx.annotation.NonNull;\r\nimport androidx.recyclerview.widget.RecyclerView;\r\n\r\nimport com.bumptech.glide.Glide;\r\nimport com.bumptech.glide.load.engine.DiskCacheStrategy;\r\nimport com.evansamuel.pbptubes.R;\r\nimport com.evansamuel.pbptubes.ui.fitur.menu.ApiClient;\r\nimport com.evansamuel.pbptubes.ui.fitur.menu.ApiInterface;\r\nimport com.evansamuel.pbptubes.ui.fitur.transaksi.TransaksiDAO;\r\nimport com.evansamuel.pbptubes.ui.fitur.transaksi.TransaksiResponse;\r\nimport com.evansamuel.pbptubes.ui.fitur.transaksi.UserRecyclerViewAdapter;\r\n\r\nimport java.text.DecimalFormat;\r\nimport java.text.ParseException;\r\nimport java.text.SimpleDateFormat;\r\nimport java.util.Calendar;\r\nimport java.util.Date;\r\nimport java.util.List;\r\nimport java.util.concurrent.TimeUnit;\r\n\r\nimport retrofit2.Call;\r\nimport retrofit2.Callback;\r\nimport retrofit2.Response;\r\n\r\npublic class FoodRecyclerViewAdapter extends RecyclerView.Adapter<FoodRecyclerViewAdapter.FoodViewHolder> {\r\n    public static final String TAG = \"TAG\";\r\n    private Context context;\r\n    private List<TransaksiFoodDAO> transaksiList;\r\n    private DatePickerDialog.OnDateSetListener mDateListener;\r\n    private ProgressDialog progressDialog;\r\n\r\n\r\n    public FoodRecyclerViewAdapter(Context context, List<TransaksiFoodDAO> transaksiList) {\r\n        this.context = context;\r\n        this.transaksiList = transaksiList;\r\n        notifyDataSetChanged();\r\n    }\r\n\r\n    @NonNull\r\n    @Override\r\n    public FoodViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {\r\n        View view = LayoutInflater.from(context).inflate(R.layout.food_adapter_view, parent, false);\r\n        return new FoodViewHolder(view);\r\n    }\r\n\r\n\r\n    @Override\r\n    public void onBindViewHolder(@NonNull FoodViewHolder holder, int position) {\r\n        TransaksiFoodDAO transaksi = transaksiList.get(position);\r\n        Glide.with(context)\r\n                .load(transaksi.getPhoto())\r\n                .diskCacheStrategy(DiskCacheStrategy.NONE)\r\n                .skipMemoryCache(true)\r\n                .into(holder.ivMenu);\r\n        holder.menu.setText(transaksi.getMenu());\r\n        holder.price.setText(\"Rp\" + Math.round(transaksi.getPrice()));\r\n        holder.amount.setText(transaksi.getAmount());\r\n        holder.delete.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View view) {\r\n                AlertDialog.Builder builder = new AlertDialog.Builder(context);\r\n                builder.setTitle(\"Delete Transaction\")\r\n                        .setMessage(\"Are you sure to delete this transaction?\")\r\n                        .setPositiveButton(\"Yes\", new DialogInterface.OnClickListener() {\r\n                            @Override\r\n                            public void onClick(DialogInterface dialogInterface, int i) {\r\n                                deleteFood(transaksi.getId());\r\n                            }\r\n                        }).setNegativeButton(\"No\", null)\r\n                        .create().show();\r\n            }\r\n        });\r\n\r\n        holder.edit.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View view) {\r\n                AlertDialog.Builder builder = new AlertDialog.Builder(context);\r\n                builder.setTitle(\"Edit Your Transaction\")\r\n                        .setMessage(\"You can only change the amount of your order. Proceed?\")\r\n                        .setPositiveButton(\"Yes\", new DialogInterface.OnClickListener() {\r\n                            @Override\r\n                            public void onClick(DialogInterface dialogInterface, int i) {\r\n                                final NumberPicker numberPicker = new NumberPicker(context);\r\n                                numberPicker.setMaxValue(100); //Maximum value to select\r\n                                numberPicker.setMinValue(1); //Minimum value to select\r\n\r\n\r\n                                final AlertDialog.Builder builder = new AlertDialog.Builder(context);\r\n                                builder.setView(numberPicker);\r\n                                builder.setTitle(\"Number picker\");\r\n                                builder.setMessage(\"Choose a value :\");\r\n                                builder.setPositiveButton(\"OK\", new DialogInterface.OnClickListener() {\r\n\r\n                                    @Override\r\n                                    public void onClick(DialogInterface dialog, int which) {\r\n                                        Toast.makeText(context, \"Number selected \"+numberPicker.getValue(), Toast.LENGTH_LONG).show();\r\n                                        updateTransaksiFood(transaksi.getId(),numberPicker.getValue());\r\n                                    }\r\n                                });\r\n                                builder.setNegativeButton(\"CANCEL\", new DialogInterface.OnClickListener(){\r\n\r\n                                    @Override\r\n                                    public void onClick(DialogInterface dialog, int which) {\r\n                                        Toast.makeText(context, \"You have not selected anything\", Toast.LENGTH_LONG).show();\r\n                                        dialog.dismiss();\r\n                                    }\r\n                                });\r\n                                builder.show();\r\n\r\n\r\n                            }\r\n                        }).setNegativeButton(\"No\", null)\r\n                        .create().show();\r\n            }\r\n        });\r\n\r\n\r\n\r\n\r\n    }\r\n\r\n    @Override\r\n    public int getItemCount() {\r\n        return transaksiList.size();\r\n    }\r\n\r\n\r\n    public class FoodViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {\r\n\r\n        TextView  price, menu, amount;\r\n        Button edit, delete;\r\n        ImageView ivMenu;\r\n\r\n        public FoodViewHolder(@NonNull View itemView) {\r\n            super(itemView);\r\n\r\n            progressDialog = new ProgressDialog(context);\r\n            menu = itemView.findViewById(R.id.twName);\r\n            price = itemView.findViewById(R.id.twPrice);\r\n            amount = itemView.findViewById(R.id.twAmount);\r\n            edit = itemView.findViewById(R.id.edit);\r\n            delete = itemView.findViewById(R.id.delete);\r\n            ivMenu = itemView.findViewById(R.id.ivMenu);\r\n\r\n\r\n\r\n            itemView.setOnClickListener(this);\r\n        }\r\n\r\n\r\n        @Override\r\n        public void onClick(View view) {\r\n\r\n        }\r\n    }\r\n\r\n    private void updateTransaksiFood(String id,int amount) {\r\n        ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);\r\n\r\n\r\n        Call<TransaksiFoodResponse> update = apiService.updatefood(id,amount);\r\n\r\n\r\n        update.enqueue(new Callback<TransaksiFoodResponse>() {\r\n            @Override\r\n            public void onResponse(Call<TransaksiFoodResponse> call, Response<TransaksiFoodResponse> response) {\r\n                Toast.makeText(context, \"Kesalahan Jaringan\", Toast.LENGTH_SHORT).show();\r\n                progressDialog.dismiss();\r\n\r\n            }\r\n\r\n            @Override\r\n            public void onFailure(Call<TransaksiFoodResponse> call, Throwable t) {\r\n                Toast.makeText(context, \"Update Berhasil\", Toast.LENGTH_SHORT).show();\r\n\r\n                progressDialog.dismiss();\r\n\r\n            }\r\n        });\r\n    }\r\n\r\n    private void deleteFood(String id) {\r\n        ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);\r\n        Call<TransaksiFoodResponse> delete = apiService.deleteFoodTransaksi(id);\r\n\r\n\r\n        delete.enqueue(new Callback<TransaksiFoodResponse>() {\r\n            @Override\r\n            public void onResponse(Call<TransaksiFoodResponse> call, Response<TransaksiFoodResponse> response) {\r\n                Toast.makeText(context, \"Kesalahan Jaringan\", Toast.LENGTH_SHORT).show();\r\n                progressDialog.dismiss();\r\n            }\r\n\r\n            @Override\r\n            public void onFailure(Call<TransaksiFoodResponse> call, Throwable t) {\r\n                Toast.makeText(context, \"Delete Berhasil\", Toast.LENGTH_SHORT).show();\r\n\r\n                progressDialog.dismiss();\r\n\r\n            }\r\n        });\r\n    }\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/evansamuel/pbptubes/ui/fitur/foodorder/FoodRecyclerViewAdapter.java	(revision e7ee44a74b852fc3d6d7f926d134b61158ca318e)
++++ app/src/main/java/com/evansamuel/pbptubes/ui/fitur/foodorder/FoodRecyclerViewAdapter.java	(date 1607598787619)
+@@ -1,17 +1,13 @@
+ package com.evansamuel.pbptubes.ui.fitur.foodorder;
+ 
+ import android.app.AlertDialog;
+-import android.app.DatePickerDialog;
+ import android.app.ProgressDialog;
+ import android.content.Context;
+ import android.content.DialogInterface;
+-import android.graphics.Color;
+-import android.util.Log;
+ import android.view.LayoutInflater;
+ import android.view.View;
+ import android.view.ViewGroup;
+ import android.widget.Button;
+-import android.widget.DatePicker;
+ import android.widget.ImageView;
+ import android.widget.NumberPicker;
+ import android.widget.TextView;
+@@ -25,17 +21,8 @@
+ import com.evansamuel.pbptubes.R;
+ import com.evansamuel.pbptubes.ui.fitur.menu.ApiClient;
+ import com.evansamuel.pbptubes.ui.fitur.menu.ApiInterface;
+-import com.evansamuel.pbptubes.ui.fitur.transaksi.TransaksiDAO;
+-import com.evansamuel.pbptubes.ui.fitur.transaksi.TransaksiResponse;
+-import com.evansamuel.pbptubes.ui.fitur.transaksi.UserRecyclerViewAdapter;
+ 
+-import java.text.DecimalFormat;
+-import java.text.ParseException;
+-import java.text.SimpleDateFormat;
+-import java.util.Calendar;
+-import java.util.Date;
+ import java.util.List;
+-import java.util.concurrent.TimeUnit;
+ 
+ import retrofit2.Call;
+ import retrofit2.Callback;
+@@ -45,7 +32,6 @@
+     public static final String TAG = "TAG";
+     private Context context;
+     private List<TransaksiFoodDAO> transaksiList;
+-    private DatePickerDialog.OnDateSetListener mDateListener;
+     private ProgressDialog progressDialog;
+ 
+ 
+@@ -112,11 +98,11 @@
+ 
+                                     @Override
+                                     public void onClick(DialogInterface dialog, int which) {
+-                                        Toast.makeText(context, "Number selected "+numberPicker.getValue(), Toast.LENGTH_LONG).show();
+-                                        updateTransaksiFood(transaksi.getId(),numberPicker.getValue());
++                                        Toast.makeText(context, "Number selected " + numberPicker.getValue(), Toast.LENGTH_LONG).show();
++                                        updateTransaksiFood(transaksi.getId(), numberPicker.getValue());
+                                     }
+                                 });
+-                                builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener(){
++                                builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+ 
+                                     @Override
+                                     public void onClick(DialogInterface dialog, int which) {
+@@ -134,8 +120,6 @@
+         });
+ 
+ 
+-
+-
+     }
+ 
+     @Override
+@@ -146,7 +130,7 @@
+ 
+     public class FoodViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+ 
+-        TextView  price, menu, amount;
++        TextView price, menu, amount;
+         Button edit, delete;
+         ImageView ivMenu;
+ 
+@@ -162,7 +146,6 @@
+             ivMenu = itemView.findViewById(R.id.ivMenu);
+ 
+ 
+-
+             itemView.setOnClickListener(this);
+         }
+ 
+@@ -173,11 +156,11 @@
+         }
+     }
+ 
+-    private void updateTransaksiFood(String id,int amount) {
++    private void updateTransaksiFood(String id, int amount) {
+         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
+ 
+ 
+-        Call<TransaksiFoodResponse> update = apiService.updatefood(id,amount);
++        Call<TransaksiFoodResponse> update = apiService.updatefood(id, amount);
+ 
+ 
+         update.enqueue(new Callback<TransaksiFoodResponse>() {
+Index: app/src/androidTest/java/com/evansamuel/pbptubes/RegisterTest.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.evansamuel.pbptubes;\r\n\r\n\r\nimport android.view.View;\r\nimport android.view.ViewGroup;\r\nimport android.view.ViewParent;\r\n\r\nimport androidx.test.espresso.ViewInteraction;\r\nimport androidx.test.filters.LargeTest;\r\nimport androidx.test.rule.ActivityTestRule;\r\nimport androidx.test.runner.AndroidJUnit4;\r\n\r\nimport org.hamcrest.Description;\r\nimport org.hamcrest.Matcher;\r\nimport org.hamcrest.TypeSafeMatcher;\r\nimport org.junit.Rule;\r\nimport org.junit.Test;\r\nimport org.junit.runner.RunWith;\r\n\r\nimport static androidx.test.espresso.Espresso.onView;\r\nimport static androidx.test.espresso.Espresso.pressBack;\r\nimport static androidx.test.espresso.action.ViewActions.click;\r\nimport static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;\r\nimport static androidx.test.espresso.action.ViewActions.replaceText;\r\nimport static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;\r\nimport static androidx.test.espresso.matcher.ViewMatchers.withClassName;\r\nimport static androidx.test.espresso.matcher.ViewMatchers.withId;\r\nimport static androidx.test.espresso.matcher.ViewMatchers.withText;\r\nimport static org.hamcrest.Matchers.allOf;\r\nimport static org.hamcrest.Matchers.is;\r\n\r\n@LargeTest\r\n@RunWith(AndroidJUnit4.class)\r\npublic class RegisterTest {\r\n\r\n    @Rule\r\n    public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);\r\n\r\n    @Test\r\n    public void registerTest() {\r\n        // Added a sleep statement to match the app's execution delay.\r\n        // The recommended way to handle such scenarios is to use Espresso idling resources:\r\n        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html\r\n        try {\r\n            Thread.sleep(7000);\r\n        } catch (InterruptedException e) {\r\n            e.printStackTrace();\r\n        }\r\n\r\n        ViewInteraction materialButton = onView(\r\n                allOf(withId(R.id.btnRegister1), withText(\"Register\"),\r\n                        childAtPosition(\r\n                                childAtPosition(\r\n                                        withClassName(is(\"android.widget.LinearLayout\")),\r\n                                        1),\r\n                                1),\r\n                        isDisplayed()));\r\n        materialButton.perform(click());\r\n\r\n        // Added a sleep statement to match the app's execution delay.\r\n        // The recommended way to handle such scenarios is to use Espresso idling resources:\r\n        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html\r\n        try {\r\n            Thread.sleep(7000);\r\n        } catch (InterruptedException e) {\r\n            e.printStackTrace();\r\n        }\r\n\r\n        ViewInteraction materialButton2 = onView(\r\n                allOf(withId(R.id.btnRegisterUser), withText(\"Register\"),\r\n                        childAtPosition(\r\n                                childAtPosition(\r\n                                        withClassName(is(\"android.widget.LinearLayout\")),\r\n                                        7),\r\n                                0),\r\n                        isDisplayed()));\r\n        materialButton2.perform(click());\r\n\r\n        ViewInteraction textInputEditText = onView(\r\n                allOf(withId(R.id.edtName),\r\n                        childAtPosition(\r\n                                childAtPosition(\r\n                                        withId(R.id.edtNameLayout),\r\n                                        0),\r\n                                0),\r\n                        isDisplayed()));\r\n        textInputEditText.perform(click());\r\n\r\n        ViewInteraction textInputEditText2 = onView(\r\n                allOf(withId(R.id.edtName),\r\n                        childAtPosition(\r\n                                childAtPosition(\r\n                                        withId(R.id.edtNameLayout),\r\n                                        0),\r\n                                0),\r\n                        isDisplayed()));\r\n        textInputEditText2.perform(replaceText(\"William\"), closeSoftKeyboard());\r\n\r\n\r\n        ViewInteraction materialButton3 = onView(\r\n                allOf(withId(R.id.btnRegisterUser), withText(\"Register\"),\r\n                        childAtPosition(\r\n                                childAtPosition(\r\n                                        withClassName(is(\"android.widget.LinearLayout\")),\r\n                                        7),\r\n                                0),\r\n                        isDisplayed()));\r\n        materialButton3.perform(click());\r\n\r\n        ViewInteraction textInputEditText3 = onView(\r\n                allOf(withId(R.id.edtAddress),\r\n                        childAtPosition(\r\n                                childAtPosition(\r\n                                        withId(R.id.edtAddressLayout),\r\n                                        0),\r\n                                1),\r\n                        isDisplayed()));\r\n        textInputEditText3.perform(replaceText(\"jln cilik riwut\"), closeSoftKeyboard());\r\n\r\n\r\n        ViewInteraction materialButton4 = onView(\r\n                allOf(withId(R.id.btnRegisterUser), withText(\"Register\"),\r\n                        childAtPosition(\r\n                                childAtPosition(\r\n                                        withClassName(is(\"android.widget.LinearLayout\")),\r\n                                        7),\r\n                                0),\r\n                        isDisplayed()));\r\n        materialButton4.perform(click());\r\n\r\n        ViewInteraction textInputEditText4 = onView(\r\n                allOf(withId(R.id.edtEmailRegister),\r\n                        childAtPosition(\r\n                                childAtPosition(\r\n                                        withId(R.id.edtEmailLayout),\r\n                                        0),\r\n                                1),\r\n                        isDisplayed()));\r\n        textInputEditText4.perform(replaceText(\"onsin200\"), closeSoftKeyboard());\r\n\r\n\r\n        ViewInteraction materialButton5 = onView(\r\n                allOf(withId(R.id.btnRegisterUser), withText(\"Register\"),\r\n                        childAtPosition(\r\n                                childAtPosition(\r\n                                        withClassName(is(\"android.widget.LinearLayout\")),\r\n                                        7),\r\n                                0),\r\n                        isDisplayed()));\r\n        materialButton5.perform(click());\r\n\r\n        ViewInteraction textInputEditText5 = onView(\r\n                allOf(withId(R.id.edtHand),\r\n                        childAtPosition(\r\n                                childAtPosition(\r\n                                        withId(R.id.edtTelponLayout),\r\n                                        0),\r\n                                1),\r\n                        isDisplayed()));\r\n        textInputEditText5.perform(replaceText(\"081346800553\"), closeSoftKeyboard());\r\n\r\n        ViewInteraction materialButton6 = onView(\r\n                allOf(withId(R.id.btnRegisterUser), withText(\"Register\"),\r\n                        childAtPosition(\r\n                                childAtPosition(\r\n                                        withClassName(is(\"android.widget.LinearLayout\")),\r\n                                        7),\r\n                                0),\r\n                        isDisplayed()));\r\n        materialButton6.perform(click());\r\n\r\n        ViewInteraction textInputEditText6 = onView(\r\n                allOf(withId(R.id.edtUsername),\r\n                        childAtPosition(\r\n                                childAtPosition(\r\n                                        withId(R.id.edtUsernameLayout),\r\n                                        0),\r\n                                1),\r\n                        isDisplayed()));\r\n        textInputEditText6.perform(replaceText(\"hehehe\"), closeSoftKeyboard());\r\n\r\n\r\n        ViewInteraction materialButton7 = onView(\r\n                allOf(withId(R.id.btnRegisterUser), withText(\"Register\"),\r\n                        childAtPosition(\r\n                                childAtPosition(\r\n                                        withClassName(is(\"android.widget.LinearLayout\")),\r\n                                        7),\r\n                                0),\r\n                        isDisplayed()));\r\n        materialButton7.perform(click());\r\n\r\n        ViewInteraction textInputEditText7 = onView(\r\n                allOf(withId(R.id.edtPasswordRegister),\r\n                        childAtPosition(\r\n                                childAtPosition(\r\n                                        withId(R.id.edtPasswordLayout),\r\n                                        0),\r\n                                1),\r\n                        isDisplayed()));\r\n        textInputEditText7.perform(replaceText(\"hehe\"), closeSoftKeyboard());\r\n\r\n\r\n        ViewInteraction materialButton8 = onView(\r\n                allOf(withId(R.id.btnRegisterUser), withText(\"Register\"),\r\n                        childAtPosition(\r\n                                childAtPosition(\r\n                                        withClassName(is(\"android.widget.LinearLayout\")),\r\n                                        7),\r\n                                0),\r\n                        isDisplayed()));\r\n        materialButton8.perform(click());\r\n\r\n        ViewInteraction textInputEditText8 = onView(\r\n                allOf(withId(R.id.edtEmailRegister), withText(\"onsin200\"),\r\n                        childAtPosition(\r\n                                childAtPosition(\r\n                                        withId(R.id.edtEmailLayout),\r\n                                        0),\r\n                                1),\r\n                        isDisplayed()));\r\n        textInputEditText8.perform(replaceText(\"wlourensius@gmail.com\"));\r\n\r\n        ViewInteraction textInputEditText9 = onView(\r\n                allOf(withId(R.id.edtEmailRegister), withText(\"wlourensius@gmail.com\"),\r\n                        childAtPosition(\r\n                                childAtPosition(\r\n                                        withId(R.id.edtEmailLayout),\r\n                                        0),\r\n                                1),\r\n                        isDisplayed()));\r\n        textInputEditText9.perform(closeSoftKeyboard());\r\n\r\n\r\n        ViewInteraction materialButton9 = onView(\r\n                allOf(withId(R.id.btnRegisterUser), withText(\"Register\"),\r\n                        childAtPosition(\r\n                                childAtPosition(\r\n                                        withClassName(is(\"android.widget.LinearLayout\")),\r\n                                        7),\r\n                                0),\r\n                        isDisplayed()));\r\n        materialButton9.perform(click());\r\n\r\n        ViewInteraction textInputEditText10 = onView(\r\n                allOf(withId(R.id.edtPasswordRegister), withText(\"hehe\"),\r\n                        childAtPosition(\r\n                                childAtPosition(\r\n                                        withId(R.id.edtPasswordLayout),\r\n                                        0),\r\n                                1),\r\n                        isDisplayed()));\r\n        textInputEditText10.perform(replaceText(\"hehehe\"));\r\n\r\n        ViewInteraction textInputEditText11 = onView(\r\n                allOf(withId(R.id.edtPasswordRegister), withText(\"hehehe\"),\r\n                        childAtPosition(\r\n                                childAtPosition(\r\n                                        withId(R.id.edtPasswordLayout),\r\n                                        0),\r\n                                1),\r\n                        isDisplayed()));\r\n        textInputEditText11.perform(closeSoftKeyboard());\r\n\r\n\r\n        ViewInteraction materialButton10 = onView(\r\n                allOf(withId(R.id.btnRegisterUser), withText(\"Register\"),\r\n                        childAtPosition(\r\n                                childAtPosition(\r\n                                        withClassName(is(\"android.widget.LinearLayout\")),\r\n                                        7),\r\n                                0),\r\n                        isDisplayed()));\r\n        materialButton10.perform(click());\r\n\r\n        ViewInteraction textInputEditText12 = onView(\r\n                allOf(withId(R.id.edtEmailRegister), withText(\"wlourensius@gmail.com\"),\r\n                        childAtPosition(\r\n                                childAtPosition(\r\n                                        withId(R.id.edtEmailLayout),\r\n                                        0),\r\n                                1),\r\n                        isDisplayed()));\r\n        textInputEditText12.perform(replaceText(\"onsin20@gmail.com\"));\r\n\r\n        ViewInteraction textInputEditText13 = onView(\r\n                allOf(withId(R.id.edtEmailRegister), withText(\"onsin20@gmail.com\"),\r\n                        childAtPosition(\r\n                                childAtPosition(\r\n                                        withId(R.id.edtEmailLayout),\r\n                                        0),\r\n                                1),\r\n                        isDisplayed()));\r\n        textInputEditText13.perform(closeSoftKeyboard());\r\n\r\n\r\n        ViewInteraction materialButton11 = onView(\r\n                allOf(withId(R.id.btnRegisterUser), withText(\"Register\"),\r\n                        childAtPosition(\r\n                                childAtPosition(\r\n                                        withClassName(is(\"android.widget.LinearLayout\")),\r\n                                        7),\r\n                                0),\r\n                        isDisplayed()));\r\n        materialButton11.perform(click());\r\n    }\r\n\r\n    private static Matcher<View> childAtPosition(\r\n            final Matcher<View> parentMatcher, final int position) {\r\n\r\n        return new TypeSafeMatcher<View>() {\r\n            @Override\r\n            public void describeTo(Description description) {\r\n                description.appendText(\"Child at position \" + position + \" in parent \");\r\n                parentMatcher.describeTo(description);\r\n            }\r\n\r\n            @Override\r\n            public boolean matchesSafely(View view) {\r\n                ViewParent parent = view.getParent();\r\n                return parent instanceof ViewGroup && parentMatcher.matches(parent)\r\n                        && view.equals(((ViewGroup) parent).getChildAt(position));\r\n            }\r\n        };\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/androidTest/java/com/evansamuel/pbptubes/RegisterTest.java	(revision e7ee44a74b852fc3d6d7f926d134b61158ca318e)
++++ app/src/androidTest/java/com/evansamuel/pbptubes/RegisterTest.java	(date 1607598787627)
+@@ -71,7 +71,7 @@
+                         childAtPosition(
+                                 childAtPosition(
+                                         withClassName(is("android.widget.LinearLayout")),
+-                                        7),
++                                        8),
+                                 0),
+                         isDisplayed()));
+         materialButton2.perform(click());
+@@ -102,7 +102,7 @@
+                         childAtPosition(
+                                 childAtPosition(
+                                         withClassName(is("android.widget.LinearLayout")),
+-                                        7),
++                                        8),
+                                 0),
+                         isDisplayed()));
+         materialButton3.perform(click());
+@@ -123,7 +123,7 @@
+                         childAtPosition(
+                                 childAtPosition(
+                                         withClassName(is("android.widget.LinearLayout")),
+-                                        7),
++                                        8),
+                                 0),
+                         isDisplayed()));
+         materialButton4.perform(click());
+@@ -144,7 +144,7 @@
+                         childAtPosition(
+                                 childAtPosition(
+                                         withClassName(is("android.widget.LinearLayout")),
+-                                        7),
++                                        8),
+                                 0),
+                         isDisplayed()));
+         materialButton5.perform(click());
+@@ -164,7 +164,7 @@
+                         childAtPosition(
+                                 childAtPosition(
+                                         withClassName(is("android.widget.LinearLayout")),
+-                                        7),
++                                        8),
+                                 0),
+                         isDisplayed()));
+         materialButton6.perform(click());
+@@ -185,7 +185,7 @@
+                         childAtPosition(
+                                 childAtPosition(
+                                         withClassName(is("android.widget.LinearLayout")),
+-                                        7),
++                                        8),
+                                 0),
+                         isDisplayed()));
+         materialButton7.perform(click());
+@@ -206,7 +206,7 @@
+                         childAtPosition(
+                                 childAtPosition(
+                                         withClassName(is("android.widget.LinearLayout")),
+-                                        7),
++                                        8),
+                                 0),
+                         isDisplayed()));
+         materialButton8.perform(click());
+@@ -237,7 +237,7 @@
+                         childAtPosition(
+                                 childAtPosition(
+                                         withClassName(is("android.widget.LinearLayout")),
+-                                        7),
++                                        8),
+                                 0),
+                         isDisplayed()));
+         materialButton9.perform(click());
+@@ -268,7 +268,7 @@
+                         childAtPosition(
+                                 childAtPosition(
+                                         withClassName(is("android.widget.LinearLayout")),
+-                                        7),
++                                        8),
+                                 0),
+                         isDisplayed()));
+         materialButton10.perform(click());
+@@ -299,7 +299,7 @@
+                         childAtPosition(
+                                 childAtPosition(
+                                         withClassName(is("android.widget.LinearLayout")),
+-                                        7),
++                                        8),
+                                 0),
+                         isDisplayed()));
+         materialButton11.perform(click());

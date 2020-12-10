@@ -1,17 +1,13 @@
 package com.evansamuel.pbptubes.ui.fitur.foodorder;
 
 import android.app.AlertDialog;
-import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
 import android.widget.TextView;
@@ -25,17 +21,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.evansamuel.pbptubes.R;
 import com.evansamuel.pbptubes.ui.fitur.menu.ApiClient;
 import com.evansamuel.pbptubes.ui.fitur.menu.ApiInterface;
-import com.evansamuel.pbptubes.ui.fitur.transaksi.TransaksiDAO;
-import com.evansamuel.pbptubes.ui.fitur.transaksi.TransaksiResponse;
-import com.evansamuel.pbptubes.ui.fitur.transaksi.UserRecyclerViewAdapter;
 
-import java.text.DecimalFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -45,7 +32,6 @@ public class FoodRecyclerViewAdapter extends RecyclerView.Adapter<FoodRecyclerVi
     public static final String TAG = "TAG";
     private Context context;
     private List<TransaksiFoodDAO> transaksiList;
-    private DatePickerDialog.OnDateSetListener mDateListener;
     private ProgressDialog progressDialog;
 
 
@@ -112,11 +98,11 @@ public class FoodRecyclerViewAdapter extends RecyclerView.Adapter<FoodRecyclerVi
 
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        Toast.makeText(context, "Number selected "+numberPicker.getValue(), Toast.LENGTH_LONG).show();
-                                        updateTransaksiFood(transaksi.getId(),numberPicker.getValue());
+                                        Toast.makeText(context, "Number selected " + numberPicker.getValue(), Toast.LENGTH_LONG).show();
+                                        updateTransaksiFood(transaksi.getId(), numberPicker.getValue());
                                     }
                                 });
-                                builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener(){
+                                builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
 
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
@@ -134,8 +120,6 @@ public class FoodRecyclerViewAdapter extends RecyclerView.Adapter<FoodRecyclerVi
         });
 
 
-
-
     }
 
     @Override
@@ -146,7 +130,7 @@ public class FoodRecyclerViewAdapter extends RecyclerView.Adapter<FoodRecyclerVi
 
     public class FoodViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        TextView  price, menu, amount;
+        TextView price, menu, amount;
         Button edit, delete;
         ImageView ivMenu;
 
@@ -162,7 +146,6 @@ public class FoodRecyclerViewAdapter extends RecyclerView.Adapter<FoodRecyclerVi
             ivMenu = itemView.findViewById(R.id.ivMenu);
 
 
-
             itemView.setOnClickListener(this);
         }
 
@@ -173,11 +156,11 @@ public class FoodRecyclerViewAdapter extends RecyclerView.Adapter<FoodRecyclerVi
         }
     }
 
-    private void updateTransaksiFood(String id,int amount) {
+    private void updateTransaksiFood(String id, int amount) {
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
 
 
-        Call<TransaksiFoodResponse> update = apiService.updatefood(id,amount);
+        Call<TransaksiFoodResponse> update = apiService.updatefood(id, amount);
 
 
         update.enqueue(new Callback<TransaksiFoodResponse>() {

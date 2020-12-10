@@ -71,7 +71,7 @@ public class RegisterTest {
                         childAtPosition(
                                 childAtPosition(
                                         withClassName(is("android.widget.LinearLayout")),
-                                        7),
+                                        8),
                                 0),
                         isDisplayed()));
         materialButton2.perform(click());
@@ -102,7 +102,7 @@ public class RegisterTest {
                         childAtPosition(
                                 childAtPosition(
                                         withClassName(is("android.widget.LinearLayout")),
-                                        7),
+                                        8),
                                 0),
                         isDisplayed()));
         materialButton3.perform(click());
@@ -123,7 +123,7 @@ public class RegisterTest {
                         childAtPosition(
                                 childAtPosition(
                                         withClassName(is("android.widget.LinearLayout")),
-                                        7),
+                                        8),
                                 0),
                         isDisplayed()));
         materialButton4.perform(click());
@@ -144,7 +144,7 @@ public class RegisterTest {
                         childAtPosition(
                                 childAtPosition(
                                         withClassName(is("android.widget.LinearLayout")),
-                                        7),
+                                        8),
                                 0),
                         isDisplayed()));
         materialButton5.perform(click());
@@ -164,7 +164,7 @@ public class RegisterTest {
                         childAtPosition(
                                 childAtPosition(
                                         withClassName(is("android.widget.LinearLayout")),
-                                        7),
+                                        8),
                                 0),
                         isDisplayed()));
         materialButton6.perform(click());
@@ -185,7 +185,7 @@ public class RegisterTest {
                         childAtPosition(
                                 childAtPosition(
                                         withClassName(is("android.widget.LinearLayout")),
-                                        7),
+                                        8),
                                 0),
                         isDisplayed()));
         materialButton7.perform(click());
@@ -206,7 +206,7 @@ public class RegisterTest {
                         childAtPosition(
                                 childAtPosition(
                                         withClassName(is("android.widget.LinearLayout")),
-                                        7),
+                                        8),
                                 0),
                         isDisplayed()));
         materialButton8.perform(click());
@@ -237,7 +237,7 @@ public class RegisterTest {
                         childAtPosition(
                                 childAtPosition(
                                         withClassName(is("android.widget.LinearLayout")),
-                                        7),
+                                        8),
                                 0),
                         isDisplayed()));
         materialButton9.perform(click());
@@ -268,7 +268,7 @@ public class RegisterTest {
                         childAtPosition(
                                 childAtPosition(
                                         withClassName(is("android.widget.LinearLayout")),
-                                        7),
+                                        8),
                                 0),
                         isDisplayed()));
         materialButton10.perform(click());
@@ -299,7 +299,7 @@ public class RegisterTest {
                         childAtPosition(
                                 childAtPosition(
                                         withClassName(is("android.widget.LinearLayout")),
-                                        7),
+                                        8),
                                 0),
                         isDisplayed()));
         materialButton11.perform(click());
