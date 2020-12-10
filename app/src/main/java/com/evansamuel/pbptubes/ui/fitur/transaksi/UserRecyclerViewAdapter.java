@@ -217,14 +217,14 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
         update.enqueue(new Callback<TransaksiResponse>() {
             @Override
             public void onResponse(Call<TransaksiResponse> call, Response<TransaksiResponse> response) {
-                Toast.makeText(context, "Update Berhasil", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Kesalahan Jaringan", Toast.LENGTH_SHORT).show();
                 progressDialog.dismiss();
 
             }
 
             @Override
             public void onFailure(Call<TransaksiResponse> call, Throwable t) {
-                Toast.makeText(context, "Kesalahan Jaringan", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Update Berhasil", Toast.LENGTH_SHORT).show();
                 progressDialog.dismiss();
 
             }
@@ -239,13 +239,13 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
         delete.enqueue(new Callback<TransaksiResponse>() {
             @Override
             public void onResponse(Call<TransaksiResponse> call, Response<TransaksiResponse> response) {
-                Toast.makeText(context, "Update Berhasil", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Kesalahan Jaringan", Toast.LENGTH_SHORT).show();
                 progressDialog.dismiss();
             }
 
             @Override
             public void onFailure(Call<TransaksiResponse> call, Throwable t) {
-                Toast.makeText(context, "Kesalahan Jaringan", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Delete Berhasil", Toast.LENGTH_SHORT).show();
                 progressDialog.dismiss();
 
             }

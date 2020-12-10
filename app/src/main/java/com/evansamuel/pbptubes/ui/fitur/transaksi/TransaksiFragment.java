@@ -146,12 +146,20 @@ public class TransaksiFragment extends Fragment {
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
         Call<TransaksiResponse> call = apiService.getBookingByEmail(email, "data");
 
+
         call.enqueue(new Callback<TransaksiResponse>() {
             @Override
             public void onResponse(Call<TransaksiResponse> call, Response<TransaksiResponse> response) {
-                generateDataList(response.body().getTransactions());
-                Toast.makeText(getContext(),"Data Retrieved Successfully", Toast.LENGTH_SHORT).show();
-                refreshLayout.setRefreshing(false);
+                if (response.body()==null) {
+                    ListTransaksi = new ArrayList<>();
+                    generateDataList(ListTransaksi);
+                    Toast.makeText(getContext(),"Data Retrieved Successfully", Toast.LENGTH_SHORT).show();
+                    refreshLayout.setRefreshing(false);
+                }else{
+                    generateDataList(response.body().getTransactions());
+                    Toast.makeText(getContext(),"Data Retrieved Successfully", Toast.LENGTH_SHORT).show();
+                }
+
             }
 
             @Override
