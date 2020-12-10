@@ -147,9 +147,18 @@ public class TransaksiFoodFragment extends Fragment {
         call.enqueue(new Callback<TransaksiFoodResponse>() {
             @Override
             public void onResponse(Call<TransaksiFoodResponse> call, Response<TransaksiFoodResponse> response) {
-                generateDataList(response.body().getTransactionsFood());
-                Toast.makeText(getContext(),"Data Retrieved Successfully", Toast.LENGTH_SHORT).show();
-                refreshLayout.setRefreshing(false);
+
+                if (response.body()==null) {
+                    ListTransaksi = new ArrayList<>();
+                    generateDataList(ListTransaksi);
+                    Toast.makeText(getContext(),"Data Empty", Toast.LENGTH_SHORT).show();
+                    refreshLayout.setRefreshing(false);
+                }else{
+                    generateDataList(response.body().getTransactionsFood());
+                    Toast.makeText(getContext(),"Data Retrieved Successfully", Toast.LENGTH_SHORT).show();
+                    refreshLayout.setRefreshing(false);
+                }
+
             }
 
             @Override
@@ -162,13 +171,11 @@ public class TransaksiFoodFragment extends Fragment {
 
 
     private void generateDataList(List<TransaksiFoodDAO> customerList) {
-
         recyclerView = v.findViewById(R.id.user_rv);
         recyclerAdapter = new FoodRecyclerViewAdapter(getContext(), customerList);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(recyclerAdapter);
-
     }
 }

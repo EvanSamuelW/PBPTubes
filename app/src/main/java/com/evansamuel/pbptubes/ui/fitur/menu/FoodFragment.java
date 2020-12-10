@@ -142,9 +142,16 @@ public class FoodFragment extends Fragment {
             @Override
             public void onResponse(Call<MenuResponse> call, Response<MenuResponse> response) {
 
-                generateDataList(response.body().getMenus());
-                swipeRefresh.setRefreshing(false);
-
+                if (response.body()==null) {
+                    user = new ArrayList<>();
+                    generateDataList(user);
+                    Toast.makeText(getContext(),"Data Empty", Toast.LENGTH_SHORT).show();
+                    swipeRefresh.setRefreshing(false);
+                }else{
+                    generateDataList(response.body().getMenus());
+                    Toast.makeText(getContext(),"Data Retrieved Successfully", Toast.LENGTH_SHORT).show();
+                    swipeRefresh.setRefreshing(false);
+                }
 
             }
 
