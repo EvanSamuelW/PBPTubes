@@ -70,7 +70,7 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
         holder.CheckInDate.setText(dateIn);
         holder.CheckOutDate.setText(dateOut);
         holder.room.setText(transaksi.getRoom());
-        holder.PriceTag.setText("Rp. " + transaksi.getPrice().toString());
+        holder.PriceTag.setText("Rp. " + Math.round(transaksi.getPrice()) );
 
         holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
